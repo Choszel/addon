@@ -1,0 +1,36 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; 
+    font-size: 20px;
+    height: 100%;
+  }
+
+:root{
+    height: 100%;
+    /* CSS HEX */
+    --powder-blue: #afc2d5ff;
+    --honeydew: #ccddd3ff;
+    --nyanza: #dfefcaff;
+    --vanilla: #fff9a5ff;
+    --red-munsell: #ec0b43ff;
+
+    /* SCSS Gradient */
+    --gradient-top: linear-gradient(0deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
+    --gradient-right: linear-gradient(90deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
+    --gradient-bottom: linear-gradient(180deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
+    --gradient-left: linear-gradient(270deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
+    --gradient-top-right: linear-gradient(45deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
+    --gradient-bottom-right: linear-gradient(135deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
+    --gradient-top-left: linear-gradient(225deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
+    --gradient-bottom-left: linear-gradient(315deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
+    --gradient-radial: radial-gradient(#afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
+}
+
+h1{
+    font-size: 48px; 
+}
+
+.p2{
+    font-size: 24px;
+}
