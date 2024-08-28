@@ -1,8 +1,9 @@
-import { Card, HStack, Image } from "@chakra-ui/react";
+import { HStack, Image } from "@chakra-ui/react";
 import book from "../assets/world-book-day.png";
 import cards from "../assets/card-game.png";
+import { Link } from "react-router-dom";
 
-const Main = () => {
+const Home = () => {
   return (
     <div>
       <text className="p2">
@@ -17,13 +18,7 @@ const Main = () => {
         spacing={10}
         marginBottom="3%"
       >
-        <Card
-          bg="var(--gradient-top)"
-          padding={8}
-          w="40%"
-          display="flex"
-          flexDirection="column"
-        >
+        <Link to="/dictionary" className="gradient_box">
           <text className="p2">Słownik</text>
           <Image
             src={book}
@@ -31,14 +26,9 @@ const Main = () => {
             marginTop={10}
             userSelect="none"
           ></Image>
-        </Card>
-        <Card
-          bg="var(--gradient-top)"
-          padding={8}
-          w="40%"
-          display="flex"
-          flexDirection="column"
-        >
+        </Link>
+
+        <Link to="/fishCards" className="gradient_box">
           <text className="p2">Fiszki i gry</text>
           <Image
             src={cards}
@@ -47,10 +37,10 @@ const Main = () => {
             alignSelf="end"
             userSelect="none"
           ></Image>
-        </Card>
+        </Link>
       </HStack>
     </div>
   );
 };
 
-export default Main;
+export default Home;
