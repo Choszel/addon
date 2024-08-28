@@ -11,20 +11,30 @@ const Main = () => {
         nauki? Wystarczy wybrać jedną z poniższych opcji!
       </text>
       <h1 style={{ margin: "3%" }}>Czego teraz potrzebujesz?</h1>
-      <HStack display="flex" justifyContent="center" spacing={10} marginY="3%">
+      <HStack
+        display="flex"
+        justifyContent="center"
+        spacing={10}
+        marginBottom="3%"
+      >
         <Card
           bg="var(--gradient-top)"
-          padding={10}
+          padding={8}
           w="40%"
           display="flex"
           flexDirection="column"
         >
           <text className="p2">Słownik</text>
-          <Image src={book} boxSize={20} marginTop={10}></Image>
+          <Image
+            src={book}
+            boxSize={20}
+            marginTop={10}
+            userSelect="none"
+          ></Image>
         </Card>
         <Card
           bg="var(--gradient-top)"
-          padding={10}
+          padding={8}
           w="40%"
           display="flex"
           flexDirection="column"
@@ -35,6 +45,7 @@ const Main = () => {
             boxSize={20}
             marginTop={10}
             alignSelf="end"
+            userSelect="none"
           ></Image>
         </Card>
       </HStack>

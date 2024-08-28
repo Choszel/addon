@@ -7,9 +7,9 @@ const Navbar = () => {
       <HStack display="flex" marginBottom={6}>
         <p>Logo</p>
         <Spacer width="50%"></Spacer>
-        <SlGlobe size={30} />
+        <SlGlobe size={20} />
         <p>PL</p>
-        <Avatar marginX={4} size="sm"></Avatar>
+        <Avatar margin="0% 0% 0% 2%" boxSize={6}></Avatar>
         <p>Nazwa użytkownika</p>
       </HStack>
     </div>
