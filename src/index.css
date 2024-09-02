@@ -43,3 +43,9 @@ h1{
     flex-direction: column;
     border-radius: 3%;
 }
+
+.gradient_button{
+    /* background-color: var(--gradient-top); */
+    padding: 2%;
+    border-radius: 3%;
+}
