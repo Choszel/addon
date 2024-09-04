@@ -5,6 +5,7 @@ import DictionaryHome from "./pages/DictionaryHome";
 import FishCardsHome from "./pages/FishCardsHome";
 import Layout from "./Layout";
 import NoTranslation from "./pages/NoTranslation";
+import DictionarySearchResult from "./pages/DictionarySearchResult";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/dictionary" element={<DictionaryHome />} />
           <Route path="/fishCards" element={<FishCardsHome />} />
           <Route path="/noTranslation" element={<NoTranslation />} />
+          <Route path="/dSearchResult" element={<DictionarySearchResult />} />
         </Route>
       </Routes>
     </Router>

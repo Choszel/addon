@@ -1,4 +1,5 @@
 import {
+  Button,
   Flex,
   HStack,
   Input,
@@ -23,7 +24,7 @@ const SearchInput = ({ onSearch }: Props) => {
   return (
     <Flex
       display="flex"
-      marginY="5%"
+      margin="3% 0% 5% 0%"
       alignContent="center"
       justifyContent="center"
     >
@@ -39,12 +40,13 @@ const SearchInput = ({ onSearch }: Props) => {
               ref={ref}
               borderRadius={20}
               border="0px"
-              placeholder="Szukaj!"
+              placeholder="Wpisz szukaną frazę tutaj..."
               color="var(--neutral1)"
               focusBorderColor="var(--primary)"
               onChange={handleSubmit}
             ></Input>
           </InputGroup>
+          <Button marginX="1%">Szukaj</Button>
         </HStack>
       </form>
     </Flex>

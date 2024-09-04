@@ -16,7 +16,7 @@ const Layout = () => {
         }}
         height="100%"
       >
-        <GridItem area="nav">
+        <GridItem area="nav" marginX="2%">
           <Navbar />
         </GridItem>
         <GridItem area="main" height="100%" marginX="8%">
