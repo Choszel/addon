@@ -48,7 +48,6 @@ app.get('/api/englishWords', async (req, res) => {
             query += ' WHERE id = $1';
             queryParams.push(id);
         }
-
         const result = await pool.query(query, queryParams);
 
         if (result.rows.length === 0) {
@@ -84,8 +83,23 @@ app.get('/api/quizesWords', async(req, res)=>{
 });
 
 app.get('/api/translationPLNENG', async(req, res)=>{
+         
     try{
-        const result = await pool.query('SELECT * FROM translation_pl_eng;');
+        const { id } = req.query;
+    
+        let query = "SELECT * FROM translation_pl_eng";
+        const queryParams = [];
+    
+        if (id) {
+            query += ' WHERE id = $1';
+            queryParams.push(id);
+        }
+
+        const result = await pool.query(query, queryParams);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Phrase not found" });
+        }
+
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -133,9 +147,22 @@ app.get('/api/usersWords', async(req, res)=>{
     }
 });
 
-app.get('/api/words_polish', async(req, res)=>{
+app.get('/api/wordsPolish', async(req, res)=>{
     try{
-        const result = await pool.query('SELECT * FROM words_polish;');
+        const { id } = req.query;
+        let query = "SELECT * FROM words_polish";
+        const queryParams = [];
+    
+        if (id) {
+            query += ' WHERE id = $1';
+            queryParams.push(id);
+        }
+
+        const result = await pool.query(query, queryParams);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Phrase not found" });
+        }
+
         res.json(result.rows);
     }catch(err){
         console.error(err.message);

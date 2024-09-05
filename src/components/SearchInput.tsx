@@ -1,10 +1,9 @@
 import {
-  Button,
   Flex,
   HStack,
   Input,
   InputGroup,
-  InputLeftElement,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { useRef } from "react";
 import { BsSearch } from "react-icons/bs";
@@ -30,7 +29,7 @@ const SearchInput = ({ onSearch }: Props) => {
   return (
     <Flex
       display="flex"
-      margin="3% 0% 5% 0%"
+      margin="2% 0% 3% 0%"
       alignContent="center"
       justifyContent="center"
     >
@@ -40,7 +39,6 @@ const SearchInput = ({ onSearch }: Props) => {
             boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
             borderRadius="20px"
           >
-            <InputLeftElement children={<BsSearch />}></InputLeftElement>
             <Input
               width="500px"
               ref={ref}
@@ -52,10 +50,10 @@ const SearchInput = ({ onSearch }: Props) => {
               onChange={handleTyping}
               onKeyPress={handleKeyPress}
             ></Input>
+            <Link to="/dSearchResult">
+              <InputRightElement children={<BsSearch />}></InputRightElement>
+            </Link>
           </InputGroup>
-          <Link to="/dSearchResult">
-            <Button marginX="1%">Szukaj</Button>
-          </Link>
         </HStack>
       </form>
     </Flex>
