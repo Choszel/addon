@@ -74,6 +74,18 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+app.get('/api/headers', async(req, res)=>{
+    const {tableName} = req.query;
+
+    try{    
+        const result = await pool.query('SELECT column_name FROM information_schema.columns WHERE table_name = $1', [tableName]);
+        res.json(result.rows.map(row => row.column_name));
+    }catch(err){
+        console.log(err);
+        res.status(500).send("Server error");
+    }
+})
+
 app.get('/api/categories', async(req, res)=>{
     try{
         const result = await pool.query('SELECT * FROM categories;');

@@ -6,8 +6,10 @@ import FishCardsHome from "./pages/FishCardsHome";
 import Layout from "./Layout";
 import NoTranslation from "./pages/NoTranslation";
 import DictionarySearchResult from "./pages/DictionarySearchResult";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./pages/account/Login";
+import Register from "./pages/account/Register";
+import RCategory from "./pages/category/RCategory";
+import CCategory from "./pages/category/CCategory";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route path="/dSearchResult" element={<DictionarySearchResult />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/category" element={<RCategory />} />
+          <Route path="/category/create" element={<CCategory />} />
         </Route>
       </Routes>
     </Router>

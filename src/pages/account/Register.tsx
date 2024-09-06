@@ -1,7 +1,7 @@
 import { Button, HStack, Input } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import postRegister from "../hooks/postRegister";
+import postRegister from "../../hooks/postRegister";
 
 const Register = () => {
   const [nameInput, setNameInput] = useState("");

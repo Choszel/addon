@@ -8,7 +8,7 @@ export interface Category{
 const useCategories = (id?: number) => {
     const config = id ? { params: { id: id } } : {};
   
-    return useData<Category>("/englishWords", config);
+    return useData<Category>("/categories", config);
   };
   
 

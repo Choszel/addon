@@ -1,7 +1,7 @@
 import { Button, HStack, Input } from "@chakra-ui/react";
 import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import postLogin from "../hooks/postLogin";
+import postLogin from "../../hooks/postLogin";
 
 const Login = () => {
   const { isSending, sendLoginForm } = postLogin();
