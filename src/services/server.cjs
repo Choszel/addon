@@ -3,19 +3,76 @@ const cors = require('cors');
 const {Pool} = require('pg');
 const app = express();
 const port = 3001;
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+require('dotenv').config();
+
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'Addon_db',
-    password: '123',
-    port: 5432
+    database: process.env.DATABASE_NAME,
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT
 });
 
 app.use(cors({
     origin: 'http://localhost:5173' 
 }));
 
+app.use(express.urlencoded({ extended: true }));
+
+
+app.post('/api/register', async (req, res) => {
+    const { name, login, password } = req.body;
+
+    try {
+        const userExists = await pool.query('SELECT * FROM users WHERE login = $1', [login]);
+
+        if (userExists.rows.length > 0) {
+            return res.status(400).json({ error: "User already exists" });
+        }
+        const hashedPass = await bcrypt.hash(password, 10);
+
+        await pool.query(
+            'INSERT INTO users (name, login, password, user_type) VALUES ($1, $2, $3, 0)',
+            [name, login, hashedPass]
+        );
+
+        res.status(201).json({ message: "User registered successfully" });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+app.post('/api/login', async (req, res) => {
+    const { login, password } = req.body;
+
+    try {
+        const user = await pool.query('SELECT * FROM users WHERE login = $1', [login]);
+
+        if (user.rows.length === 0) {
+            return res.status(400).json({ error: "Invalid login" });
+        }
+        const validPassword = await bcrypt.compare(password, user.rows[0].password);
+
+        if (!validPassword) {
+            return res.status(400).json({ error: "Invalid password" });
+        }
+
+        const token = jwt.sign(
+            { userId: user.rows[0].id, userType: user.rows[0].user_type }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: '1h' }
+        );
+
+        res.status(201).json({ token });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
 
 app.get('/api/categories', async(req, res)=>{
     try{
