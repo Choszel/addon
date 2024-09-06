@@ -6,11 +6,11 @@ import { Link } from "react-router-dom";
 const Home = () => {
   return (
     <div>
-      <text className="p2">
+      <p className="p2">
         [Nazwa strony] to internetowa aplikacja do nauki języków obcych. Szukasz
         tłumaczenia jakiegoś słowa? A może chcesz rozwiązać jeden z zestawów do
         nauki? Wystarczy wybrać jedną z poniższych opcji!
-      </text>
+      </p>
       <h1 style={{ margin: "3%" }}>Czego teraz potrzebujesz?</h1>
       <HStack
         display="flex"
@@ -19,7 +19,7 @@ const Home = () => {
         marginBottom="3%"
       >
         <Link to="/dictionary" className="gradient_box">
-          <text className="p2">Słownik</text>
+          <p className="p2">Słownik</p>
           <Image
             src={book}
             boxSize={20}
@@ -29,7 +29,7 @@ const Home = () => {
         </Link>
 
         <Link to="/fishCards" className="gradient_box">
-          <text className="p2">Fiszki i gry</text>
+          <p className="p2">Fiszki i gry</p>
           <Image
             src={cards}
             boxSize={20}

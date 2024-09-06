@@ -1,5 +1,11 @@
+import CheckUserType from "../others/CheckUserType";
+
 const FishCardsHome = () => {
-  return <div>FishCardsHome</div>;
+  return (
+    <>
+      <p>{CheckUserType()}</p>
+    </>
+  );
 };
 
 export default FishCardsHome;
