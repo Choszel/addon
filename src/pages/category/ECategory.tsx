@@ -1,21 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import FormTemplate, {
   FormData,
 } from "../../components/crud_templates/CreateTemplate";
-import { useNavigate } from "react-router-dom";
-import postData from "../../hooks/postData";
+import updateData from "../../hooks/updateData";
+import useCategories from "../../hooks/useCategories";
 
-const Index = () => {
+const ECategory = () => {
+  const { id } = useParams<{ id: string }>();
   const [refs, setRefs] = useState<(HTMLInputElement | null)[]>([]);
   const navigate = useNavigate();
-  const { sendData } = postData("/category");
+  const { putData } = updateData("/category");
 
+  const { data: categoryData, isLoading } = useCategories(parseInt(id ?? "0"));
   const handleSave = () => {
     console.log("Refs:", refs);
-    console.log(refs[0]?.value);
     const formData = new URLSearchParams();
+    formData.append("id", id || "");
     formData.append("name", refs[0]?.value ?? "");
-    sendData(formData);
+    putData(formData);
     return navigate("/category");
   };
 
@@ -23,8 +26,16 @@ const Index = () => {
     return navigate("/category");
   };
 
+  useEffect(() => {
+    if (categoryData && refs[0]) {
+      refs[0].value = categoryData[0].name;
+    }
+  }, [categoryData, refs]);
+
+  if (isLoading) return <div>Ładowanie danych...</div>;
+
   const formData: FormData = {
-    header: "Tworzenie Kategorii",
+    header: "Edytowanie Kategorii",
     data: [{ inputName: "Name", inputType: "text", isRequired: true }],
     setRefs: function (): void {},
     onSave: handleSave,
@@ -38,4 +49,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default ECategory;

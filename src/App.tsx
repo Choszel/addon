@@ -10,6 +10,7 @@ import Login from "./pages/account/Login";
 import Register from "./pages/account/Register";
 import RCategory from "./pages/category/RCategory";
 import CCategory from "./pages/category/CCategory";
+import ECategory from "./pages/category/ECategory";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/category" element={<RCategory />} />
           <Route path="/category/create" element={<CCategory />} />
+          <Route path="/category/edit/:id" element={<ECategory />} />
         </Route>
       </Routes>
     </Router>

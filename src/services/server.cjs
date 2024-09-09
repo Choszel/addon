@@ -46,7 +46,48 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-app.post('/api/login', async (req, res) => {
+app.post('/api/category', async (req, res) =>{
+    const { name } = req.body;
+    console.log("App ", name);
+    try{
+        const categoryExists = await pool.query('SELECT * FROM categories WHERE name = $1', [name]);
+        if(categoryExists.rows.length > 0){
+            return res.status(400).json({ error: "Category already exists" });
+        }
+        await pool.query(
+            'INSERT INTO categories(name) VALUES ($1)', [name]
+        );
+        res.status(201).json({ message: "Category added succesfully" });
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+})
+
+app.delete('/api/category', async (req, res) =>{
+    const { id } = req.body;
+    try{
+        const result = await pool.query('DELETE FROM categories WHERE id = $1', [id]);
+        res.status(201).json({message: "Deleted successfully"});
+    }catch(err){
+        console.log(err.message);
+        res.status(500).send("Server error");
+    }
+})
+
+app.put('/api/category', async (req, res) =>{
+    const { id, name } = req.body;
+    console.log(id, " ", name);
+    try{
+        const result = await pool.query('UPDATE categories SET name = $1 WHERE id = $2', [name, id]);
+        res.status(201).json({message: "Updated successfully"})
+    }catch(err){
+        console.log(err.message)
+        res.status(500).send("Server error");
+    }
+})
+
+app.post('/api/login', async (req, res) =>{
     const { login, password } = req.body;
 
     try {
@@ -88,12 +129,12 @@ app.get('/api/headers', async(req, res)=>{
 
 app.get('/api/categories', async(req, res)=>{
     try{
-        const result = await pool.query('SELECT * FROM categories;');
+        const result = await pool.query('SELECT * FROM categories ORDER BY id ASC;');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
         res.status(500).send('Server error');
-    }
+    }   
 });
 
 app.get('/api/difficultyLevel', async(req, res)=>{
