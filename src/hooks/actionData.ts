@@ -2,16 +2,31 @@ import { useState } from "react";
 import {  CanceledError } from "axios";
 import { useToast } from "@chakra-ui/react";
 
-const postData = (endpoint: string) => {
+const actionData = (endpoint: string) => {
   const [isSending, setSending] = useState(false); 
   const toast = useToast();
+
+  const deleteData = (formData: URLSearchParams) => {
+    const method = "DELETE"
+    sendData(formData, method);
+  }
+
+  const postData = (formData: URLSearchParams) => {
+    const method = "POST"
+    sendData(formData, method);
+  }
+  
+  const putData = (formData: URLSearchParams) => {
+    const method = "PUT"
+    sendData(formData, method);
+  }
     
-  const sendData = async (formData: URLSearchParams) => {
+  const sendData = async (formData: URLSearchParams, method: string) => {
     try {
         console.log(formData);
         console.log(formData.toString());
         const response = await fetch("http://localhost:3001/api" + endpoint, {
-        method: "POST",
+        method: method,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
@@ -20,9 +35,9 @@ const postData = (endpoint: string) => {
       });
 
       const responseData = await response.json(); 
-      if (response.status === 201) {
+      if (response.status === 200) {
         toast({
-          title: response.statusText,
+          title: responseData.message,
           status: "success",
           position: "bottom-right",
           duration: 5000,
@@ -52,7 +67,7 @@ const postData = (endpoint: string) => {
     }
   }; 
 
-  return { isSending, sendData };
+  return { isSending, deleteData, postData, putData };
 };
 
-export default postData;
+export default actionData;

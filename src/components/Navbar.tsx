@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import SelectLanguage from "./SelectLanguage";
 import { useContext } from "react";
 import { AuthContext } from "../others/AuthContext";
+import CheckUserType from "../others/CheckUserType";
+import AdminPanel from "./AdminPanel";
 
 const Navbar = () => {
   const authContext = useContext(AuthContext);
@@ -20,6 +22,7 @@ const Navbar = () => {
 
         {authContext && authContext.isLoggedIn ? (
           <>
+            {CheckUserType() == "admin" && <AdminPanel />}
             <Avatar margin="0% 0% 0% 2%" boxSize={6}></Avatar>
             <Button onClick={authContext.logout}>Wyloguj się</Button>
           </>

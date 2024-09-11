@@ -11,6 +11,7 @@ import Register from "./pages/account/Register";
 import RCategory from "./pages/category/RCategory";
 import CCategory from "./pages/category/CCategory";
 import ECategory from "./pages/category/ECategory";
+import RDifficultyLevel from "./pages/difficulty_level/RDifficultyLevel";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/category" element={<RCategory />} />
           <Route path="/category/create" element={<CCategory />} />
           <Route path="/category/edit/:id" element={<ECategory />} />
+          <Route path="/difficultyLevel" element={<RDifficultyLevel />} />
         </Route>
       </Routes>
     </Router>

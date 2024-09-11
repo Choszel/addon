@@ -3,16 +3,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import FormTemplate, {
   FormData,
 } from "../../components/crud_templates/CreateTemplate";
-import updateData from "../../hooks/updateData";
 import useCategories from "../../hooks/useCategories";
+import actionData from "../../hooks/actionData";
 
 const ECategory = () => {
   const { id } = useParams<{ id: string }>();
   const [refs, setRefs] = useState<(HTMLInputElement | null)[]>([]);
   const navigate = useNavigate();
-  const { putData } = updateData("/category");
+  const { putData } = actionData("/category");
 
   const { data: categoryData, isLoading } = useCategories(parseInt(id ?? "0"));
+
   const handleSave = () => {
     console.log("Refs:", refs);
     const formData = new URLSearchParams();

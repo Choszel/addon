@@ -3,19 +3,19 @@ import FormTemplate, {
   FormData,
 } from "../../components/crud_templates/CreateTemplate";
 import { useNavigate } from "react-router-dom";
-import postData from "../../hooks/postData";
+import actionData from "../../hooks/actionData";
 
 const Index = () => {
   const [refs, setRefs] = useState<(HTMLInputElement | null)[]>([]);
   const navigate = useNavigate();
-  const { sendData } = postData("/category");
+  const { postData } = actionData("/category");
 
   const handleSave = () => {
     console.log("Refs:", refs);
     console.log(refs[0]?.value);
     const formData = new URLSearchParams();
     formData.append("name", refs[0]?.value ?? "");
-    sendData(formData);
+    postData(formData);
     return navigate("/category");
   };
 

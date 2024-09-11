@@ -57,7 +57,7 @@ app.post('/api/category', async (req, res) =>{
         await pool.query(
             'INSERT INTO categories(name) VALUES ($1)', [name]
         );
-        res.status(201).json({ message: "Category added succesfully" });
+        res.status(200).json({ message: "Category added succesfully" });
     }catch(err){
         console.error(err.message);
         res.status(500).send("Server error");
@@ -68,7 +68,7 @@ app.delete('/api/category', async (req, res) =>{
     const { id } = req.body;
     try{
         const result = await pool.query('DELETE FROM categories WHERE id = $1', [id]);
-        res.status(201).json({message: "Deleted successfully"});
+        res.status(200).json({message: "Deleted successfully"});
     }catch(err){
         console.log(err.message);
         res.status(500).send("Server error");
@@ -80,7 +80,7 @@ app.put('/api/category', async (req, res) =>{
     console.log(id, " ", name);
     try{
         const result = await pool.query('UPDATE categories SET name = $1 WHERE id = $2', [name, id]);
-        res.status(201).json({message: "Updated successfully"})
+        res.status(200).json({message: "Updated successfully"})
     }catch(err){
         console.log(err.message)
         res.status(500).send("Server error");
@@ -128,8 +128,10 @@ app.get('/api/headers', async(req, res)=>{
 })
 
 app.get('/api/categories', async(req, res)=>{
+    const { id } = req.query;
     try{
-        const result = await pool.query('SELECT * FROM categories ORDER BY id ASC;');
+        const condition = "SELECT * FROM categories WHERE id = " + id + ";";
+        const result = await pool.query(id ? condition : 'SELECT * FROM categories ORDER BY id ASC;');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
