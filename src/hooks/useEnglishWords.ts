@@ -1,5 +1,5 @@
 import useData from "./useData";
-import { DifficultyLevel } from "./useDifficultyLevel";
+import { DifficultyLevel } from "./useDifficultyLevels";
 
 export interface EnglishWord{
     id: number;

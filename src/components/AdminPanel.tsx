@@ -22,8 +22,15 @@ const AdminPanel = () => {
           <Link to="/category">
             <MenuItem>Kategorie</MenuItem>
           </Link>
-          <MenuItem>Kategorie</MenuItem>
-          <MenuItem>Kategorie</MenuItem>
+          <Link to="/difficultyLevel">
+            <MenuItem>Poziomy Trudności</MenuItem>
+          </Link>
+          <Link to="/language">
+            <MenuItem>Języki</MenuItem>
+          </Link>
+          <Link to="/user">
+            <MenuItem>Użytkownicy</MenuItem>
+          </Link>
         </MenuList>
       </Menu>
     </>

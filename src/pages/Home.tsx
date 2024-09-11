@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <div>
       <p className="p2">
-        [Nazwa strony] to internetowa aplikacja do nauki języków obcych. Szukasz
+        Addon to internetowa aplikacja do nauki języków obcych. Szukasz
         tłumaczenia jakiegoś słowa? A może chcesz rozwiązać jeden z zestawów do
         nauki? Wystarczy wybrać jedną z poniższych opcji!
       </p>

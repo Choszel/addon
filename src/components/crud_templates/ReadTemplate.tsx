@@ -17,31 +17,39 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import actionData from "../../hooks/actionData";
 
 export interface TableData<T> {
   title: string;
   headers: string[];
   data: T[];
-  onAdd: () => void;
-  onDelete: (id: number) => void;
-  onEdit: (id: number) => void;
+  canCreate?: boolean;
+  canDelete?: boolean;
+  canEdit?: boolean;
+  routeName?: string;
 }
 
 const ReadTemplate = <T extends object>({
   title,
   headers,
   data,
-  onAdd,
-  onDelete,
-  onEdit,
+  canCreate,
+  canDelete,
+  canEdit,
+  routeName,
 }: TableData<T>) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
+  const { deleteData } = actionData(routeName ?? "");
+  const navigate = useNavigate();
 
   return (
     <>
       <Text>{title}</Text>
-      <Button onClick={onAdd}>Dodaj</Button>
+      {canCreate && (
+        <Button onClick={() => navigate(routeName + "/create")}>Dodaj</Button>
+      )}
       <TableContainer>
         <Table>
           <Thead>
@@ -58,20 +66,28 @@ const ReadTemplate = <T extends object>({
                   <Td key={cellIndex}>{(row as any)[header]} </Td>
                 ))}
                 <Td>
-                  <Button
-                    marginRight="2%"
-                    onClick={() => onEdit((row as any)[headers[0]])}
-                  >
-                    Edytuj
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setSelectedRow((row as any)[headers[0]]);
-                      onOpen();
-                    }}
-                  >
-                    Usuń
-                  </Button>
+                  {canEdit && (
+                    <Button
+                      marginRight="2%"
+                      onClick={() =>
+                        navigate(
+                          routeName + "/edit/" + (row as any)[headers[0]]
+                        )
+                      }
+                    >
+                      Edytuj
+                    </Button>
+                  )}
+                  {canDelete && (
+                    <Button
+                      onClick={() => {
+                        setSelectedRow((row as any)[headers[0]]);
+                        onOpen();
+                      }}
+                    >
+                      Usuń
+                    </Button>
+                  )}
                 </Td>
               </Tr>
             ))}
@@ -79,27 +95,34 @@ const ReadTemplate = <T extends object>({
         </Table>
       </TableContainer>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <ModalBody>
-            Czy na pewno chcesz usunąć rekord o id {selectedRow}?
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              colorScheme="red"
-              mr={3}
-              onClick={() => onDelete(selectedRow ?? -1)}
-            >
-              Usuń
-            </Button>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Anuluj
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      {canDelete && (
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalCloseButton />
+            <ModalBody>
+              Czy na pewno chcesz usunąć rekord o id {selectedRow}?
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                colorScheme="red"
+                mr={3}
+                onClick={() => {
+                  const formData = new URLSearchParams();
+                  formData.append("id", (selectedRow ?? -1).toString());
+                  deleteData(formData);
+                  window.location.reload(); // nie widać po tym toast
+                }}
+              >
+                Usuń
+              </Button>
+              <Button colorScheme="blue" mr={3} onClick={onClose}>
+                Anuluj
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
     </>
   );
 };

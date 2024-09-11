@@ -6,12 +6,16 @@ import FishCardsHome from "./pages/FishCardsHome";
 import Layout from "./Layout";
 import NoTranslation from "./pages/NoTranslation";
 import DictionarySearchResult from "./pages/DictionarySearchResult";
-import Login from "./pages/account/Login";
-import Register from "./pages/account/Register";
+import Login from "./pages/user/Login";
+import Register from "./pages/user/Register";
 import RCategory from "./pages/category/RCategory";
 import CCategory from "./pages/category/CCategory";
 import ECategory from "./pages/category/ECategory";
 import RDifficultyLevel from "./pages/difficulty_level/RDifficultyLevel";
+import RLanguage from "./pages/languages/RLanguage";
+import CLanguage from "./pages/languages/CLanguage";
+import Elanguage from "./pages/languages/Elanguage";
+import RUser from "./pages/user/RUser";
 
 function App() {
   return (
@@ -29,6 +33,10 @@ function App() {
           <Route path="/category/create" element={<CCategory />} />
           <Route path="/category/edit/:id" element={<ECategory />} />
           <Route path="/difficultyLevel" element={<RDifficultyLevel />} />
+          <Route path="/language" element={<RLanguage />} />
+          <Route path="/language/create" element={<CLanguage />} />
+          <Route path="/language/edit/:id" element={<Elanguage />} />
+          <Route path="/user" element={<RUser />} />
         </Route>
       </Routes>
     </Router>

@@ -14,7 +14,7 @@ const Navbar = () => {
     <div>
       <HStack display="flex" marginBottom={6}>
         <Link to="/">
-          <p>Logo</p>
+          <p>Addon</p>
         </Link>
         <Spacer width="50%"></Spacer>
         <SlGlobe size={20} />

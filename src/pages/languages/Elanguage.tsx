@@ -3,23 +3,23 @@ import { useNavigate, useParams } from "react-router-dom";
 import FormTemplate, {
   FormData,
 } from "../../components/crud_templates/CreateTemplate";
-import useCategories from "../../hooks/useCategories";
 import actionData from "../../hooks/actionData";
+import useLanguages from "../../hooks/useLanguages";
 
-const ECategory = () => {
+const Elanguage = () => {
   const { id } = useParams<{ id: string }>();
   const [refs, setRefs] = useState<(HTMLInputElement | null)[]>([]);
   const navigate = useNavigate();
-  const routeName = "/category";
+  const routeName = "/language";
   const { putData } = actionData(routeName);
 
-  const { data: categoryData, isLoading } = useCategories(parseInt(id ?? "0"));
+  const { data, isLoading } = useLanguages(parseInt(id ?? "0"));
 
   const handleSave = () => {
     console.log("Refs:", refs);
     const formData = new URLSearchParams();
     formData.append("id", id || "");
-    formData.append("name", refs[0]?.value ?? "");
+    formData.append("code", refs[0]?.value ?? "");
     putData(formData);
     return navigate(routeName);
   };
@@ -29,16 +29,16 @@ const ECategory = () => {
   };
 
   useEffect(() => {
-    if (categoryData && refs[0]) {
-      refs[0].value = categoryData[0].name;
+    if (data && refs[0]) {
+      refs[0].value = data[0].code;
     }
-  }, [categoryData, refs]);
+  }, [data, refs]);
 
   if (isLoading) return <div>Ładowanie danych...</div>;
 
   const formData: FormData = {
-    title: "Edytowanie Kategorii",
-    headers: [{ inputName: "Name", inputType: "text", isRequired: true }],
+    title: "Edytowanie Języka",
+    headers: [{ inputName: "Code", inputType: "text", isRequired: true }],
     setRefs: function (): void {},
     onSave: handleSave,
     onCancel: handleCancel,
@@ -47,4 +47,4 @@ const ECategory = () => {
   return <FormTemplate {...formData} setRefs={setRefs} />;
 };
 
-export default ECategory;
+export default Elanguage;
