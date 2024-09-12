@@ -12,6 +12,7 @@ const RUser = () => {
     title: "Wykaz użytkowników",
     headers: headers,
     data: data,
+    details: true,
   };
   return <ReadTemplate {...tableData}></ReadTemplate>;
 };

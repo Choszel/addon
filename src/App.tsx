@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import DictionaryHome from "./pages/DictionaryHome";
 import FishCardsHome from "./pages/FishCardsHome";
 import Layout from "./Layout";
-import NoTranslation from "./pages/NoTranslation";
+import NoTranslation from "./pages/missing_phrases/NoTranslation";
 import DictionarySearchResult from "./pages/DictionarySearchResult";
 import Login from "./pages/user/Login";
 import Register from "./pages/user/Register";
@@ -16,6 +16,10 @@ import RLanguage from "./pages/languages/RLanguage";
 import CLanguage from "./pages/languages/CLanguage";
 import Elanguage from "./pages/languages/Elanguage";
 import RUser from "./pages/user/RUser";
+import RMissingPhrases from "./pages/missing_phrases/RMissingPhrases";
+import DetailsMissingPhrases from "./pages/missing_phrases/DetailsMissingPhrases";
+import RWordsPolish from "./pages/words_polish/RWordsPolish";
+import RWordsEnglish from "./pages/words_english/RWordsEnglish";
 
 function App() {
   return (
@@ -37,6 +41,13 @@ function App() {
           <Route path="/language/create" element={<CLanguage />} />
           <Route path="/language/edit/:id" element={<Elanguage />} />
           <Route path="/user" element={<RUser />} />
+          <Route path="/missingPhrases" element={<RMissingPhrases />} />
+          <Route
+            path="/missingPhrases/details/:id"
+            element={<DetailsMissingPhrases />}
+          />
+          <Route path="/wordsPolish" element={<RWordsPolish />} />
+          <Route path="/wordsEnglish" element={<RWordsEnglish />} />
         </Route>
       </Routes>
     </Router>

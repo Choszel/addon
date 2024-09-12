@@ -31,6 +31,15 @@ const AdminPanel = () => {
           <Link to="/user">
             <MenuItem>Użytkownicy</MenuItem>
           </Link>
+          <Link to="/missingPhrases">
+            <MenuItem>Brakujące frazy</MenuItem>
+          </Link>
+          <Link to="/wordsPolish">
+            <MenuItem>Polskie słowa</MenuItem>
+          </Link>
+          <Link to="/wordsEnglish">
+            <MenuItem>Angielskie słowa</MenuItem>
+          </Link>
         </MenuList>
       </Menu>
     </>

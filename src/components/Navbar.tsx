@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 import SelectLanguage from "./SelectLanguage";
 import { useContext } from "react";
 import { AuthContext } from "../others/AuthContext";
-import CheckUserType from "../others/CheckUserType";
 import AdminPanel from "./AdminPanel";
+import useTokenData from "../others/useTokenData";
 
 const Navbar = () => {
   const authContext = useContext(AuthContext);
+  const { CheckUserType } = useTokenData();
 
   return (
     <div>

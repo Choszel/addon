@@ -1,5 +1,5 @@
 import { HStack } from "@chakra-ui/react";
-import useEnglishWords from "../hooks/useEnglishWords";
+import useEnglishWords from "../hooks/useWordsEnglish";
 import SelectLanguage from "../components/SelectLanguage";
 import SearchInput from "../components/SearchInput";
 import { useState } from "react";

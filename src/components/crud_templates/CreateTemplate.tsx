@@ -8,13 +8,24 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Select,
   Text,
 } from "@chakra-ui/react";
 
+interface Props {
+  id: number;
+  value: string;
+}
+
 export interface FormData {
   title: string;
-  headers: { inputName: string; inputType: string; isRequired: boolean }[];
-  setRefs: (refs: (HTMLInputElement | null)[]) => void;
+  headers: {
+    inputName: string;
+    inputType: string;
+    isRequired: boolean;
+    data?: Props[];
+  }[];
+  setRefs: (refs: (HTMLInputElement | HTMLSelectElement | null)[]) => void;
   onSave: () => void;
   onCancel: () => void;
 }
@@ -26,7 +37,7 @@ const FormTemplate = ({
   onSave,
   onCancel,
 }: FormData) => {
-  const localRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const localRefs = useRef<(HTMLInputElement | HTMLSelectElement | null)[]>([]);
   const [errors, setErrors] = useState<boolean[]>(
     Array(headers.length).fill(true)
   );
@@ -65,6 +76,18 @@ const FormTemplate = ({
                   <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
+            ) : input.inputType === "select" ? (
+              <Select
+                ref={(el) => {
+                  localRefs.current[index] = el;
+                }}
+              >
+                {input.data?.map((option) => (
+                  <option value={option.id} key={option.id}>
+                    {option.value}
+                  </option>
+                ))}
+              </Select>
             ) : (
               <Input
                 ref={(el) => {

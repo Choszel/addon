@@ -109,7 +109,7 @@ app.post('/api/category', async (req, res) =>{
         await pool.query(
             'INSERT INTO categories(name) VALUES ($1)', [name]
         );
-        res.status(200).json({ message: "Category added succesfully" });
+        res.status(200).json({ message: "Category added successfully" });
     }catch(err){
         console.error(err.message);
         res.status(500).send("Server error");
@@ -170,7 +170,7 @@ app.post('/api/language', async (req, res) =>{
             return res.status(400).json({ error: "Language already exists" });
         }
         await pool.query('INSERT INTO languages(code) VALUES ($1);', [code]);
-        res.status(200).json({ message: "Language added succesfully" });
+        res.status(200).json({ message: "Language added successfully" });
     }catch(err){
         console.error(err.message);
         res.status(500).send("Server error");
@@ -224,30 +224,123 @@ app.get('/api/missingPhrases', async(req, res)=>{
     }   
 })
 
-app.get('/api/englishWords', async (req, res) => {
-    try {
-        const { id } = req.query;
-
-        let query = 'SELECT * FROM english_words';
-        const queryParams = [];
-
-        if (id) {
-            query += ' WHERE id = $1';
-            queryParams.push(id);
-        }
-        const result = await pool.query(query, queryParams);
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: "Phrase not found" });
-        }
-
+app.get('/api/missingPhrasesDetailed', async(req, res)=>{
+    const { id } = req.query;
+    try{
+        const condition = 'select m.id, code, login as login, phrase, definition, c.name as category, level ' 
+            + 'from missing_phrases m, languages l, users u, categories c, difficulty_levels dl '
+            + 'where m.languages_id=l.id and m.users_id=u.id and m.category=c.id and m.difficulty_level=dl.id ' 
+            + 'AND m.id = ' + id + ';'
+        const result = await pool.query(id ? condition : 'select m.id, code, login as login, phrase, definition, c.name as category, level ' 
+            + 'from missing_phrases m, languages l, users u, categories c, difficulty_levels dl '
+            + 'where m.languages_id=l.id and m.users_id=u.id and m.category=c.id and m.difficulty_level=dl.id ' 
+            + 'ORDER BY m.id ASC;');
         res.json(result.rows);
-    } catch (err) {
+    }catch(err){
         console.error(err.message);
         res.status(500).send('Server error');
+    }   
+})
+
+app.post('/api/missingPhrases', async (req, res) =>{
+    const { phrase, definition, languages_id, users_id, difficulty_level, category } = req.body;
+    console.log("App ", phrase, users_id);
+    try{
+        const phraseExists = await pool.query('SELECT * FROM missing_phrases WHERE phrase = $1', [phrase]);
+        if(phraseExists.rows.length > 0){
+            return res.status(400).json({ error: "Phrase already reported" });
+        }
+        await pool.query(
+            'INSERT INTO missing_phrases(phrase, definition, languages_id, users_id, difficulty_level, category) VALUES ($1, $2, $3, $4, $5, $6)', [phrase, definition, languages_id, users_id, difficulty_level, category]
+        );
+        res.status(200).json({ message: "Phrase reported successfully" });
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send("Server error");
     }
+})
+
+app.delete('/api/missingPhrases', async (req, res) =>{
+    const { id } = req.body;
+    console.log(id);
+    try{
+        const result = await pool.query('DELETE FROM missing_phrases WHERE id = $1', [id]);
+        res.status(200).json({message: "Deleted successfully"});
+    }catch(err){
+        console.log(err.message);
+        res.status(500).send("Server error");
+    }
+})
+
+app.get('/api/wordsPolish', async(req, res)=>{
+    const { id } = req.query;
+    try{
+        const condition = "SELECT * FROM words_polish WHERE id = " + id + ";";
+        const result = await pool.query(id ? condition : 'SELECT * FROM words_polish ORDER BY id ASC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }  
 });
 
+app.get('/api/wordsPolishDetailed', async(req, res)=>{
+    const { id } = req.query;
+    try{
+        const condition = 'SELECT wp.id, word, definition, photo, c.name as category '
+            + 'FROM words_polish wp, categories c '
+            + 'WHERE wp.categories_id=c.id AND wp.id = ' + id + ';'
+        const result = await pool.query(id ? condition : 
+            'SELECT wp.id, word, definition, photo, c.name as category '
+            + 'FROM words_polish wp, categories c '
+            + 'WHERE wp.categories_id=c.id ORDER BY wp.id ASC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }  
+});
+
+app.get('/api/wordsEnglish', async (req, res) => {
+    const { id } = req.query;
+    try{
+        const condition = "SELECT * FROM words_english WHERE id = " + id + ";";
+        const result = await pool.query(id ? condition : 'SELECT * FROM words_english ORDER BY id ASC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.get('/api/wordsEnglishDetailed', async(req, res)=>{
+    const { id } = req.query;
+    try{
+        const condition = 'SELECT we.id, word, definition, dl.level as level, c.name as category '
+            + 'FROM words_english we, categories c, difficulty_levels dl '
+            + 'WHERE we.categories_id=c.id and we.difficultylevel_id=dl.id AND id = ' + id + ';'
+        const result = await pool.query(id ? condition : 
+            'SELECT we.id, word, definition, dl.level as level, c.name as category '
+            + 'FROM words_english we, categories c, difficulty_levels dl '
+            + 'WHERE we.categories_id=c.id and we.difficultylevel_id=dl.id ORDER BY we.id ASC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }  
+});
+
+app.get('/api/translationPLNENG', async(req, res)=>{
+    const { id } = req.query;
+    try{
+        const condition = "SELECT * FROM translations_pl_eng WHERE id = " + id + ";";
+        const result = await pool.query(id ? condition : 'SELECT * FROM translations_pl_eng ORDER BY id ASC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
 
 app.get('/api/quizes', async(req, res)=>{
     try{
@@ -262,31 +355,6 @@ app.get('/api/quizes', async(req, res)=>{
 app.get('/api/quizesWords', async(req, res)=>{
     try{
         const result = await pool.query('SELECT * FROM quizes_words;');
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Server error');
-    }
-});
-
-app.get('/api/translationPLNENG', async(req, res)=>{
-         
-    try{
-        const { id } = req.query;
-    
-        let query = "SELECT * FROM translation_pl_eng";
-        const queryParams = [];
-    
-        if (id) {
-            query += ' WHERE id = $1';
-            queryParams.push(id);
-        }
-
-        const result = await pool.query(query, queryParams);
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: "Phrase not found" });
-        }
-
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -323,30 +391,6 @@ app.get('/api/usersWords', async(req, res)=>{
         res.status(500).send('Server error');
     }
 });
-
-app.get('/api/wordsPolish', async(req, res)=>{
-    try{
-        const { id } = req.query;
-        let query = "SELECT * FROM words_polish";
-        const queryParams = [];
-    
-        if (id) {
-            query += ' WHERE id = $1';
-            queryParams.push(id);
-        }
-
-        const result = await pool.query(query, queryParams);
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: "Phrase not found" });
-        }
-
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Server error');
-    }
-});
-
 
 app.listen(port, ()=>{
     console.log(`Server is running on http://localhost:${port}`);

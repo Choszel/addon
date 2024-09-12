@@ -27,6 +27,7 @@ export interface TableData<T> {
   canCreate?: boolean;
   canDelete?: boolean;
   canEdit?: boolean;
+  details?: boolean;
   routeName?: string;
 }
 
@@ -37,6 +38,7 @@ const ReadTemplate = <T extends object>({
   canCreate,
   canDelete,
   canEdit,
+  details,
   routeName,
 }: TableData<T>) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -63,9 +65,25 @@ const ReadTemplate = <T extends object>({
             {data.map((row, rowIndex) => (
               <Tr key={rowIndex}>
                 {headers.map((header, cellIndex) => (
-                  <Td key={cellIndex}>{(row as any)[header]} </Td>
+                  <Td key={cellIndex}>
+                    {(row as any)[header]?.length > 20
+                      ? (row as any)[header].substring(0, 20) + "..."
+                      : (row as any)[header]}{" "}
+                  </Td>
                 ))}
                 <Td>
+                  {details && (
+                    <Button
+                      marginRight="2%"
+                      onClick={() =>
+                        navigate(
+                          routeName + "/details/" + (row as any)[headers[0]]
+                        )
+                      }
+                    >
+                      Szczegóły
+                    </Button>
+                  )}
                   {canEdit && (
                     <Button
                       marginRight="2%"

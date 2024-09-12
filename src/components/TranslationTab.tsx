@@ -1,4 +1,4 @@
-import usePolishWords from "../hooks/usePolishWords";
+import usePolishWords from "../hooks/useWordsPolish";
 
 interface Props {
   id: number;
