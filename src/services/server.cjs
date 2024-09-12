@@ -318,7 +318,7 @@ app.get('/api/wordsEnglishDetailed', async(req, res)=>{
     try{
         const condition = 'SELECT we.id, word, definition, dl.level as level, c.name as category '
             + 'FROM words_english we, categories c, difficulty_levels dl '
-            + 'WHERE we.categories_id=c.id and we.difficultylevel_id=dl.id AND id = ' + id + ';'
+            + 'WHERE we.categories_id=c.id and we.difficultylevel_id=dl.id AND we.id = ' + id + ';'
         const result = await pool.query(id ? condition : 
             'SELECT we.id, word, definition, dl.level as level, c.name as category '
             + 'FROM words_english we, categories c, difficulty_levels dl '
@@ -330,17 +330,64 @@ app.get('/api/wordsEnglishDetailed', async(req, res)=>{
     }  
 });
 
-app.get('/api/translationPLNENG', async(req, res)=>{
+app.get('/api/translationPLNENGDetailed', async(req, res)=>{
     const { id } = req.query;
     try{
-        const condition = "SELECT * FROM translations_pl_eng WHERE id = " + id + ";";
-        const result = await pool.query(id ? condition : 'SELECT * FROM translations_pl_eng ORDER BY id ASC;');
+        const condition = 'SELECT tr.id, wp.word as word_polish, we.word as word_english '
+            + 'FROM translations_pl_eng tr, words_polish wp, words_english we '
+            + 'WHERE tr.words_polish_id=wp.id and tr.words_english_id=we.id AND tr.id = ' + id + ';';
+        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word, we.word '
+            + 'FROM translations_pl_eng tr, words_polish wp, words_english we '
+            + 'WHERE tr.words_polish_id=wp.id and tr.words_english_id=we.id ORDER BY id ASC;');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
         res.status(500).send('Server error');
     } 
 });
+
+app.get('/api/translationPLNENG/pln', async(req, res)=>{
+    const { id } = req.query;
+    try{
+        const condition = 'SELECT tr.id, we.word as word '
+            + 'FROM translations_pl_eng tr, words_english we '
+            + 'WHERE tr.words_english_id=we.id AND tr.words_polish_id = ' + id + ';';
+        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word, we.word '
+            + 'FROM translations_pl_eng tr, words_polish wp, words_english we '
+            + 'WHERE tr.words_polish_id=wp.id and tr.words_english_id=we.id ORDER BY id ASC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.get('/api/translationPLNENG/eng', async(req, res)=>{
+    const { id } = req.query;
+    try{
+        const condition = 'SELECT tr.id, wp.word as word '
+            + 'FROM translations_pl_eng tr, words_polish wp '
+            + 'WHERE tr.words_polish_id=wp.id AND tr.words_english_id = ' + id + ';';
+        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word, we.word '
+            + 'FROM translations_pl_eng tr, words_polish wp, words_english we '
+            + 'WHERE tr.words_polish_id=wp.id and tr.words_english_id=we.id ORDER BY id ASC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.delete('/api/translationPLNENG', async (req, res) =>{
+    const { id } = req.body;
+    try{
+        const result = await pool.query('DELETE FROM translations_pl_eng WHERE id = $1', [id]);
+        res.status(200).json({message: "Deleted successfully"});
+    }catch(err){
+        console.log(err.message);
+        res.status(500).send("Server error");
+    }
+})
 
 app.get('/api/quizes', async(req, res)=>{
     try{

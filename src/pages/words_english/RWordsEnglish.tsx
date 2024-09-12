@@ -17,6 +17,8 @@ const RWordsEnglish = () => {
           ? "category"
           : e === "difficultylevel_id"
           ? "level"
+          : e === "definition"
+          ? ""
           : e
       );
       setUpdatedHeaders(newHeaders);
@@ -30,7 +32,8 @@ const RWordsEnglish = () => {
     canCreate: true,
     canDelete: true,
     canEdit: true,
-    routeName: "/wordsPolish",
+    details: true,
+    routeName: "/wordsEnglish",
   };
 
   return <ReadTemplate {...tableData}></ReadTemplate>;

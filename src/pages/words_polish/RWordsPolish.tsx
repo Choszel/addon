@@ -26,6 +26,7 @@ const RWordsPolish = () => {
     canCreate: true,
     canDelete: true,
     canEdit: true,
+    details: true,
     routeName: "/wordsPolish",
   };
 

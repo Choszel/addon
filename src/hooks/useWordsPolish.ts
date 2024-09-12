@@ -3,7 +3,9 @@ import useData from "./useData";
 export interface PolishWord{
     id: number;
     word: string;
-    categories_id: number;
+    definition: string;
+    photo: string | null;
+    category: string;
 }
 
 const useWordsPolish = (id?: number) => {

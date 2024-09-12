@@ -20,6 +20,8 @@ import RMissingPhrases from "./pages/missing_phrases/RMissingPhrases";
 import DetailsMissingPhrases from "./pages/missing_phrases/DetailsMissingPhrases";
 import RWordsPolish from "./pages/words_polish/RWordsPolish";
 import RWordsEnglish from "./pages/words_english/RWordsEnglish";
+import DetailsWordsPolish from "./pages/words_polish/DetailsWordsPolish";
+import DetailsWordsEnglish from "./pages/words_english/DetailsWordsEnglish";
 
 function App() {
   return (
@@ -47,7 +49,15 @@ function App() {
             element={<DetailsMissingPhrases />}
           />
           <Route path="/wordsPolish" element={<RWordsPolish />} />
+          <Route
+            path="/wordsPolish/details/:id"
+            element={<DetailsWordsPolish />}
+          />
           <Route path="/wordsEnglish" element={<RWordsEnglish />} />
+          <Route
+            path="/wordsEnglish/details/:id"
+            element={<DetailsWordsEnglish />}
+          />
         </Route>
       </Routes>
     </Router>

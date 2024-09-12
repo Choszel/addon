@@ -4,8 +4,8 @@ export interface EnglishWord{
     id: number;
     word: string;
     definition: string;
-    difficultylevel_id: number;
-    categories_id: number;
+    level: string;
+    category: string;
 }
 
 const useWordsEnglish = (id?: number) => {

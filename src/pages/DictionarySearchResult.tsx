@@ -7,18 +7,18 @@ import useTranslationPL_ENG from "../hooks/useTranslationPL_ENG";
 import TranslationTab from "../components/TranslationTab";
 
 const DictionarySearchResult = () => {
-  const { data, error, isLoading, isFetching } = useEnglishWords(1);
-  const {
-    data: translation,
-    error: translationError,
-    isLoading: loadingTranslation,
-    isFetching: fetchingTranslation,
-  } = useTranslationPL_ENG(1);
+  // const { data, error, isLoading, isFetching } = useEnglishWords(1);
+  // const {
+  //   data: translation,
+  //   error: translationError,
+  //   isLoading: loadingTranslation,
+  //   isFetching: fetchingTranslation,
+  // } = useTranslationPL_ENG(1);
   const [searchText, setSearchText] = useState<string | null>(null);
 
   return (
     <>
-      <HStack>
+      {/* <HStack>
         <p>Wybrany język:</p>
         <SelectLanguage />
         <SearchInput
@@ -30,7 +30,7 @@ const DictionarySearchResult = () => {
         {translation.map((element) => (
           <TranslationTab id={element.words_polish_id}></TranslationTab>
         ))}
-      </ul>
+      </ul> */}
     </>
   );
 };
