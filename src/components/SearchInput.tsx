@@ -5,25 +5,68 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { useRef } from "react";
+import { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { useDebounce } from "use-debounce";
+import SearchResultList from "./SearchResultList";
 
 interface Props {
-  onSearch: (searchText: string) => void;
+  onSearch: (id: number, searchText: string) => void;
+  language: string;
 }
 
-const SearchInput = ({ onSearch }: Props) => {
-  const ref = useRef<HTMLInputElement>(null);
+export interface WordsLike {
+  id: number;
+  word: string;
+}
 
-  const handleTyping = () => {
-    event?.preventDefault();
-    onSearch(ref.current?.value ?? "");
-  };
+const SearchInput = ({ onSearch, language }: Props) => {
+  const [words, setWords] = useState<WordsLike[]>();
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [debounceSearchInput] = useDebounce(searchValue, 1000);
+  const [endpoint, setEndpoint] = useState<string>();
+
+  useEffect(() => {
+    switch (language) {
+      case "ENG":
+        setEndpoint("wordsEnglish");
+        break;
+      default:
+        setEndpoint("wordsPolish");
+        break;
+    }
+  }, [language]);
+
+  useEffect(() => {
+    const getWords = async () => {
+      if (debounceSearchInput.trim() === "") {
+        setWords([]);
+        return;
+      }
+      try {
+        const response = await fetch(
+          "http://localhost:3001/api/" +
+            endpoint +
+            "/word?word=" +
+            debounceSearchInput
+        );
+        const data = await response.json();
+        setWords(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getWords();
+  }, [debounceSearchInput, language]);
 
   const handleKeyPress = (event: { key: string }) => {
     if (event.key === "Enter") {
+      if (words) onSearch(words[0].id, words[0].word);
     }
+  };
+
+  const handleResultClick = (id: number, word: string) => {
+    onSearch(id, word);
   };
 
   return (
@@ -35,26 +78,35 @@ const SearchInput = ({ onSearch }: Props) => {
     >
       <form>
         <HStack>
+          (
           <InputGroup
             boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
             borderRadius="20px"
           >
             <Input
               width="500px"
-              ref={ref}
               borderRadius={20}
               border="0px"
               placeholder="Wpisz szukaną frazę tutaj..."
               color="var(--neutral1)"
               focusBorderColor="var(--primary)"
-              onChange={handleTyping}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
               onKeyPress={handleKeyPress}
-            ></Input>
-            <Link to="/dSearchResult">
-              <InputRightElement children={<BsSearch />}></InputRightElement>
-            </Link>
+            />
+            <InputRightElement
+              children={<BsSearch />}
+              onClick={() => handleKeyPress({ key: "Enter" })}
+            />
           </InputGroup>
+          )
         </HStack>
+        {words && (
+          <SearchResultList
+            results={words ?? null}
+            listElementClicked={handleResultClick}
+          />
+        )}
       </form>
     </Flex>
   );

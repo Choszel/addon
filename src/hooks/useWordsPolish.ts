@@ -8,11 +8,21 @@ export interface PolishWord{
     category: string;
 }
 
-const useWordsPolish = (id?: number) => {
+const useWordsPolish = () => {
+  const fetchWords = (id?: number) =>{
     const config = id ? { params: { id: id } } : {};
   
     return useData<PolishWord>("/wordsPolishDetailed", config);
-  };
+  }
+
+  const fetchWordsByWord = (word?: string, category?: number) =>{
+    const config = word ? category ? { params: { word: word, category: category } } : {} : {};
+  
+    return useData<PolishWord>("/wordsPolishByWord", config);
+  }
+
+  return {fetchWords, fetchWordsByWord};
+};
   
 
 export default useWordsPolish;

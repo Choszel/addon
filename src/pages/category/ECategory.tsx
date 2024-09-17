@@ -8,7 +8,9 @@ import actionData from "../../hooks/actionData";
 
 const ECategory = () => {
   const { id } = useParams<{ id: string }>();
-  const [refs, setRefs] = useState<(HTMLInputElement | null)[]>([]);
+  const [refs, setRefs] = useState<
+    (HTMLInputElement | HTMLSelectElement | null)[]
+  >([]);
   const navigate = useNavigate();
   const routeName = "/category";
   const { putData } = actionData(routeName);

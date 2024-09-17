@@ -7,13 +7,15 @@ import useWordsPolish, { PolishWord } from "../../hooks/useWordsPolish";
 
 const RWordsPolish = () => {
   const { data: headers } = useHeaders("words_polish");
-  const { data } = useWordsPolish();
+  const { fetchWords } = useWordsPolish();
+  const { data } = fetchWords();
+
   const [updatedHeaders, setUpdatedHeaders] = useState<string[]>([]);
 
   useEffect(() => {
     if (headers) {
       const newHeaders = headers.map((e) =>
-        e === "categories_id" ? "category" : e
+        e === "categories_id" ? "category" : e === "photo" ? "" : e
       );
       setUpdatedHeaders(newHeaders);
     }

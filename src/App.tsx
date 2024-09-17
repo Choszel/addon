@@ -22,6 +22,11 @@ import RWordsPolish from "./pages/words_polish/RWordsPolish";
 import RWordsEnglish from "./pages/words_english/RWordsEnglish";
 import DetailsWordsPolish from "./pages/words_polish/DetailsWordsPolish";
 import DetailsWordsEnglish from "./pages/words_english/DetailsWordsEnglish";
+import EWordsPolish from "./pages/words_polish/EWordsPolish";
+import EWordsEnglish from "./pages/words_english/EWordsEnglish";
+import CWordsPolish from "./pages/words_polish/CWordsPolish";
+import CWordsEnglish from "./pages/words_english/CWordsEnglish";
+import UserProfile from "./pages/user/UserProfile";
 
 function App() {
   return (
@@ -42,22 +47,28 @@ function App() {
           <Route path="/language" element={<RLanguage />} />
           <Route path="/language/create" element={<CLanguage />} />
           <Route path="/language/edit/:id" element={<Elanguage />} />
-          <Route path="/user" element={<RUser />} />
           <Route path="/missingPhrases" element={<RMissingPhrases />} />
           <Route
             path="/missingPhrases/details/:id"
             element={<DetailsMissingPhrases />}
           />
           <Route path="/wordsPolish" element={<RWordsPolish />} />
+          <Route path="/wordsPolish/create" element={<CWordsPolish />} />
+          <Route path="/wordsPolish/edit/:id" element={<EWordsPolish />} />
           <Route
             path="/wordsPolish/details/:id"
             element={<DetailsWordsPolish />}
           />
           <Route path="/wordsEnglish" element={<RWordsEnglish />} />
+          <Route path="/wordsEnglish/create" element={<CWordsEnglish />} />
+          <Route path="/wordsEnglish/edit/:id" element={<EWordsEnglish />} />
+
           <Route
             path="/wordsEnglish/details/:id"
             element={<DetailsWordsEnglish />}
           />
+          <Route path="/user" element={<RUser />} />
+          <Route path="/user/:login" element={<UserProfile />} />
         </Route>
       </Routes>
     </Router>

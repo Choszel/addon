@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, ReactNode } from "react";
 import {
   Button,
   HStack,
@@ -28,6 +28,7 @@ export interface FormData {
   setRefs: (refs: (HTMLInputElement | HTMLSelectElement | null)[]) => void;
   onSave: () => void;
   onCancel: () => void;
+  others?: ReactNode;
 }
 
 const FormTemplate = ({
@@ -36,6 +37,7 @@ const FormTemplate = ({
   setRefs,
   onSave,
   onCancel,
+  others,
 }: FormData) => {
   const localRefs = useRef<(HTMLInputElement | HTMLSelectElement | null)[]>([]);
   const [errors, setErrors] = useState<boolean[]>(
@@ -109,7 +111,8 @@ const FormTemplate = ({
           )}
         </div>
       ))}
-      <HStack>
+      {others}
+      <HStack marginY="5%">
         <Button
           onClick={() => {
             const errorId = errors.findIndex(

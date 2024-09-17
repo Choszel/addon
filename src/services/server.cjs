@@ -284,6 +284,18 @@ app.get('/api/wordsPolish', async(req, res)=>{
     }  
 });
 
+app.get('/api/wordsPolish/word', async (req, res) => {
+    const { word } = req.query;
+    try{
+        if(!word)return;
+        const result = await pool.query("SELECT id, word FROM words_polish WHERE word like '%" + word + "%';");
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
 app.get('/api/wordsPolishDetailed', async(req, res)=>{
     const { id } = req.query;
     try{
@@ -301,11 +313,81 @@ app.get('/api/wordsPolishDetailed', async(req, res)=>{
     }  
 });
 
+app.get('/api/wordsPolishByWord', async(req, res)=>{
+    const { word, category } = req.query;
+    try{
+        const condition = "SELECT * FROM words_polish WHERE word = '" + word + "' AND categories_id = " + category + ";";
+        const result = await pool.query(id ? condition : 'SELECT * FROM words_polish ORDER BY id ASC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }  
+});
+
+app.delete('/api/wordsPolish', async (req, res) =>{
+    const { id } = req.body;
+    console.log(id);
+    try{
+        const result = await pool.query('DELETE FROM words_polish WHERE id = $1', [id]);
+        res.status(200).json({message: "Deleted successfully"});
+    }catch(err){
+        console.log(err.message);
+        res.status(500).send("Server error");
+    }
+})
+
+app.put('/api/wordsPolish', async (req, res) =>{
+    const { id, word, definition, categories_id, photo } = req.body;
+    console.log(id, " ", word);
+    try{
+        const result = await pool.query('UPDATE words_polish SET word = $2, definition = $3, categories_id = $4, photo = $5 WHERE id = $1', [id, word, definition, categories_id, photo]);
+        res.status(200).json({message: "Updated successfully"})
+    }catch(err){
+        console.log(err.message)
+        res.status(500).send("Server error");
+    }
+})
+
+app.post('/api/wordsPolish', async (req, res) => {
+    const { word, categories_id, definition, photo } = req.body;
+    console.log("App ", word, categories_id);
+    
+    try {
+        const phraseExists = await pool.query('SELECT * FROM words_polish WHERE word = $1 AND categories_id = $2', [word, categories_id]);
+        if (phraseExists.rows.length > 0) {
+            return res.status(400).json({ error: "Phrase already exists" });
+        }
+        const insertResult = await pool.query('INSERT INTO words_polish(word, categories_id, definition, photo) VALUES ($1, $2, $3, $4) RETURNING id', 
+            [word, categories_id, definition, photo]);
+        
+        const newWordId = insertResult.rows[0].id; 
+
+        res.json({ id: newWordId }); 
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+});
+
+
 app.get('/api/wordsEnglish', async (req, res) => {
     const { id } = req.query;
     try{
         const condition = "SELECT * FROM words_english WHERE id = " + id + ";";
         const result = await pool.query(id ? condition : 'SELECT * FROM words_english ORDER BY id ASC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.get('/api/wordsEnglish/word', async (req, res) => {
+    const { word } = req.query;
+    try{
+        if(!word)return;
+        const result = await pool.query("SELECT id, word FROM words_english WHERE word like '%" + word + "%';");
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -328,6 +410,51 @@ app.get('/api/wordsEnglishDetailed', async(req, res)=>{
         console.error(err.message);
         res.status(500).send('Server error');
     }  
+});
+
+app.delete('/api/wordsEnglish', async (req, res) =>{
+    const { id } = req.body;
+    console.log(id);
+    try{
+        const result = await pool.query('DELETE FROM words_english WHERE id = $1', [id]);
+        res.status(200).json({message: "Deleted successfully"});
+    }catch(err){
+        console.log(err.message);
+        res.status(500).send("Server error");
+    }
+})
+
+app.put('/api/wordsEnglish', async (req, res) =>{
+    const { id, word, definition, difficultylevel_id, categories_id } = req.body;
+    console.log(id, " ", word);
+    try{
+        const result = await pool.query('UPDATE words_english SET word = $2, definition = $3, difficultylevel_id = $4, categories_id = $5 WHERE id = $1', [id, word, definition, difficultylevel_id, categories_id]);
+        res.status(200).json({message: "Updated successfully"})
+    }catch(err){
+        console.log(err.message)
+        res.status(500).send("Server error");
+    }
+})
+
+app.post('/api/wordsEnglish', async (req, res) => {
+    const { word, definition, difficultylevel_id, categories_id } = req.body;
+    console.log("App ", word, categories_id);
+    
+    try {
+        const phraseExists = await pool.query('SELECT * FROM words_english WHERE word = $1 AND categories_id = $2', [word, categories_id]);
+        if (phraseExists.rows.length > 0) {
+            return res.status(400).json({ error: "Phrase already exists" });
+        }
+        const insertResult = await pool.query('INSERT INTO words_english(word, definition, difficultylevel_id, categories_id) VALUES ($1, $2, $3, $4) RETURNING id', 
+            [word, definition, difficultylevel_id, categories_id]);
+        
+        const newWordId = insertResult.rows[0].id; 
+
+        res.json({ id: newWordId }); 
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
 });
 
 app.get('/api/translationPLNENGDetailed', async(req, res)=>{
@@ -385,6 +512,24 @@ app.delete('/api/translationPLNENG', async (req, res) =>{
         res.status(200).json({message: "Deleted successfully"});
     }catch(err){
         console.log(err.message);
+        res.status(500).send("Server error");
+    }
+})
+
+app.post('/api/translationPLNENG', async (req, res) =>{
+    const { words_polish_id, words_english_id } = req.body;
+    console.log("App ", words_polish_id, words_english_id);
+    try{
+        const phraseExists = await pool.query('SELECT * FROM translations_pl_eng WHERE words_polish_id = $1 AND words_english_id = $2', [words_polish_id, words_english_id]);
+        if(phraseExists.rows.length > 0){
+            return res.status(400).json({ error: "Translation already exists" });
+        }
+        await pool.query(
+            'INSERT INTO translations_pl_eng(words_polish_id, words_english_id) VALUES ($1, $2)', [words_polish_id, words_english_id]
+        );
+        res.status(200).json({ message: "Translation added successfully" });
+    }catch(err){
+        console.error(err.message);
         res.status(500).send("Server error");
     }
 })

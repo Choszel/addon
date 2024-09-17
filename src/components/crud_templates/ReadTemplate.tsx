@@ -16,7 +16,7 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import actionData from "../../hooks/actionData";
 
@@ -29,6 +29,7 @@ export interface TableData<T> {
   canEdit?: boolean;
   details?: boolean;
   routeName?: string;
+  others?: ReactNode;
 }
 
 const ReadTemplate = <T extends object>({
@@ -40,6 +41,7 @@ const ReadTemplate = <T extends object>({
   canEdit,
   details,
   routeName,
+  others,
 }: TableData<T>) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
@@ -112,6 +114,7 @@ const ReadTemplate = <T extends object>({
           </Tbody>
         </Table>
       </TableContainer>
+      {others}
 
       {canDelete && (
         <Modal isOpen={isOpen} onClose={onClose}>

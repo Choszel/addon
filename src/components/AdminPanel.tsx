@@ -28,9 +28,6 @@ const AdminPanel = () => {
           <Link to="/language">
             <MenuItem>Języki</MenuItem>
           </Link>
-          <Link to="/user">
-            <MenuItem>Użytkownicy</MenuItem>
-          </Link>
           <Link to="/missingPhrases">
             <MenuItem>Brakujące frazy</MenuItem>
           </Link>
@@ -39,6 +36,9 @@ const AdminPanel = () => {
           </Link>
           <Link to="/wordsEnglish">
             <MenuItem>Angielskie słowa</MenuItem>
+          </Link>
+          <Link to="/user">
+            <MenuItem>Użytkownicy</MenuItem>
           </Link>
         </MenuList>
       </Menu>

@@ -15,7 +15,8 @@ const DictionaryHome = () => {
         <SelectLanguage />
       </HStack>
       <SearchInput
-        onSearch={(searchText) => setSearchText(searchText)}
+        onSearch={(id, searchText) => setSearchText(searchText)}
+        language={""}
       ></SearchInput>
       <Button bgColor="var(--honeydew)">Losuj frazę</Button>
       <HStack display="flex" justifyContent="center" spacing={10} marginY="4%">

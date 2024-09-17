@@ -6,7 +6,9 @@ import { useNavigate } from "react-router-dom";
 import actionData from "../../hooks/actionData";
 
 const CLanguage = () => {
-  const [refs, setRefs] = useState<(HTMLInputElement | null)[]>([]);
+  const [refs, setRefs] = useState<
+    (HTMLInputElement | HTMLSelectElement | null)[]
+  >([]);
   const navigate = useNavigate();
   const routeName = "/language";
   const { postData } = actionData(routeName);

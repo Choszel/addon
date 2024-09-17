@@ -8,7 +8,9 @@ import useLanguages from "../../hooks/useLanguages";
 
 const Elanguage = () => {
   const { id } = useParams<{ id: string }>();
-  const [refs, setRefs] = useState<(HTMLInputElement | null)[]>([]);
+  const [refs, setRefs] = useState<
+    (HTMLInputElement | HTMLSelectElement | null)[]
+  >([]);
   const navigate = useNavigate();
   const routeName = "/language";
   const { putData } = actionData(routeName);
