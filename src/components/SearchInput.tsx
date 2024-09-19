@@ -5,7 +5,7 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { useDebounce } from "use-debounce";
 import SearchResultList from "./SearchResultList";
@@ -24,18 +24,8 @@ const SearchInput = ({ onSearch, language }: Props) => {
   const [words, setWords] = useState<WordsLike[]>();
   const [searchValue, setSearchValue] = useState<string>("");
   const [debounceSearchInput] = useDebounce(searchValue, 1000);
-  const [endpoint, setEndpoint] = useState<string>();
-
-  useEffect(() => {
-    switch (language) {
-      case "ENG":
-        setEndpoint("wordsEnglish");
-        break;
-      default:
-        setEndpoint("wordsPolish");
-        break;
-    }
-  }, [language]);
+  // const [endpoint, setEndpoint] = useState<string>();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const getWords = async () => {
@@ -43,17 +33,49 @@ const SearchInput = ({ onSearch, language }: Props) => {
         setWords([]);
         return;
       }
-      try {
-        const response = await fetch(
-          "http://localhost:3001/api/" +
-            endpoint +
-            "/word?word=" +
-            debounceSearchInput
-        );
-        const data = await response.json();
-        setWords(data);
-      } catch (err) {
-        console.log(err);
+
+      switch (language) {
+        case "ENG":
+          try {
+            const response = await fetch(
+              "http://localhost:3001/api/wordsEnglish/word?word=" +
+                debounceSearchInput
+            );
+            const data = await response.json();
+            setWords(data);
+          } catch (err) {
+            console.log(err);
+          }
+          break;
+        case "ENG_PLN":
+          try {
+            const response = await fetch(
+              "http://localhost:3001/api/wordsEnglish/word?word=" +
+                debounceSearchInput
+            );
+            const data = await response.json();
+            const response2 = await fetch(
+              "http://localhost:3001/api/wordsPolish/word?word=" +
+                debounceSearchInput
+            );
+            const data2 = await response2.json();
+            setWords(data.concat(data2));
+          } catch (err) {
+            console.log(err);
+          }
+          break;
+        default:
+          try {
+            const response = await fetch(
+              "http://localhost:3001/api/wordsPolish/word?word=" +
+                debounceSearchInput
+            );
+            const data = await response.json();
+            setWords(data);
+          } catch (err) {
+            console.log(err);
+          }
+          break;
       }
     };
     getWords();
@@ -66,6 +88,7 @@ const SearchInput = ({ onSearch, language }: Props) => {
   };
 
   const handleResultClick = (id: number, word: string) => {
+    setSearchValue(word);
     onSearch(id, word);
   };
 
@@ -92,7 +115,8 @@ const SearchInput = ({ onSearch, language }: Props) => {
               focusBorderColor="var(--primary)"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyUp={handleKeyPress}
+              ref={inputRef}
             />
             <InputRightElement
               children={<BsSearch />}

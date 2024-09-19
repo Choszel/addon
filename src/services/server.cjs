@@ -62,7 +62,7 @@ app.post('/api/login', async (req, res) =>{
         }
 
         const token = jwt.sign(
-            { userId: user.rows[0].id, userType: user.rows[0].user_type }, 
+            { userId: user.rows[0].id, userLogin: user.rows[0].login, userType: user.rows[0].user_type }, 
             process.env.JWT_SECRET, 
             { expiresIn: '1h' }
         );
@@ -489,6 +489,22 @@ app.get('/api/translationPLNENG/pln', async(req, res)=>{
     } 
 });
 
+app.get('/api/translationPLNENGDetailed/pln', async(req, res)=>{
+    const { id } = req.query;
+    try{
+        const condition = 'SELECT we.id, we.word as word, definition, dl.level as level, c. name as category '
+            + 'FROM translations_pl_eng tr, words_english we, difficulty_levels dl, categories c '
+            + 'WHERE tr.words_english_id=we.id AND dl.id = we.difficultylevel_id AND c.id = we.categories_id AND tr.words_polish_id = ' + id + ';';
+        const result = await pool.query(id ? condition : 'SELECT tr.id, we.word as word, definition, dl.level as level, c. name as category '
+            + 'FROM translations_pl_eng tr, words_english we, difficulty_levels dl, categories c '
+            + 'WHERE tr.words_english_id=we.id AND dl.id = we.difficultylevel_id AND c.id = we.categories_id ORDER BY id ASC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
 app.get('/api/translationPLNENG/eng', async(req, res)=>{
     const { id } = req.query;
     try{
@@ -498,6 +514,22 @@ app.get('/api/translationPLNENG/eng', async(req, res)=>{
         const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word, we.word '
             + 'FROM translations_pl_eng tr, words_polish wp, words_english we '
             + 'WHERE tr.words_polish_id=wp.id and tr.words_english_id=we.id ORDER BY id ASC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.get('/api/translationPLNENGDetailed/eng', async(req, res)=>{
+    const { id } = req.query;
+    try{
+        const condition = 'SELECT wp.id, wp.word as word, definition, c. name as category, photo '
+            + 'FROM translations_pl_eng tr, words_polish wp, categories c '
+            + 'WHERE tr.words_polish_id=wp.id AND c.id = wp.categories_id AND tr.words_english_id = ' + id + ';';
+        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word as word, definition, c. name as category, photo '
+            + 'FROM translations_pl_eng tr, words_polish wp, categories c '
+            + 'WHERE tr.words_polish_id=wp.id AND c.id = wp.categories_id ORDER BY id ASC;');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);

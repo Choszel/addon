@@ -2,6 +2,7 @@ import { jwtDecode } from 'jwt-decode';
 
 interface DecodedToken {
   userId: string;
+  userLogin: string;
   userType: string;
 }
 
@@ -14,6 +15,15 @@ const useTokenData = () => {
       return parseInt(decoded.userId);
     }
     return -1; 
+  }
+
+  const GetUserLogin = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = jwtDecode<DecodedToken>(token);        
+      return decoded.userLogin;
+    }
+    return ""; 
   }
 
   const CheckUserType = () => {
@@ -32,7 +42,7 @@ const useTokenData = () => {
     return "none"; 
   };
 
-  return { GetUserId, CheckUserType }
+  return { GetUserId, GetUserLogin, CheckUserType }
 }
 
 export default useTokenData;

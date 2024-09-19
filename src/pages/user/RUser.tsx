@@ -13,6 +13,7 @@ const RUser = () => {
     headers: headers,
     data: data,
     details: true,
+    routeName: "/user",
   };
   return <ReadTemplate {...tableData}></ReadTemplate>;
 };

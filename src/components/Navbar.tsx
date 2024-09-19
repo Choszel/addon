@@ -1,7 +1,6 @@
-import { Avatar, Button, HStack, Spacer } from "@chakra-ui/react";
+import { Avatar, Button, HStack, Select, Spacer } from "@chakra-ui/react";
 import { SlGlobe } from "react-icons/sl";
 import { Link } from "react-router-dom";
-import SelectLanguage from "./SelectLanguage";
 import { useContext } from "react";
 import { AuthContext } from "../others/AuthContext";
 import AdminPanel from "./AdminPanel";
@@ -9,7 +8,8 @@ import useTokenData from "../others/useTokenData";
 
 const Navbar = () => {
   const authContext = useContext(AuthContext);
-  const { CheckUserType } = useTokenData();
+  const { CheckUserType, GetUserLogin } = useTokenData();
+  const languages = ["PLN", "ENG"];
 
   return (
     <div>
@@ -19,13 +19,29 @@ const Navbar = () => {
         </Link>
         <Spacer width="50%"></Spacer>
         <SlGlobe size={20} />
-        <SelectLanguage />
+        <Select
+          width="10%"
+          margin="0%"
+          onChange={(event) => {
+            console.log(event.target.value);
+          }}
+        >
+          {languages.map((language, index) => (
+            <option key={index}>{language}</option>
+          ))}
+        </Select>
 
         {authContext && authContext.isLoggedIn ? (
           <>
-            {CheckUserType() == "admin" && <AdminPanel />}
             <Avatar margin="0% 0% 0% 2%" boxSize={6}></Avatar>
-            <Button onClick={authContext.logout}>Wyloguj się</Button>
+            <p style={{ margin: "0% 1% 0% 0%" }}>{GetUserLogin()}</p>
+            {CheckUserType() == "admin" && <AdminPanel />}
+            <Button
+              onClick={authContext.logout}
+              style={{ margin: "0% 0% 0% 2%" }}
+            >
+              Wyloguj się
+            </Button>
           </>
         ) : (
           <>

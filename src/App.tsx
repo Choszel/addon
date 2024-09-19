@@ -37,7 +37,10 @@ function App() {
           <Route path="/dictionary" element={<DictionaryHome />} />
           <Route path="/fishCards" element={<FishCardsHome />} />
           <Route path="/noTranslation" element={<NoTranslation />} />
-          <Route path="/dSearchResult" element={<DictionarySearchResult />} />
+          <Route
+            path="dictionary/searchResult/:id/:word/:code"
+            element={<DictionarySearchResult />}
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/category" element={<RCategory />} />
@@ -68,7 +71,7 @@ function App() {
             element={<DetailsWordsEnglish />}
           />
           <Route path="/user" element={<RUser />} />
-          <Route path="/user/:login" element={<UserProfile />} />
+          <Route path="/user/details/:login" element={<UserProfile />} />
         </Route>
       </Routes>
     </Router>

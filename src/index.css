@@ -46,9 +46,17 @@ h1{
 }
 
 .gradient_button{
-    /* background-color: var(--gradient-top); */
-    padding: 2%;
-    border-radius: 3%;
+    background: var(--nyanza);
+    padding: 0.5%;
+    padding-inline: 1.5%;
+    border-radius: 20px;
+}
+
+.add_to_quiz_button{
+    background: var(--gradient-bottom-left);
+    padding: 0.5%;
+    padding-inline: 1.5%;
+    border-radius: 20px;
 }
 
 .small{

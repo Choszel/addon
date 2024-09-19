@@ -1,4 +1,6 @@
 import useData from "./useData";
+import { EnglishWord } from "./useWordsEnglish";
+import { PolishWord } from "./useWordsPolish";
 
 export interface TranslationPL_ENG{
     id: number;
@@ -19,13 +21,25 @@ const useTranslationPL_ENG = () =>{
         return useData<TranslationPL_ENG>("/translationPLNENG/pln", config);
     }
 
+    const fetchForPLNDetailed = (id: number) =>{ //fetchuje po polskim indeksie i zajduje słowa odpowiadające w angielskim zbiorze fraz
+        const config = { params: { id: id } };
+    
+        return useData<EnglishWord>("/translationPLNENGDetailed/pln", config);
+    }
+
     const fetchForENG = (id: number) =>{
         const config = { params: { id: id } };
     
         return useData<TranslationPL_ENG>("/translationPLNENG/eng", config);
     }
 
-    return {fetchAll, fetchForPLN, fetchForENG}; 
+    const fetchForENGDetailed = (id: number) =>{
+        const config = { params: { id: id } };
+    
+        return useData<PolishWord>("/translationPLNENGDetailed/eng", config);
+    }
+
+    return {fetchAll, fetchForPLN, fetchForPLNDetailed, fetchForENG, fetchForENGDetailed}; 
 }
 
 export default useTranslationPL_ENG;
