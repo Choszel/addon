@@ -288,7 +288,7 @@ app.get('/api/wordsPolish/word', async (req, res) => {
     const { word } = req.query;
     try{
         if(!word)return;
-        const result = await pool.query("SELECT id, word FROM words_polish WHERE word like '%" + word + "%';");
+        const result = await pool.query("SELECT id, word FROM words_polish WHERE word like '" + word + "%';");
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -375,7 +375,7 @@ app.get('/api/wordsEnglish', async (req, res) => {
     const { id } = req.query;
     try{
         const condition = "SELECT * FROM words_english WHERE id = " + id + ";";
-        const result = await pool.query(id ? condition : 'SELECT * FROM words_english ORDER BY id ASC;');
+        const result = await pool.query(id ? condition : 'SELECT * FROM words_english ORDER BY popularity DESC;');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -383,11 +383,22 @@ app.get('/api/wordsEnglish', async (req, res) => {
     } 
 });
 
+app.put('/api/wordsEnglish/raisePopularity', async (req, res) =>{
+    const { id } = req.body;
+    console.log(id);
+    try {       
+        const result = await pool.query('UPDATE words_english SET popularity = popularity+1 WHERE id = $1', [id]);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+})
+
 app.get('/api/wordsEnglish/word', async (req, res) => {
     const { word } = req.query;
     try{
         if(!word)return;
-        const result = await pool.query("SELECT id, word FROM words_english WHERE word like '%" + word + "%';");
+        const result = await pool.query("SELECT id, word FROM words_english WHERE word like '" + word + "%' ORDER BY popularity;");
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -566,9 +577,11 @@ app.post('/api/translationPLNENG', async (req, res) =>{
     }
 })
 
-app.get('/api/quizes', async(req, res)=>{
+app.get('/api/quizzes', async(req, res)=>{
     try{
-        const result = await pool.query('SELECT * FROM quizes;');
+        const result = await pool.query('SELECT q.id, q.title, u.name as user, dl.level, c.name as category, l.code as language '
+        + 'FROM quizzes q, users u, difficulty_levels dl, categories c, languages l '
+        + 'WHERE q.users_id=u.id AND q.difficultylevel_id=dl.id AND q.categories_id=c.id AND q.languages_id=l.id order by q.id;');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);

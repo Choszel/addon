@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import useHeaders from "../../hooks/useHeaders";
-import useWordsEngllish, { EnglishWord } from "../../hooks/useWordsEnglish";
+import useWordsEnglish, { EnglishWord } from "../../hooks/useWordsEnglish";
 import ReadTemplate, {
   TableData,
 } from "../../components/crud_templates/ReadTemplate";
 
 const RWordsEnglish = () => {
   const { data: headers } = useHeaders("words_english");
-  const { data } = useWordsEngllish();
+  const { fetchAllDetailed } = useWordsEnglish();
+  const { data } = fetchAllDetailed();
   const [updatedHeaders, setUpdatedHeaders] = useState<string[]>([]);
 
   useEffect(() => {

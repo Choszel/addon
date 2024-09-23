@@ -6,7 +6,7 @@ import useTranslationPL_ENG, {
 import ReadTemplate, {
   TableData,
 } from "../../components/crud_templates/ReadTemplate";
-import AddTranslationButton from "../../components/AddTranslationButton";
+import AddTranslationButton from "../../components/dictionary/AddTranslationButton";
 import { Button } from "@chakra-ui/react";
 import actionData from "../../hooks/actionData";
 import { useState } from "react";
@@ -14,7 +14,8 @@ import { Translation } from "../words_polish/CWordsPolish";
 
 const DetailsWordsEnglish = () => {
   const { id } = useParams<{ id: string }>();
-  const { data } = useWordsEnglish(parseInt(id ?? "-1"));
+  const { fetchAllDetailed } = useWordsEnglish(parseInt(id ?? "-1"));
+  const { data } = fetchAllDetailed();
   const { fetchForENG } = useTranslationPL_ENG();
   const { data: translations } = fetchForENG(parseInt(id ?? "-1"));
   const [translationsData, setTranslationsData] = useState<Translation[]>();

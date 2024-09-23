@@ -5,7 +5,7 @@ import FormTemplate, {
   FormData,
 } from "../../components/crud_templates/CreateTemplate";
 import useCategories from "../../hooks/useCategories";
-import AddTranslationButton from "../../components/AddTranslationButton";
+import AddTranslationButton from "../../components/dictionary/AddTranslationButton";
 import { Translation } from "../words_polish/CWordsPolish";
 import useDifficultyLevels from "../../hooks/useDifficultyLevels";
 

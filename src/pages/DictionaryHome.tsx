@@ -1,13 +1,46 @@
 import { Button, HStack } from "@chakra-ui/react";
-import SearchInput from "../components/SearchInput";
+import SearchInput from "../components/dictionary/SearchInput";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SelectLanguage from "../components/SelectLanguage";
+import useWordsEnglish from "../hooks/useWordsEnglish";
 
 const DictionaryHome = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>("ENG_PLN");
-  const popularWords = ["cat", "dog", "duck"];
+  const { fetchAll } = useWordsEnglish();
+  const { data: popularEnglishWords } = fetchAll();
   const navigate = useNavigate();
+  const alphabet = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+  ];
+
+  const slicedArray = popularEnglishWords.slice(0, 5);
+
   const onSearch = (id: number, searchText: string) => {
     console.log("onSearch", id, searchText);
     return navigate(
@@ -36,19 +69,30 @@ const DictionaryHome = () => {
       <HStack display="flex" justifyContent="center" spacing={10} marginY="4%">
         <div className="gradient_box">
           <p>Popularne wyszukiwania w tym miesiącu</p>
-          {popularWords.map((word, id) => (
+          {slicedArray.map((word, id) => (
             <HStack>
-              <p>{id + 1}</p> <p>{word}</p>
+              <p>{id + 1}</p> <p>{word.word}</p> <p>{word.popularity}</p>
             </HStack>
           ))}
         </div>
         <div className="gradient_box" style={{ height: "100%" }}>
           <p>Przeszukiwanie alfabetyczne</p>
-          {popularWords.map((word, id) => (
-            <HStack>
-              <p>{id + 1}</p> <p>{word}</p>
-            </HStack>
-          ))}
+          <HStack
+            display="flex"
+            justifyContent="center"
+            wrap="wrap"
+            spacing={4}
+            marginY="4%"
+          >
+            {alphabet.map((letter) => (
+              <Link
+                to={"alphabeticalSearch/" + selectedLanguage + "/" + letter}
+                key={letter}
+              >
+                {letter}
+              </Link>
+            ))}
+          </HStack>
         </div>
       </HStack>
       <HStack display="flex" alignContent="center" justifyContent="center">

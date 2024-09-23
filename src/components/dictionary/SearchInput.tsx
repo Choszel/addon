@@ -8,7 +8,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { useDebounce } from "use-debounce";
-import SearchResultList from "./SearchResultList";
+import SearchResultList from "../SearchResultList";
 
 interface Props {
   onSearch: (id: number, searchText: string) => void;
@@ -23,7 +23,7 @@ export interface WordsLike {
 const SearchInput = ({ onSearch, language }: Props) => {
   const [words, setWords] = useState<WordsLike[]>();
   const [searchValue, setSearchValue] = useState<string>("");
-  const [debounceSearchInput] = useDebounce(searchValue, 1000);
+  const [debounceSearchInput] = useDebounce(searchValue.toLowerCase(), 1000);
   // const [endpoint, setEndpoint] = useState<string>();
   const inputRef = useRef<HTMLInputElement>(null);
 

@@ -1,8 +1,8 @@
 import { Button, HStack, Select, useToast } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import SearchInput from "./SearchInput";
-import useLanguages from "../hooks/useLanguages";
-import { Translation } from "../pages/words_polish/CWordsPolish";
+import useLanguages from "../../hooks/useLanguages";
+import { Translation } from "../../pages/words_polish/CWordsPolish";
 
 interface Props {
   langugeOption?: boolean;

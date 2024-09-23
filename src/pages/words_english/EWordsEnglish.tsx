@@ -19,7 +19,8 @@ const EWordsEnglish = () => {
 
   const { data: categories, isLoading } = useCategories();
   const { data: difficultyLevels } = useDifficultyLevels();
-  const { data } = useWordsEnglish(parseInt(id ?? "0"));
+  const { fetchAllDetailed } = useWordsEnglish(parseInt(id ?? "-1"));
+  const { data } = fetchAllDetailed();
 
   const handleSave = () => {
     console.log("Refs:", refs);

@@ -27,6 +27,7 @@ import EWordsEnglish from "./pages/words_english/EWordsEnglish";
 import CWordsPolish from "./pages/words_polish/CWordsPolish";
 import CWordsEnglish from "./pages/words_english/CWordsEnglish";
 import UserProfile from "./pages/user/UserProfile";
+import AlphabeticalSearch from "./pages/alphabeticalSearch";
 
 function App() {
   return (
@@ -35,6 +36,10 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/dictionary" element={<DictionaryHome />} />
+          <Route
+            path="/dictionary/alphabeticalSearch/:language/:letter"
+            element={<AlphabeticalSearch />}
+          />
           <Route path="/fishCards" element={<FishCardsHome />} />
           <Route path="/noTranslation" element={<NoTranslation />} />
           <Route

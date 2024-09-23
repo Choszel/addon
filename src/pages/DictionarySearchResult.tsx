@@ -2,10 +2,11 @@ import { HStack, Img } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SelectLanguage from "../components/SelectLanguage";
-import SearchInput from "../components/SearchInput";
-import TranslationTab from "../components/TranslationTab";
+import SearchInput from "../components/dictionary/SearchInput";
+import TranslationTab from "../components/dictionary/TranslationTab";
 import { PolishWord } from "../hooks/useWordsPolish";
 import getCroppedImageUrl from "../services/image-url";
+import actionData from "../hooks/actionData";
 
 export interface Phrase {
   id: number;
@@ -26,6 +27,7 @@ const DictionarySearchResult = () => {
   const [searchPhrase, setSearchPhrase] = useState<Phrase | null>(null);
   const [translations, setTranslations] = useState<Phrase[]>([]);
   const navigate = useNavigate();
+  const { putData } = actionData("/wordsEnglish/raisePopularity");
 
   const Load = async () => {
     switch (code) {
@@ -36,6 +38,9 @@ const DictionarySearchResult = () => {
           );
           const data: Phrase[] = await response.json();
           if (data[0].word == word) {
+            const formData = new URLSearchParams();
+            formData.append("id", id || "");
+            putData(formData);
             setSearchPhrase(data[0]);
             console.log("wordsEnglishDetailed", searchPhrase);
             const response2 = await fetch(
@@ -81,7 +86,7 @@ const DictionarySearchResult = () => {
 
   useEffect(() => {
     Load();
-  }, [id, code]);
+  }, [id, code, word]);
 
   const onSearch = (id: number, searchText: string) => {
     console.log("onSearch", id, searchText);
@@ -121,6 +126,7 @@ const DictionarySearchResult = () => {
             key={phrase.id}
             phrase={phrase}
             index={index + 1}
+            link={true}
           ></TranslationTab>
         ))}
       </ul>

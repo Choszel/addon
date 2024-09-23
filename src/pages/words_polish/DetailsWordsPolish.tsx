@@ -8,7 +8,7 @@ import ReadTemplate, {
 } from "../../components/crud_templates/ReadTemplate";
 import getCroppedImageUrl from "../../services/image-url";
 import { Button, Image } from "@chakra-ui/react";
-import AddTranslationButton from "../../components/AddTranslationButton";
+import AddTranslationButton from "../../components/dictionary/AddTranslationButton";
 import { useState } from "react";
 import { Translation } from "./CWordsPolish";
 import actionData from "../../hooks/actionData";

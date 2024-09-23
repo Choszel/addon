@@ -50,6 +50,7 @@ h1{
     padding: 0.5%;
     padding-inline: 1.5%;
     border-radius: 20px;
+    cursor: default;
 }
 
 .add_to_quiz_button{

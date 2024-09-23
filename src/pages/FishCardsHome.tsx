@@ -1,11 +1,18 @@
-import useTokenData from "../others/useTokenData";
+import { useState } from "react";
+import QuizGrid, { QuizQuery } from "../components/quizes/QuizGrid";
+import SearchInput from "../components/quizes/SearchInput";
 
 const FishCardsHome = () => {
-  const { CheckUserType, GetUserId } = useTokenData();
+  const [quizQuery, setQuizQuery] = useState<QuizQuery>({} as QuizQuery);
   return (
     <>
-      <p>{CheckUserType()}</p>
-      <p>{GetUserId()}</p>
+      <SearchInput
+        onSearch={function (id: number, searchText: string): void {
+          throw new Error("Function not implemented.");
+        }}
+        language={""}
+      ></SearchInput>
+      <QuizGrid quizQuery={quizQuery}></QuizGrid>
     </>
   );
 };
