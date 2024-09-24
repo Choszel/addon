@@ -201,10 +201,10 @@ app.put('/api/language', async (req, res) =>{
 })
 
 app.get('/api/users', async(req, res)=>{
-    const { id } = req.query;
+    const { login } = req.query;
     try{
-        const condition = "SELECT id, name, login, user_type FROM users WHERE id = " + id + ";";
-        const result = await pool.query(id ? condition : 'SELECT id, name, login, user_type FROM users ORDER BY id ASC;');
+        const condition = "SELECT id, name, login, user_type FROM users WHERE login = '" + login + "';";
+        const result = await pool.query(login ? condition : 'SELECT id, name, login, user_type FROM users ORDER BY id ASC;');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -578,10 +578,14 @@ app.post('/api/translationPLNENG', async (req, res) =>{
 })
 
 app.get('/api/quizzes', async(req, res)=>{
+    const { id } = req.query;
     try{
-        const result = await pool.query('SELECT q.id, q.title, u.name as user, dl.level, c.name as category, l.code as language '
+        const condition = 'SELECT q.id, q.title, u.name as user, dl.level, c.name as category, l.code as language, execution_date '
         + 'FROM quizzes q, users u, difficulty_levels dl, categories c, languages l '
-        + 'WHERE q.users_id=u.id AND q.difficultylevel_id=dl.id AND q.categories_id=c.id AND q.languages_id=l.id order by q.id;');
+        + 'WHERE q.users_id=u.id AND q.difficultylevel_id=dl.id AND q.categories_id=c.id AND q.languages_id=l.id AND q.id = ' + id + ' ORDER BY q.popularity;'
+        const result = await pool.query(id ? condition : 'SELECT q.id, q.title, u.name as user, dl.level, c.name as category, l.code as language, execution_date '
+        + 'FROM quizzes q, users u, difficulty_levels dl, categories c, languages l '
+        + 'WHERE q.users_id=u.id AND q.difficultylevel_id=dl.id AND q.categories_id=c.id AND q.languages_id=l.id ORDER BY q.popularity;');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -589,9 +593,19 @@ app.get('/api/quizzes', async(req, res)=>{
     }
 });
 
-app.get('/api/quizesWords', async(req, res)=>{
+app.get('/api/quizzesQuestions/ENG', async(req, res)=>{
+    const { id } = req.query;
     try{
-        const result = await pool.query('SELECT * FROM quizes_words;');
+        const condition = 'SELECT qqe.id, qqe.quizzes_id, qqe.question_id, qqe.type, we.word as word_english, we.definition as we_definition, '
+        + 'we.difficultylevel_id as we_level_id, we.categories_id as we_category_id, '
+        + 'wp.word as word_polish, wp.definition as wp_definition, wp.categories_id as wp_category_id, wp.photo as wp_photo '
+        + 'FROM quizzes_questions_eng qqe, translations_pl_eng tpe, words_english we, words_polish wp '
+        + 'WHERE qqe.question_id = tpe.id AND tpe.words_polish_id = wp.id AND tpe.words_english_id = we.id AND qqe.quizzes_id = ' + id + ' ORDER BY qqe.id ASC'
+        const result = await pool.query(id ? condition : 'SELECT qqe.id, qqe.quizzes_id, qqe.question_id, qqe.type, we.word as word_english, we.definition as we_definition, '
+        + 'we.difficultylevel_id as we_level_id, we.categories_id as we_category_id, '
+        + 'wp.word as word_polish, wp.definition as wp_definition, wp.categories_id as wp_category_id, wp.photo as wp_photo '
+        + 'FROM quizzes_questions_eng qqe, translations_pl_eng tpe, words_english we, words_polish wp '
+        + 'WHERE qqe.question_id = tpe.id AND tpe.words_polish_id = wp.id AND tpe.words_english_id = we.id ORDER BY qqe.id ASC');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -619,15 +633,6 @@ app.get('/api/usersQuizesScores', async(req, res)=>{
     }
 });
 
-app.get('/api/usersWords', async(req, res)=>{
-    try{
-        const result = await pool.query('SELECT * FROM users_words;');
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Server error');
-    }
-});
 
 app.listen(port, ()=>{
     console.log(`Server is running on http://localhost:${port}`);

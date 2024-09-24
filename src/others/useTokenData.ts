@@ -26,11 +26,11 @@ const useTokenData = () => {
     return ""; 
   }
 
-  const CheckUserType = () => {
+  const CheckUserType = (type?: number) => {
     const token = localStorage.getItem('token');
     if (token) {
       const decoded = jwtDecode<DecodedToken>(token);  
-      switch (decoded.userType) {
+      switch (type ? type : decoded.userType) {
         case "2":
           return "admin";
         case "1":

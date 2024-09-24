@@ -27,7 +27,7 @@ import EWordsEnglish from "./pages/words_english/EWordsEnglish";
 import CWordsPolish from "./pages/words_polish/CWordsPolish";
 import CWordsEnglish from "./pages/words_english/CWordsEnglish";
 import UserProfile from "./pages/user/UserProfile";
-import AlphabeticalSearch from "./pages/alphabeticalSearch";
+import AlphabeticalSearch from "./pages/AlphabeticalSearch";
 
 function App() {
   return (

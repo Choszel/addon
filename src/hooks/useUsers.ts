@@ -7,10 +7,10 @@ export interface User{
     user_type: number;
 }
 
-const useUsers = (id?: number) => {
-    const config = id ? { params: { id: id } } : {};
-    
-    return useData<User>("/users", config);
-};
+const useUsers = (login?: string) => useData<User>("/users", 
+    {params: {
+        login: login ?? "" }},
+    [login ?? ""]);
+
   
 export default useUsers;

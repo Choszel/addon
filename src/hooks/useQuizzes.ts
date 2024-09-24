@@ -8,10 +8,12 @@ export interface Quiz{
     level: string | null;
     category: string | null;
     language: string | null;
+    execution_date: Date | string | null;
 }
 
-const useQuizes = (quizQuery: QuizQuery) => useData<Quiz>("/quizzes", 
+const useQuizzes = (quizQuery: QuizQuery) => useData<Quiz>("/quizzes", 
 {params: {
+    id: quizQuery.id,
     level: quizQuery.level, 
     category: quizQuery.category,
     user: quizQuery.user,
@@ -21,4 +23,4 @@ const useQuizes = (quizQuery: QuizQuery) => useData<Quiz>("/quizzes",
 
   
 
-export default useQuizes;
+export default useQuizzes;

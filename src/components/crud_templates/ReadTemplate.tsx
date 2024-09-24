@@ -79,7 +79,11 @@ const ReadTemplate = <T extends object>({
                       marginRight="2%"
                       onClick={() =>
                         navigate(
-                          routeName + "/details/" + (row as any)[headers[0]]
+                          routeName +
+                            "/details/" +
+                            (routeName == "/user"
+                              ? (row as any)[headers[3]]
+                              : (row as any)[headers[0]])
                         )
                       }
                     >

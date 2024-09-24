@@ -1,11 +1,11 @@
-import { HStack, SimpleGrid, Text } from "@chakra-ui/react";
+import { SimpleGrid, Text } from "@chakra-ui/react";
 import QuizCardContainer from "./QuizCardContainer";
 import QuizCard from "./QuizCard";
 import QuizCardSkeleton from "./QuizCardSkeleton";
-import useQuizes from "../../hooks/useQuizes";
-import { BsFire } from "react-icons/bs";
+import useQuizzes from "../../hooks/useQuizzes";
 
 export interface QuizQuery {
+  id: number;
   level: string;
   category: string;
   user: string;
@@ -18,17 +18,13 @@ interface Props {
 }
 
 const QuizGrid = ({ quizQuery }: Props) => {
-  const { data, error, isLoading } = useQuizes(quizQuery);
+  const { data, error, isLoading } = useQuizzes(quizQuery);
   const skeletons = [1, 2, 3, 4, 5, 6];
 
   if (error) return <Text>{error}</Text>;
 
   return (
     <div>
-      <HStack>
-        <h1>Lista zestawów do nauki na Topie</h1>
-        <BsFire size={45} />
-      </HStack>
       <SimpleGrid
         columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
         padding={10}
