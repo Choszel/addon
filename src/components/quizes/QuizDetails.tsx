@@ -1,16 +1,17 @@
 import { Card, CardBody, HStack } from "@chakra-ui/react";
 import { Quiz } from "../../hooks/useQuizzes";
-import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
+import { QuizQuestion } from "../../hooks/useQuizzesQuestions";
 
 interface Props {
   quiz: Quiz;
+  userId?: number;
+  questions: QuizQuestion[];
 }
 
-const QuizDetails = ({ quiz }: Props) => {
-  const { fetchENG } = useQuizzesQuestions();
-  const { data: questions } = fetchENG(quiz.id ?? 0);
+const QuizDetails = ({ quiz, userId, questions }: Props) => {
   console.log(quiz);
   console.log(questions);
+
   return (
     <>
       <h1>Szczegóły</h1>
@@ -32,14 +33,14 @@ const QuizDetails = ({ quiz }: Props) => {
       <h1>Lista zwrotów</h1>
       {questions.map((question) => (
         <HStack marginY="3%">
-          <Card>
+          <Card bg={userId ? (question.done ? "var(--nyanza)" : "red") : ""}>
             <CardBody>
               <p>{question.word_polish}</p>
             </CardBody>
           </Card>
-          <Card>
+          <Card bg={userId ? (question.done ? "var(--nyanza)" : "red") : ""}>
             <CardBody>
-              <p>{question.word_english}</p>
+              <p>{question.word_second}</p>
             </CardBody>
           </Card>
         </HStack>

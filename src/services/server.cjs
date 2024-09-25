@@ -577,32 +577,44 @@ app.post('/api/translationPLNENG', async (req, res) =>{
     }
 })
 
-app.get('/api/quizzes', async(req, res)=>{
-    const { id } = req.query;
-    try{
-        const condition = 'SELECT q.id, q.title, u.name as user, dl.level, c.name as category, l.code as language, execution_date '
+app.get('/api/quizzes', async (req, res) => {
+    try {
+        const { id, level, category, user, language, name } = req.query;
+        let query = 'SELECT q.id, q.title, u.name as user, dl.level, c.name as category, l.code as language, execution_date '
         + 'FROM quizzes q, users u, difficulty_levels dl, categories c, languages l '
-        + 'WHERE q.users_id=u.id AND q.difficultylevel_id=dl.id AND q.categories_id=c.id AND q.languages_id=l.id AND q.id = ' + id + ' ORDER BY q.popularity;'
-        const result = await pool.query(id ? condition : 'SELECT q.id, q.title, u.name as user, dl.level, c.name as category, l.code as language, execution_date '
-        + 'FROM quizzes q, users u, difficulty_levels dl, categories c, languages l '
-        + 'WHERE q.users_id=u.id AND q.difficultylevel_id=dl.id AND q.categories_id=c.id AND q.languages_id=l.id ORDER BY q.popularity;');
+        + 'WHERE q.users_id=u.id AND q.difficultylevel_id=dl.id AND q.categories_id=c.id AND q.languages_id=l.id ';
+        const conditions = [];
+        if (id) conditions.push(`q.id = ${id}`);
+        if (level) conditions.push(`dl.level = '${level}'`);
+        if (category) conditions.push(`c.name = '${category}'`);
+        if (user) conditions.push(`u.name = '${user}'`);
+        if (language) conditions.push(`l.code = '${language}'`);
+        if (name) conditions.push(`q.title LIKE '%${name}%'`);
+        
+        if (conditions.length > 0) {
+            query += ' AND ' + conditions.join(' AND ');
+        }
+        query += ' ORDER BY q.popularity;';
+        
+        const result = await pool.query(query);
         res.json(result.rows);
-    }catch(err){
+    } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
     }
 });
 
+
 app.get('/api/quizzesQuestions/ENG', async(req, res)=>{
     const { id } = req.query;
     try{
-        const condition = 'SELECT qqe.id, qqe.quizzes_id, qqe.question_id, qqe.type, we.word as word_english, we.definition as we_definition, '
-        + 'we.difficultylevel_id as we_level_id, we.categories_id as we_category_id, '
+        const condition = 'SELECT qqe.id, qqe.quizzes_id, qqe.question_id, qqe.type, we.word as word_second, we.definition as ws_definition, '
+        + 'we.difficultylevel_id as ws_level_id, we.categories_id as ws_category_id, '
         + 'wp.word as word_polish, wp.definition as wp_definition, wp.categories_id as wp_category_id, wp.photo as wp_photo '
         + 'FROM quizzes_questions_eng qqe, translations_pl_eng tpe, words_english we, words_polish wp '
         + 'WHERE qqe.question_id = tpe.id AND tpe.words_polish_id = wp.id AND tpe.words_english_id = we.id AND qqe.quizzes_id = ' + id + ' ORDER BY qqe.id ASC'
-        const result = await pool.query(id ? condition : 'SELECT qqe.id, qqe.quizzes_id, qqe.question_id, qqe.type, we.word as word_english, we.definition as we_definition, '
-        + 'we.difficultylevel_id as we_level_id, we.categories_id as we_category_id, '
+        const result = await pool.query(id ? condition : 'SELECT qqe.id, qqe.quizzes_id, qqe.question_id, qqe.type, we.word as word_second, we.definition as ws_definition, '
+        + 'we.difficultylevel_id as ws_level_id, we.categories_id as ws_category_id, '
         + 'wp.word as word_polish, wp.definition as wp_definition, wp.categories_id as wp_category_id, wp.photo as wp_photo '
         + 'FROM quizzes_questions_eng qqe, translations_pl_eng tpe, words_english we, words_polish wp '
         + 'WHERE qqe.question_id = tpe.id AND tpe.words_polish_id = wp.id AND tpe.words_english_id = we.id ORDER BY qqe.id ASC');
@@ -612,10 +624,21 @@ app.get('/api/quizzesQuestions/ENG', async(req, res)=>{
         res.status(500).send('Server error');
     }
 });
-
-app.get('/api/usersQuizesQuestions', async(req, res)=>{
+   
+app.get('/api/usersQuizzesQuestions', async(req, res)=>{
     try{
-        const result = await pool.query('SELECT * FROM users_quizes_questions;');
+        const { id, userId } = req.query;
+        const condition = 'SELECT qqe.id, qqe.quizzes_id, qqe.question_id, qqe.type, we.word as word_second, we.definition as ws_definition, '
+        + 'we.difficultylevel_id as ws_level_id, we.categories_id as ws_category_id, '
+        + 'wp.word as word_polish, wp.definition as wp_definition, wp.categories_id as wp_category_id, wp.photo as wp_photo, '
+        + 'EXISTS (SELECT 1 FROM users_quizzes_questions uqq, users_quizzes_scores uqs WHERE uqq.quizzes_questions_id = qqe.id AND uqs.users_id=' + userId + ' AND uqs.quizzes_id=qqe.quizzes_id AND uqq.users_quizzes_scores_id=uqs.id) AS done '
+        + 'FROM quizzes_questions_eng qqe, translations_pl_eng tpe, words_english we, words_polish wp '
+        + 'WHERE qqe.question_id = tpe.id AND tpe.words_polish_id = wp.id AND tpe.words_english_id = we.id AND qqe.quizzes_id = ' + id + ' ORDER BY qqe.id ASC'
+        const result = await pool.query(userId ? condition : 'SELECT qqe.id, qqe.quizzes_id, qqe.question_id, qqe.type, we.word as word_second, we.definition as ws_definition, '
+        + 'we.difficultylevel_id as ws_level_id, we.categories_id as ws_category_id, '
+        + 'wp.word as word_polish, wp.definition as wp_definition, wp.categories_id as wp_category_id, wp.photo as wp_photo '
+        + 'FROM quizzes_questions_eng qqe, translations_pl_eng tpe, words_english we, words_polish wp '
+        + 'WHERE qqe.question_id = tpe.id AND tpe.words_polish_id = wp.id AND tpe.words_english_id = we.id AND qqe.quizzes_id = ' + id + ' ORDER BY qqe.id ASC');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -623,9 +646,23 @@ app.get('/api/usersQuizesQuestions', async(req, res)=>{
     }
 });
 
-app.get('/api/usersQuizesScores', async(req, res)=>{
+app.get('/api/quizzesQuestions/Count', async(req, res)=>{
     try{
-        const result = await pool.query('SELECT * FROM users_quizes_scores;');
+        const { id } = req.query;
+        const result = await pool.query('SELECT count(*) as amount_of_questions FROM quizzes_questions_eng WHERE quizzes_id=$1;', [id]);
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+app.get('/api/usersQuizzesScores', async(req, res)=>{
+    try{
+        const { id } = req.query;
+        const result = await pool.query('SELECT q.id, q.title, u.name as user, dl.level, c.name as category, l.code as language, execution_date '
+        + 'FROM quizzes q, users u, difficulty_levels dl, categories c, languages l, users_quizzes_scores uqs '
+        + 'WHERE uqs.quizzes_id=q.id AND q.users_id=u.id AND q.difficultylevel_id=dl.id AND q.categories_id=c.id AND q.languages_id=l.id AND uqs.users_id=$1 ORDER BY uqs.id DESC;', [id]);
         res.json(result.rows);
     }catch(err){
         console.error(err.message);

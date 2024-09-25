@@ -15,13 +15,30 @@ import {
 import { Quiz } from "../../hooks/useQuizzes";
 import QuizDetails from "./QuizDetails";
 import { LuArrowLeft } from "react-icons/lu";
+import { useEffect, useState } from "react";
+import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
 
 interface Props {
   quiz: Quiz;
+  isScore?: boolean;
+  userId?: number;
 }
 
-const QuizCard = ({ quiz }: Props) => {
+const QuizCard = ({ quiz, isScore, userId }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [score, setScore] = useState<number>(0.0);
+  const { fetchUserQuestions, fetchAmountOfQuestions } = useQuizzesQuestions();
+  const { data: questions } = fetchUserQuestions(quiz.id ?? 0, userId);
+  const { data: amountOfQuestions } = fetchAmountOfQuestions(quiz.id ?? 0);
+
+  useEffect(() => {
+    const answeredQuestions = questions.filter(
+      (question) => question.done == true
+    );
+    setScore(
+      answeredQuestions.length / amountOfQuestions[0]?.amount_of_questions ?? 0
+    );
+  }, [amountOfQuestions]);
 
   return (
     <>
@@ -55,8 +72,20 @@ const QuizCard = ({ quiz }: Props) => {
               </button>
             </HStack>
           </Box>
+          {isScore ? (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+              }}
+            >
+              <p>{score}</p>
+            </div>
+          ) : null}
         </CardBody>
       </Card>
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -72,7 +101,11 @@ const QuizCard = ({ quiz }: Props) => {
                 Powrót
               </Text>
             </HStack>
-            <QuizDetails quiz={quiz}></QuizDetails>
+            <QuizDetails
+              quiz={quiz}
+              userId={userId}
+              questions={questions}
+            ></QuizDetails>
           </ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>

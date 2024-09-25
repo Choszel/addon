@@ -3,6 +3,7 @@ import QuizCardContainer from "./QuizCardContainer";
 import QuizCard from "./QuizCard";
 import QuizCardSkeleton from "./QuizCardSkeleton";
 import useQuizzes from "../../hooks/useQuizzes";
+import useTokenData from "../../others/useTokenData";
 
 export interface QuizQuery {
   id: number;
@@ -20,6 +21,7 @@ interface Props {
 const QuizGrid = ({ quizQuery }: Props) => {
   const { data, error, isLoading } = useQuizzes(quizQuery);
   const skeletons = [1, 2, 3, 4, 5, 6];
+  const { GetUserId } = useTokenData();
 
   if (error) return <Text>{error}</Text>;
 
@@ -27,7 +29,7 @@ const QuizGrid = ({ quizQuery }: Props) => {
     <div>
       <SimpleGrid
         columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
-        padding={10}
+        padding={8}
         spacing={6}
       >
         {isLoading &&
@@ -38,7 +40,11 @@ const QuizGrid = ({ quizQuery }: Props) => {
           ))}
         {data.map((quiz) => (
           <QuizCardContainer key={quiz.id}>
-            <QuizCard quiz={quiz}></QuizCard>
+            <QuizCard
+              quiz={quiz}
+              isScore={true}
+              userId={GetUserId()}
+            ></QuizCard>
           </QuizCardContainer>
         ))}
       </SimpleGrid>

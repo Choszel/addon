@@ -28,6 +28,7 @@ import CWordsPolish from "./pages/words_polish/CWordsPolish";
 import CWordsEnglish from "./pages/words_english/CWordsEnglish";
 import UserProfile from "./pages/user/UserProfile";
 import AlphabeticalSearch from "./pages/AlphabeticalSearch";
+import CQuiz from "./pages/CQuiz";
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
           />
           <Route path="/user" element={<RUser />} />
           <Route path="/user/details/:login" element={<UserProfile />} />
+          <Route path="/quiz/create" element={<CQuiz />} />
         </Route>
       </Routes>
     </Router>
