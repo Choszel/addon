@@ -7,9 +7,11 @@ import TranslationTab from "../components/dictionary/TranslationTab";
 import { PolishWord } from "../hooks/useWordsPolish";
 import getCroppedImageUrl from "../services/image-url";
 import actionData from "../hooks/actionData";
+import usePhrasesStorage from "../hooks/usePhrasesStorage";
 
 export interface Phrase {
   id: number;
+  translation_id?: number | null;
   word: string;
   definition: string;
   photo?: string | null;
@@ -28,6 +30,7 @@ const DictionarySearchResult = () => {
   const [translations, setTranslations] = useState<Phrase[]>([]);
   const navigate = useNavigate();
   const { putData } = actionData("/wordsEnglish/raisePopularity");
+  const { addToSavedPhrases } = usePhrasesStorage("ENG");
 
   const Load = async () => {
     switch (code) {
@@ -88,8 +91,14 @@ const DictionarySearchResult = () => {
     Load();
   }, [id, code, word]);
 
+  const handleAddToQuiz = (id: number) => {
+    console.log(translations[id]);
+    // localStorage.removeItem("translations_pln_eng");
+
+    addToSavedPhrases(translations[id]);
+  };
+
   const onSearch = (id: number, searchText: string) => {
-    console.log("onSearch", id, searchText);
     navigate(
       "/dictionary/searchResult/" +
         id +
@@ -98,7 +107,6 @@ const DictionarySearchResult = () => {
         "/" +
         selectedLanguage
     );
-    console.log("onSearch Po navigate", id, searchText);
     window.location.reload();
   };
 
@@ -127,6 +135,7 @@ const DictionarySearchResult = () => {
             phrase={phrase}
             index={index + 1}
             link={true}
+            handleAddToQuiz={handleAddToQuiz}
           ></TranslationTab>
         ))}
       </ul>

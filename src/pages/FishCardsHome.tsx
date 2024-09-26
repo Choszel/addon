@@ -3,7 +3,7 @@ import QuizGrid, { QuizQuery } from "../components/quizes/QuizGrid";
 import SearchInput from "../components/quizes/SearchInput";
 import Flame from "../assets/Fire-Blaze-PNG-Image-Background.png";
 import { HStack } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const FishCardsHome = () => {
   const [quizQuery, setQuizQuery] = useState<QuizQuery>({} as QuizQuery);
@@ -18,7 +18,7 @@ const FishCardsHome = () => {
           language={""}
         ></SearchInput>
         <button
-          className="gradient_button"
+          className="add_to_quiz_button"
           onClick={() => navigate("/quiz/create")}
         >
           Stwórz własny quiz

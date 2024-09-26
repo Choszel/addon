@@ -5,11 +5,13 @@ import useLanguages from "../../hooks/useLanguages";
 import { Translation } from "../../pages/words_polish/CWordsPolish";
 
 interface Props {
+  title: string;
   langugeOption?: boolean;
   setTranslationsData: (translations: Translation[]) => void;
 }
 
 const AddTranslationButton = ({
+  title,
   langugeOption,
   setTranslationsData,
 }: Props) => {
@@ -70,7 +72,7 @@ const AddTranslationButton = ({
   return (
     <>
       <HStack marginY="2%">
-        <p className="p2">Tłumaczenia</p>
+        <p className="p2">{title}</p>
         <Button onClick={handleAddTranslation}>Dodaj</Button>
       </HStack>
       {dataRow.map((row) => (

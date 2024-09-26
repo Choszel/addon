@@ -5,10 +5,8 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
-import { useDebounce } from "use-debounce";
-import SearchResultList from "../SearchResultList";
 
 interface Props {
   onSearch: (id: number, searchText: string) => void;
@@ -20,32 +18,9 @@ export interface WordsLike {
   word: string;
 }
 
-const SearchInput = ({ onSearch, language }: Props) => {
-  const [words, setWords] = useState<WordsLike[]>();
+const SearchInput = ({}: Props) => {
   const [searchValue, setSearchValue] = useState<string>("");
-  const [debounceSearchInput] = useDebounce(searchValue, 1000);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const getWords = async () => {
-      if (debounceSearchInput.trim() === "") {
-        setWords([]);
-        return;
-      }
-    };
-    getWords();
-  }, [debounceSearchInput, language]);
-
-  const handleKeyPress = (event: { key: string }) => {
-    if (event.key === "Enter") {
-      if (words) onSearch(words[0].id, words[0].word);
-    }
-  };
-
-  const handleResultClick = (id: number, word: string) => {
-    setSearchValue(word);
-    onSearch(id, word);
-  };
 
   return (
     <Flex
@@ -70,22 +45,12 @@ const SearchInput = ({ onSearch, language }: Props) => {
               focusBorderColor="var(--primary)"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              onKeyUp={handleKeyPress}
               ref={inputRef}
             />
-            <InputRightElement
-              children={<BsSearch />}
-              onClick={() => handleKeyPress({ key: "Enter" })}
-            />
+            <InputRightElement children={<BsSearch />} />
           </InputGroup>
           )
         </HStack>
-        {words && (
-          <SearchResultList
-            results={words ?? null}
-            listElementClicked={handleResultClick}
-          />
-        )}
       </form>
     </Flex>
   );

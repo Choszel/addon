@@ -2,6 +2,7 @@ import useData from "./useData";
 
 export interface PolishWord{
     id: number;
+    translation_id?: number | null;
     word: string;
     definition: string;
     photo: string | null;

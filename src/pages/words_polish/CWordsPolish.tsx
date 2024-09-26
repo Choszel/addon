@@ -89,6 +89,7 @@ const CWordsPolish = () => {
       <AddTranslationButton
         langugeOption
         setTranslationsData={setTranslationsData}
+        title={"Tłumaczenia"}
       />
     ),
   };

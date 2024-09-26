@@ -2,15 +2,14 @@ import { HStack } from "@chakra-ui/react";
 import { Phrase } from "../../pages/DictionarySearchResult";
 import { useNavigate } from "react-router-dom";
 
-const TranslationTab = ({
-  phrase,
-  index,
-  link,
-}: {
+interface Props {
   phrase: Phrase;
   index: number;
   link?: boolean;
-}) => {
+  handleAddToQuiz: (id: number) => void;
+}
+
+const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
   const navigator = useNavigate();
   const redirectButton = () => {
     if (link) {
@@ -37,7 +36,14 @@ const TranslationTab = ({
             {phrase.category}
           </button>
         ) : null}
-        <button className="add_to_quiz_button">Dodaj do quizu</button>
+        {phrase?.level ? (
+          <button
+            className="add_to_quiz_button"
+            onClick={() => handleAddToQuiz(index - 1)}
+          >
+            Dodaj do quizu
+          </button>
+        ) : null}
       </HStack>
       <p style={{ display: "flex", marginInline: "25px" }}>
         {phrase.definition}

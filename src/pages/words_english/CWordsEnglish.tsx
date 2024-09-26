@@ -87,7 +87,12 @@ const CWordsEnglish = () => {
     setRefs: function (): void {},
     onSave: handleSave,
     onCancel: handleCancel,
-    others: <AddTranslationButton setTranslationsData={setTranslationsData} />,
+    others: (
+      <AddTranslationButton
+        setTranslationsData={setTranslationsData}
+        title={"Tłumaczenia"}
+      />
+    ),
   };
 
   return (
