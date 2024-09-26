@@ -17,6 +17,8 @@ import QuizDetails from "./QuizDetails";
 import { LuArrowLeft } from "react-icons/lu";
 import { useEffect, useState } from "react";
 import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
+import useCategories from "../../hooks/useCategories";
+import useDifficultyLevels from "../../hooks/useDifficultyLevels";
 
 interface Props {
   quiz: Quiz;
@@ -30,6 +32,10 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
   const { fetchUserQuestions, fetchAmountOfQuestions } = useQuizzesQuestions();
   const { data: questions } = fetchUserQuestions(quiz.id ?? 0, userId);
   const { data: amountOfQuestions } = fetchAmountOfQuestions(quiz.id ?? 0);
+  const [categoriesQuizzes, setCategoriesQuizzes] = useState<string[]>([""]);
+  const [levelsQuizzes, setLevelsQuizzes] = useState<string[]>([""]);
+  const { data: categories } = useCategories();
+  const { data: difficultyLevels } = useDifficultyLevels();
 
   useEffect(() => {
     const answeredQuestions = questions.filter(
@@ -38,7 +44,26 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
     setScore(
       answeredQuestions.length / amountOfQuestions[0]?.amount_of_questions ?? 0
     );
-  }, [amountOfQuestions]);
+    let questionsCategories = [
+      ...new Set(
+        questions.map(
+          (q) => categories.find((c) => c.id == q.ws_category_id)?.name ?? ""
+        )
+      ),
+    ];
+    let questionsLevels = [
+      ...new Set(
+        questions.map(
+          (q) =>
+            difficultyLevels.find((df) => df.id == q.ws_level_id)?.level ?? ""
+        )
+      ),
+    ];
+    setCategoriesQuizzes(questionsCategories);
+    setLevelsQuizzes(questionsLevels);
+    console.log("questionsCategories", questionsCategories);
+    console.log("questionsLevels", questionsLevels);
+  }, [amountOfQuestions, categories, difficultyLevels]);
 
   return (
     <>
@@ -61,15 +86,17 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
             <HStack>
               {" "}
               <p>Kategria: </p>
-              <button className="gradient_button">
-                {quiz.category ?? "No category"}
-              </button>
+              {categoriesQuizzes.map((cq) => (
+                <button className="gradient_button">
+                  {cq ?? "No category"}
+                </button>
+              ))}
             </HStack>
             <HStack>
               <p>Poziom: </p>
-              <button className="gradient_button">
-                {quiz.level ?? "No level"}
-              </button>
+              {levelsQuizzes.map((lq) => (
+                <button className="gradient_button">{lq ?? "No level"}</button>
+              ))}
             </HStack>
           </Box>
           {isScore ? (
@@ -105,6 +132,8 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
               quiz={quiz}
               userId={userId}
               questions={questions}
+              categories={categoriesQuizzes}
+              difficultyLevels={levelsQuizzes}
             ></QuizDetails>
           </ModalBody>
           <ModalFooter></ModalFooter>

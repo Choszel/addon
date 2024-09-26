@@ -6,9 +6,17 @@ interface Props {
   quiz: Quiz;
   userId?: number;
   questions: QuizQuestion[];
+  categories: string[];
+  difficultyLevels: string[];
 }
 
-const QuizDetails = ({ quiz, userId, questions }: Props) => {
+const QuizDetails = ({
+  quiz,
+  userId,
+  questions,
+  categories,
+  difficultyLevels,
+}: Props) => {
   console.log(quiz);
   console.log(questions);
 
@@ -21,13 +29,15 @@ const QuizDetails = ({ quiz, userId, questions }: Props) => {
       <HStack>
         {" "}
         <p>Kategria: </p>
-        <button className="gradient_button">
-          {quiz.category ?? "No category"}
-        </button>
+        {categories.map((cat) => (
+          <button className="gradient_button">{cat ?? "No category"}</button>
+        ))}
       </HStack>
       <HStack>
         <p>Poziom: </p>
-        <button className="gradient_button">{quiz.level ?? "No level"}</button>
+        {difficultyLevels.map((df) => (
+          <button className="gradient_button">{df ?? "No level"}</button>
+        ))}
       </HStack>
       <p>Data wykonania {quiz.execution_date?.toString().substring(0, 10)}</p>
       <h1>Lista zwrotów</h1>

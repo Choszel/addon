@@ -71,3 +71,13 @@ h1{
 .question_wrong{
     background-color: var(--red-munsell);
 }
+
+.question{
+    background-color: white;
+    border-radius: 15px;
+    border-color: gainsboro;
+    border-width: 1px;
+    padding: 2% 3%;
+    width: 10%;
+    box-shadow: 0 4px 6px -6px #222;
+}

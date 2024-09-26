@@ -28,7 +28,7 @@ const QuizGrid = ({ quizQuery }: Props) => {
   return (
     <div>
       <SimpleGrid
-        columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
+        columns={{ sm: 1, md: 2, lg: 2, xl: 3 }}
         padding={8}
         spacing={6}
       >

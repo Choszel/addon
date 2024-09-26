@@ -474,7 +474,7 @@ app.get('/api/translationPLNENGDetailed', async(req, res)=>{
         const condition = 'SELECT tr.id, wp.word as word_polish, we.word as word_english '
             + 'FROM translations_pl_eng tr, words_polish wp, words_english we '
             + 'WHERE tr.words_polish_id=wp.id and tr.words_english_id=we.id AND tr.id = ' + id + ';';
-        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word, we.word '
+        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word as word_polish, we.word as word_english '
             + 'FROM translations_pl_eng tr, words_polish wp, words_english we '
             + 'WHERE tr.words_polish_id=wp.id and tr.words_english_id=we.id ORDER BY id ASC;');
         res.json(result.rows);
@@ -580,13 +580,11 @@ app.post('/api/translationPLNENG', async (req, res) =>{
 app.get('/api/quizzes', async (req, res) => {
     try {
         const { id, level, category, user, language, name } = req.query;
-        let query = 'SELECT q.id, q.title, u.name as user, dl.level, c.name as category, l.code as language, execution_date '
-        + 'FROM quizzes q, users u, difficulty_levels dl, categories c, languages l '
-        + 'WHERE q.users_id=u.id AND q.difficultylevel_id=dl.id AND q.categories_id=c.id AND q.languages_id=l.id ';
+        let query = 'SELECT q.id, q.title, u.name as user, l.code as language, execution_date '
+        + 'FROM quizzes q, users u, languages l '
+        + 'WHERE q.users_id=u.id AND q.languages_id=l.id ';
         const conditions = [];
         if (id) conditions.push(`q.id = ${id}`);
-        if (level) conditions.push(`dl.level = '${level}'`);
-        if (category) conditions.push(`c.name = '${category}'`);
         if (user) conditions.push(`u.name = '${user}'`);
         if (language) conditions.push(`l.code = '${language}'`);
         if (name) conditions.push(`q.title LIKE '%${name}%'`);

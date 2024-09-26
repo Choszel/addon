@@ -12,7 +12,7 @@ export interface QuizQuestion {
   ws_category_id: number | null;
   word_polish: string | null;
   wp_definition: string | null;
-  wp_caategory_id: number | null;
+  wp_category_id: number | null;
   wp_photo: string | null;
   done?: boolean | null;
 }
