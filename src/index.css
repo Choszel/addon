@@ -81,3 +81,33 @@ h1{
     width: 10%;
     box-shadow: 0 4px 6px -6px #222;
 }
+
+.tag_error{
+    background: var(--error);
+    padding: 0.5%;
+    padding-inline: 10%;
+    border-radius: 100%;
+    cursor: default;
+    color: white;
+    align-content: center;
+    justify-content: center;
+}
+
+.tag_category{
+    background: var(--nyanza);
+    padding: 0.5%;
+    padding-inline: 1.5%;
+    border-radius: 20px;
+    cursor: default;
+}
+
+.tag_infinity{
+    background: var(--error);
+    padding: 0.5px;
+    padding-inline: 8px;
+    border-radius: 100%;
+    cursor: default;
+    color: white;
+    align-content: center;
+    justify-content: center;
+}

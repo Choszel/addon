@@ -86,17 +86,39 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
             <HStack>
               {" "}
               <p>Kategria: </p>
-              {categoriesQuizzes.map((cq) => (
-                <button className="gradient_button">
-                  {cq ?? "No category"}
-                </button>
-              ))}
+              {categoriesQuizzes.length > 3 ? (
+                <HStack>
+                  <button className="gradient_button">
+                    {categoriesQuizzes[0] ?? "No category"}
+                  </button>
+                  <button className="gradient_button">
+                    {categoriesQuizzes[1] ?? "No category"}
+                  </button>
+                  <button className="gradient_button">others</button>
+                </HStack>
+              ) : categoriesQuizzes.length == 0 ? (
+                <button className="tag_error">X</button>
+              ) : (
+                categoriesQuizzes.map((cq) => (
+                  <button className="gradient_button">
+                    {cq ?? "No category"}
+                  </button>
+                ))
+              )}
             </HStack>
             <HStack>
               <p>Poziom: </p>
-              {levelsQuizzes.map((lq) => (
-                <button className="gradient_button">{lq ?? "No level"}</button>
-              ))}
+              {levelsQuizzes.length > 4 ? (
+                <button className="tag_infinity">∞</button>
+              ) : levelsQuizzes.length == 0 ? (
+                <button className="tag_error">X</button>
+              ) : (
+                levelsQuizzes.map((lq) => (
+                  <button className="gradient_button">
+                    {lq ?? "No level"}
+                  </button>
+                ))
+              )}
             </HStack>
           </Box>
           {isScore ? (
