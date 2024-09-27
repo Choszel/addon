@@ -5,11 +5,10 @@ const postRegister = () => {
   const [isSending, setSending] = useState(false);
   const toast = useToast();
 
-  const sendRegisterForm = async (name: string, login: string, password: string) => {
+  const sendRegisterForm = async (login: string, password: string) => {
     setSending(true);
     try {
       const formData = new URLSearchParams();
-      formData.append('name', name);
       formData.append('login', login);
       formData.append('password', password);
 

@@ -82,7 +82,7 @@ const ReadTemplate = <T extends object>({
                           routeName +
                             "/details/" +
                             (routeName == "/user"
-                              ? (row as any)[headers[3]]
+                              ? (row as any)[headers[2]]
                               : (row as any)[headers[0]])
                         )
                       }

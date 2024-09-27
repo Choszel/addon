@@ -20,7 +20,7 @@ const UserProfile = () => {
   const skeletons = [1, 2, 3, 4, 5, 6];
 
   useEffect(() => {
-    setQuizQuery({ ...quizQuery, user: userData[0]?.name });
+    setQuizQuery({ ...quizQuery, user: userData[0]?.login });
   }, [userData]);
 
   return (
@@ -42,7 +42,7 @@ const UserProfile = () => {
             <TabPanels>
               <TabPanel>
                 <SimpleGrid
-                  columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
+                  columns={{ sm: 1, md: 2, lg: 2, xl: 3 }}
                   padding={8}
                   spacing={6}
                 >

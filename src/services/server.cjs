@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.post('/api/register', async (req, res) => {
-    const { name, login, password } = req.body;
+    const { login, password } = req.body;
 
     try {
         const userExists = await pool.query('SELECT * FROM users WHERE login = $1', [login]);
@@ -35,8 +35,8 @@ app.post('/api/register', async (req, res) => {
         const hashedPass = await bcrypt.hash(password, 10);
 
         await pool.query(
-            'INSERT INTO users (name, login, password, user_type) VALUES ($1, $2, $3, 0)',
-            [name, login, hashedPass]
+            'INSERT INTO users (login, password, user_type) VALUES ($1, $2, $3, 0)',
+            [login, hashedPass]
         );
 
         res.status(201).json({ message: "User registered successfully" });
@@ -203,8 +203,8 @@ app.put('/api/language', async (req, res) =>{
 app.get('/api/users', async(req, res)=>{
     const { login } = req.query;
     try{
-        const condition = "SELECT id, name, login, user_type FROM users WHERE login = '" + login + "';";
-        const result = await pool.query(login ? condition : 'SELECT id, name, login, user_type FROM users ORDER BY id ASC;');
+        const condition = "SELECT id, login, user_type FROM users WHERE login = '" + login + "';";
+        const result = await pool.query(login ? condition : 'SELECT id, login, user_type FROM users ORDER BY id ASC;');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -579,13 +579,13 @@ app.post('/api/translationPLNENG', async (req, res) =>{
 
 app.get('/api/quizzes', async (req, res) => {
     try {
-        const { id, level, category, user, language, name } = req.query;
-        let query = 'SELECT q.id, q.title, u.name as user, l.code as language, execution_date '
+        const { id, user, language, name } = req.query;
+        let query = 'SELECT q.id, q.title, u.login as user, l.code as language, execution_date '
         + 'FROM quizzes q, users u, languages l '
         + 'WHERE q.users_id=u.id AND q.languages_id=l.id ';
         const conditions = [];
         if (id) conditions.push(`q.id = ${id}`);
-        if (user) conditions.push(`u.name = '${user}'`);
+        if (user) conditions.push(`u.login = '${user}'`);
         if (language) conditions.push(`l.code = '${language}'`);
         if (name) conditions.push(`q.title LIKE '%${name}%'`);
         
@@ -601,6 +601,32 @@ app.get('/api/quizzes', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
+app.delete('/api/quizzes', async (req, res) => {
+    try{
+        const { id } = req.body;
+        console.log(id);
+        const result = await pool.query('DELETE FROM quizzes WHERE id = $1', [id]);
+        res.status(200).json({message: result});
+    }catch(err){
+        console.log(err.message);
+        res.status(500).send("Server error");
+    }
+});
+
+app.post('/api/quizzes', async (req, res) =>{
+    const { title, users_id, languages_id, execution_date } = req.body;
+    console.log("App ", title, users_id, languages_id, execution_date);
+    try{
+        await pool.query(
+            'INSERT INTO quizzes(title, users_id, languages_id, execution_date) VALUES ($1, $2, $3, $4)', [title, users_id, languages_id, execution_date]
+        );
+        res.status(200).json({ message: "Quizz added successfully" });
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+})
 
 
 app.get('/api/quizzesQuestions/ENG', async(req, res)=>{
@@ -658,9 +684,9 @@ app.get('/api/quizzesQuestions/Count', async(req, res)=>{
 app.get('/api/usersQuizzesScores', async(req, res)=>{
     try{
         const { id } = req.query;
-        const result = await pool.query('SELECT q.id, q.title, u.name as user, dl.level, c.name as category, l.code as language, execution_date '
-        + 'FROM quizzes q, users u, difficulty_levels dl, categories c, languages l, users_quizzes_scores uqs '
-        + 'WHERE uqs.quizzes_id=q.id AND q.users_id=u.id AND q.difficultylevel_id=dl.id AND q.categories_id=c.id AND q.languages_id=l.id AND uqs.users_id=$1 ORDER BY uqs.id DESC;', [id]);
+        const result = await pool.query('SELECT q.id, q.title, u.login as user, l.code as language, execution_date '
+        + 'FROM quizzes q, users u, languages l, users_quizzes_scores uqs '
+        + 'WHERE uqs.quizzes_id=q.id AND q.users_id=u.id AND q.languages_id=l.id AND uqs.users_id=$1 ORDER BY uqs.id DESC;', [id]);
         res.json(result.rows);
     }catch(err){
         console.error(err.message);

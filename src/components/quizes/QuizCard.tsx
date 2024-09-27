@@ -11,6 +11,8 @@ import {
   ModalOverlay,
   useDisclosure,
   Text,
+  ModalCloseButton,
+  Button,
 } from "@chakra-ui/react";
 import { Quiz } from "../../hooks/useQuizzes";
 import QuizDetails from "./QuizDetails";
@@ -19,6 +21,8 @@ import { useEffect, useState } from "react";
 import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
 import useCategories from "../../hooks/useCategories";
 import useDifficultyLevels from "../../hooks/useDifficultyLevels";
+import useTokenData from "../../others/useTokenData";
+import actionData from "../../hooks/actionData";
 
 interface Props {
   quiz: Quiz;
@@ -28,6 +32,11 @@ interface Props {
 
 const QuizCard = ({ quiz, isScore, userId }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: deleteIsOpen,
+    onOpen: deleteOnOpen,
+    onClose: deleteOnClose,
+  } = useDisclosure();
   const [score, setScore] = useState<number>(0.0);
   const { fetchUserQuestions, fetchAmountOfQuestions } = useQuizzesQuestions();
   const { data: questions } = fetchUserQuestions(quiz.id ?? 0, userId);
@@ -36,6 +45,8 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
   const [levelsQuizzes, setLevelsQuizzes] = useState<string[]>([""]);
   const { data: categories } = useCategories();
   const { data: difficultyLevels } = useDifficultyLevels();
+  const { GetUserLogin } = useTokenData();
+  const { deleteData } = actionData("/quizzes");
 
   useEffect(() => {
     const answeredQuestions = questions.filter(
@@ -76,11 +87,27 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
         flexDirection="column"
         alignItems="center"
         // color="var(--neutral1)"
-        onClick={onOpen}
+        key={quiz.id}
       >
-        <CardBody>
-          <Heading fontSize="xl">{quiz?.title}</Heading>
-          <Box display="flex" flexDirection="column" alignItems="flex-start">
+        <CardBody w="100%">
+          <HStack justifyContent="space-between">
+            <Heading fontSize="xl">{quiz?.title}</Heading>
+            {GetUserLogin() == quiz.user ? (
+              <button
+                className="tag_error"
+                style={{ cursor: "pointer" }}
+                onClick={deleteOnOpen}
+              >
+                X
+              </button>
+            ) : null}
+          </HStack>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="flex-start"
+            onClick={onOpen}
+          >
             <p>Twórca: {quiz.user ?? "No user"}</p>
             <p>Język: {quiz.language ?? "No language"}</p>
             <HStack>
@@ -121,17 +148,15 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
               )}
             </HStack>
           </Box>
-          {isScore ? (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-              }}
-            >
-              <p>{score}</p>
-            </div>
-          ) : null}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+            }}
+          >
+            {isScore ? <p>{(score * 100).toFixed(0) + "%"}</p> : <p>0%</p>}
+          </div>
         </CardBody>
       </Card>
 
@@ -159,6 +184,39 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
             ></QuizDetails>
           </ModalBody>
           <ModalFooter></ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={deleteIsOpen} onClose={deleteOnClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody>
+            <p>Czy na pewno chcesz usunąć dany quiz?</p>
+            <p style={{ fontWeight: "bold" }}>
+              UWAGA! Spowoduje to usunięcie wszytskich danych powiązanych z tym
+              quizem!
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme="red"
+              mr={3}
+              onClick={() => {
+                console.log(quiz.title);
+                console.log(quiz.id?.toString());
+                const formData = new URLSearchParams();
+                formData.append("id", quiz.id?.toString() ?? "");
+                deleteData(formData);
+                window.location.reload(); // nie widać po tym toast
+              }}
+            >
+              Usuń
+            </Button>
+            <Button colorScheme="blue" mr={3} onClick={deleteOnClose}>
+              Anuluj
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>

@@ -8,20 +8,35 @@ import { Translation } from "./words_polish/CWordsPolish";
 import { Box, HStack, Text, useToast } from "@chakra-ui/react";
 import usePhrasesStorage from "../hooks/usePhrasesStorage";
 import useTranslationPL_ENG from "../hooks/useTranslationPL_ENG";
+import actionData from "../hooks/actionData";
+import { useNavigate } from "react-router-dom";
+import useTokenData from "../others/useTokenData";
 
 const CQuiz = () => {
   const [refs, setRefs] = useState<
-    (HTMLInputElement | HTMLSelectElement | HTMLDivElement | null)[]
+    (HTMLInputElement | HTMLSelectElement | null)[]
   >([]);
   const [translationsData, setTranslationsData] = useState<Translation[]>();
   const divRefs = useRef<(HTMLDivElement | null)[]>([]);
   const { data: languages } = useLanguages();
   const { fetchAll } = useTranslationPL_ENG();
   const { data: translations } = fetchAll();
+  const { postData } = actionData("/quizzes");
   const { savedPhrases, isLoading } = usePhrasesStorage("ENG");
+  const navigate = useNavigate();
   const toast = useToast();
+  const { GetUserId } = useTokenData();
 
-  const handleSave = () => {};
+  const handleSave = () => {
+    const formData = new URLSearchParams();
+    formData.append("title", refs[0]?.value ?? "");
+    formData.append("users_id", GetUserId().toString());
+    formData.append("languages_id", refs[1]?.value ?? "");
+    const dateNow = new Date().toJSON().substring(0, 10);
+    formData.append("execution_date", dateNow.toString());
+    postData(formData);
+    return navigate("/fishCards");
+  };
   const handleCancel = () => {};
 
   useEffect(() => {

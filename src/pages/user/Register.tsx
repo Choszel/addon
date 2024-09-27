@@ -4,24 +4,20 @@ import { Link } from "react-router-dom";
 import postRegister from "../../hooks/postRegister";
 
 const Register = () => {
-  const [nameInput, setNameInput] = useState("");
   const [loginInput, setLoginInput] = useState("");
   const [passInput, setPassInput] = useState("");
   const { isSending, sendRegisterForm } = postRegister();
 
-  const refName = useRef<HTMLInputElement>(null);
   const refLogin = useRef<HTMLInputElement>(null);
   const refPassword = useRef<HTMLInputElement>(null);
 
-  const isNameError = nameInput === "";
   const isLoginError = loginInput === "";
   const isPassError = passInput === "";
 
   const handleRegistration = async (event: React.FormEvent) => {
     event?.preventDefault();
-    if (isNameError || isLoginError || isPassError) return;
+    if (isLoginError || isPassError) return;
     sendRegisterForm(
-      refName.current?.value ?? "",
       refLogin.current?.value ?? "",
       refPassword.current?.value ?? ""
     );
@@ -31,18 +27,6 @@ const Register = () => {
   return (
     <>
       <p>Proszę uzupełnić poniższy formularz, aby się zarejestrować</p>
-      <HStack width="50%" marginY="3%">
-        <p>Nazwa użytkownika</p>
-        <Input
-          ref={refName}
-          onChange={(e) => setNameInput(e.target.value)}
-        ></Input>
-      </HStack>
-      {isNameError && (
-        <label className="small" style={{ color: "var(--error)" }}>
-          Pole "Nazwa Użytkownika" nie może być puste.
-        </label>
-      )}
       <HStack width="50%" marginY="3%">
         <p>Login</p>
         <Input
