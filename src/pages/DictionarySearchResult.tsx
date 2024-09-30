@@ -17,6 +17,7 @@ export interface Phrase {
   photo?: string | null;
   category: string;
   level?: string | null;
+  type?: string | null;
 }
 
 const DictionarySearchResult = () => {

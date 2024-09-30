@@ -2,6 +2,7 @@ import useData from "./useData";
 
 export interface EnglishWord{
     id: number;
+    translation_id?: number | null;
     word: string;
     definition: string;
     level: string;

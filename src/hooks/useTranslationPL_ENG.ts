@@ -21,7 +21,7 @@ const useTranslationPL_ENG = () =>{
         return useData<TranslationPL_ENG>("/translationPLNENG/pln", config);
     }
 
-    const fetchForPLNDetailed = (id: number) =>{ //fetchuje po polskim indeksie i zajduje słowa odpowiadające w angielskim zbiorze fraz
+    const fetchForPLNDetailed = (id?: number) =>{ //fetchuje po polskim indeksie i zajduje słowa odpowiadające w angielskim zbiorze fraz
         const config = { params: { id: id } };
     
         return useData<EnglishWord>("/translationPLNENGDetailed/pln", config);
@@ -39,7 +39,13 @@ const useTranslationPL_ENG = () =>{
         return useData<PolishWord>("/translationPLNENGDetailed/eng", config);
     }
 
-    return {fetchAll, fetchForPLN, fetchForPLNDetailed, fetchForENG, fetchForENGDetailed}; 
+    const fetchForPLNWord = (word: string) =>{
+        const config = { params: { word: word } };
+    
+        return useData<EnglishWord>("/translationPLNENGDetailed/pln/word", config);
+    } 
+
+    return {fetchAll, fetchForPLN, fetchForPLNDetailed, fetchForENG, fetchForENGDetailed, fetchForPLNWord}; 
 }
 
 export default useTranslationPL_ENG;
