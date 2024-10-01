@@ -51,7 +51,6 @@ const DetailsWordsPolish = () => {
         <AddTranslationButton
           langugeOption
           setTranslationsData={setTranslationsData}
-          title={"Tłumaczenia"}
         />
         <Button onClick={handleSave}>Zapisz</Button>
       </>

@@ -1,6 +1,7 @@
-import { HStack } from "@chakra-ui/react";
+import { HStack, Text } from "@chakra-ui/react";
 import { Phrase } from "../../pages/DictionarySearchResult";
 import { useNavigate } from "react-router-dom";
+import { HiSpeakerWave } from "react-icons/hi2";
 
 interface Props {
   phrase: Phrase;
@@ -11,6 +12,29 @@ interface Props {
 
 const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
   const navigator = useNavigate();
+  const msg = new SpeechSynthesisUtterance();
+
+  const handleSpeak = () => {
+    if (phrase.level) {
+      msg.lang = "en-US";
+
+      const voices = speechSynthesis
+        .getVoices()
+        .filter((voice) => voice.lang === "en-US");
+      msg.voice = voices[0];
+    } else {
+      msg.lang = "pl-PL";
+
+      const voices = speechSynthesis
+        .getVoices()
+        .filter((voice) => voice.lang === "pl-PL");
+      msg.voice = voices[1];
+    }
+
+    msg.text = phrase.word;
+    window.speechSynthesis.speak(msg);
+  };
+
   const redirectButton = () => {
     if (link) {
       navigator(
@@ -26,6 +50,16 @@ const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
           <p>{index}.</p>
           <p>{phrase.word}</p>
         </HStack>
+        <HiSpeakerWave
+          size={25}
+          onClick={() => {
+            handleSpeak();
+          }}
+          cursor={"pointer"}
+        />
+        {phrase.part_of_speech != undefined ? (
+          <Text>{"[" + phrase.part_of_speech + "]"}</Text>
+        ) : null}
         {phrase.level != undefined ? (
           <button style={{ cursor: "default" }} className="gradient_button">
             {phrase.level}

@@ -2,11 +2,13 @@ import useData from "./useData";
 
 export interface EnglishWord{
     id: number;
+    translation_id?: number | null;
     word: string;
     definition: string;
     level: string;
     category: string;
     popularity: number | null;
+    part_of_speech: string | null;
 }
 
 const useWordsEnglish = (id?: number) => {

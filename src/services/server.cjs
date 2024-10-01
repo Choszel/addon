@@ -409,11 +409,11 @@ app.get('/api/wordsEnglish/word', async (req, res) => {
 app.get('/api/wordsEnglishDetailed', async(req, res)=>{
     const { id } = req.query;
     try{
-        const condition = 'SELECT we.id, word, definition, dl.level as level, c.name as category '
+        const condition = `SELECT we.id, word, definition, dl.level as level, c.name as category, part_of_speech `
             + 'FROM words_english we, categories c, difficulty_levels dl '
             + 'WHERE we.categories_id=c.id and we.difficultylevel_id=dl.id AND we.id = ' + id + ';'
         const result = await pool.query(id ? condition : 
-            'SELECT we.id, word, definition, dl.level as level, c.name as category '
+            `SELECT we.id, word, definition, dl.level as level, c.name as category, part_of_speech as "part of speech"`
             + 'FROM words_english we, categories c, difficulty_levels dl '
             + 'WHERE we.categories_id=c.id and we.difficultylevel_id=dl.id ORDER BY we.id ASC;');
         res.json(result.rows);
@@ -436,10 +436,10 @@ app.delete('/api/wordsEnglish', async (req, res) =>{
 })
 
 app.put('/api/wordsEnglish', async (req, res) =>{
-    const { id, word, definition, difficultylevel_id, categories_id } = req.body;
+    const { id, word, definition, difficultylevel_id, categories_id, part_of_speech } = req.body;
     console.log(id, " ", word);
     try{
-        const result = await pool.query('UPDATE words_english SET word = $2, definition = $3, difficultylevel_id = $4, categories_id = $5 WHERE id = $1', [id, word, definition, difficultylevel_id, categories_id]);
+        const result = await pool.query('UPDATE words_english SET word = $2, definition = $3, difficultylevel_id = $4, categories_id = $5, part_of_speech = $6 WHERE id = $1', [id, word, definition, difficultylevel_id, categories_id, part_of_speech]);
         res.status(200).json({message: "Updated successfully"})
     }catch(err){
         console.log(err.message)
@@ -448,7 +448,7 @@ app.put('/api/wordsEnglish', async (req, res) =>{
 })
 
 app.post('/api/wordsEnglish', async (req, res) => {
-    const { word, definition, difficultylevel_id, categories_id } = req.body;
+    const { word, definition, difficultylevel_id, categories_id, part_of_speech } = req.body;
     console.log("App ", word, categories_id);
     
     try {
@@ -456,8 +456,8 @@ app.post('/api/wordsEnglish', async (req, res) => {
         if (phraseExists.rows.length > 0) {
             return res.status(400).json({ error: "Phrase already exists" });
         }
-        const insertResult = await pool.query('INSERT INTO words_english(word, definition, difficultylevel_id, categories_id) VALUES ($1, $2, $3, $4) RETURNING id', 
-            [word, definition, difficultylevel_id, categories_id]);
+        const insertResult = await pool.query('INSERT INTO words_english(word, definition, difficultylevel_id, categories_id, part_of_speech) VALUES ($1, $2, $3, $4, $5) RETURNING id', 
+            [word, definition, difficultylevel_id, categories_id, part_of_speech]);
         
         const newWordId = insertResult.rows[0].id; 
 
@@ -503,10 +503,10 @@ app.get('/api/translationPLNENG/pln', async(req, res)=>{
 app.get('/api/translationPLNENGDetailed/pln', async(req, res)=>{
     const { id } = req.query;
     try{
-        const condition = 'SELECT we.id, tr.id as translation_id, we.word as word, definition, dl.level as level, c. name as category '
+        const condition = 'SELECT we.id, tr.id as translation_id, we.word as word, definition, dl.level as level, c. name as category, part_of_speech '
             + 'FROM translations_pl_eng tr, words_english we, difficulty_levels dl, categories c '
             + 'WHERE tr.words_english_id=we.id AND dl.id = we.difficultylevel_id AND c.id = we.categories_id AND tr.words_polish_id = ' + id + ';';
-        const result = await pool.query(id ? condition : 'SELECT tr.id, we.word as word, definition, dl.level as level, c. name as category '
+        const result = await pool.query(id ? condition : 'SELECT we.id, tr.id as translation_id, we.word as word, definition, dl.level as level, c. name as category, part_of_speech '
             + 'FROM translations_pl_eng tr, words_english we, difficulty_levels dl, categories c '
             + 'WHERE tr.words_english_id=we.id AND dl.id = we.difficultylevel_id AND c.id = we.categories_id ORDER BY id ASC;');
         res.json(result.rows);
@@ -541,6 +541,19 @@ app.get('/api/translationPLNENGDetailed/eng', async(req, res)=>{
         const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word as word, definition, c. name as category, photo '
             + 'FROM translations_pl_eng tr, words_polish wp, categories c '
             + 'WHERE tr.words_polish_id=wp.id AND c.id = wp.categories_id ORDER BY id ASC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.get('/api/translationPLNENGDetailed/pln/word', async(req, res)=>{
+    const { word } = req.query;
+    try{
+        const result = await pool.query("SELECT we.id, tr.id as translation_id, we.word as word, we.definition, dl.level as level, c. name as category, part_of_speech "
+            + "FROM translations_pl_eng tr, words_english we, difficulty_levels dl, categories c, words_polish wp "
+            + "WHERE tr.words_english_id=we.id AND dl.id = we.difficultylevel_id AND c.id = we.categories_id AND tr.words_polish_id = wp.id AND wp.word = '" + word + "';");
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -618,16 +631,17 @@ app.post('/api/quizzes', async (req, res) =>{
     const { title, users_id, languages_id, execution_date } = req.body;
     console.log("App ", title, users_id, languages_id, execution_date);
     try{
-        await pool.query(
-            'INSERT INTO quizzes(title, users_id, languages_id, execution_date) VALUES ($1, $2, $3, $4)', [title, users_id, languages_id, execution_date]
+        const insertResult = await pool.query(
+            'INSERT INTO quizzes(title, users_id, languages_id, execution_date) VALUES ($1, $2, $3, $4) RETURNING id', [title, users_id, languages_id, execution_date]
         );
-        res.status(200).json({ message: "Quizz added successfully" });
+        const newQuizId = insertResult.rows[0].id; 
+
+        res.json({ id: newQuizId }); 
     }catch(err){
         console.error(err.message);
         res.status(500).send("Server error");
     }
-})
-
+});
 
 app.get('/api/quizzesQuestions/ENG', async(req, res)=>{
     const { id } = req.query;
@@ -642,6 +656,42 @@ app.get('/api/quizzesQuestions/ENG', async(req, res)=>{
         + 'wp.word as word_polish, wp.definition as wp_definition, wp.categories_id as wp_category_id, wp.photo as wp_photo '
         + 'FROM quizzes_questions_eng qqe, translations_pl_eng tpe, words_english we, words_polish wp '
         + 'WHERE qqe.question_id = tpe.id AND tpe.words_polish_id = wp.id AND tpe.words_english_id = we.id ORDER BY qqe.id ASC');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+app.post('/api/quizzesQuestions/ENG', async (req, res) => {
+    const { quiz_id, data } = req.body;
+  
+    console.log(quiz_id, data)
+    try {
+      const questions = JSON.parse(data);
+      const values = questions.map((q) => [
+        quiz_id,
+        q.translation_id,
+        q.type
+      ]);
+  
+      const query =
+        'INSERT INTO quizzes_questions_eng (quizzes_id, question_id, type) VALUES ($1, $2, $3)';
+      const results = await Promise.all(
+        values.map((value) => {return pool.query(query, value)})
+      );
+  
+      res.json({ success: true, rows: results.map((result) => result.rows) });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
+    }
+});
+
+app.get('/api/quizzesQuestions/Count', async(req, res)=>{
+    try{
+        const { id } = req.query;
+        const result = await pool.query('SELECT count(*) as amount_of_questions FROM quizzes_questions_eng WHERE quizzes_id=$1;', [id]);
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -668,18 +718,7 @@ app.get('/api/usersQuizzesQuestions', async(req, res)=>{
         console.error(err.message);
         res.status(500).send('Server error');
     }
-});
-
-app.get('/api/quizzesQuestions/Count', async(req, res)=>{
-    try{
-        const { id } = req.query;
-        const result = await pool.query('SELECT count(*) as amount_of_questions FROM quizzes_questions_eng WHERE quizzes_id=$1;', [id]);
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Server error');
-    }
-});
+});  
 
 app.get('/api/usersQuizzesScores', async(req, res)=>{
     try{

@@ -47,10 +47,7 @@ const DetailsWordsEnglish = () => {
     routeName: "/translationPLNENG",
     others: (
       <>
-        <AddTranslationButton
-          setTranslationsData={setTranslationsData}
-          title={"Tłumaczenia"}
-        />
+        <AddTranslationButton setTranslationsData={setTranslationsData} />
         <Button onClick={handleSave}>Zapisz</Button>
       </>
     ),
@@ -65,6 +62,7 @@ const DetailsWordsEnglish = () => {
           <p>{e.definition}</p>
           <p>{e.level}</p>
           <p>{e.category}</p>
+          <p>{e.part_of_speech}</p>
         </div>
       ))}
       <br></br>

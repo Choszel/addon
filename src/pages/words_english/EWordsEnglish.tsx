@@ -30,6 +30,7 @@ const EWordsEnglish = () => {
     formData.append("definition", refs[1]?.value ?? "");
     formData.append("difficultylevel_id", refs[2]?.value ?? "");
     formData.append("categories_id", refs[3]?.value ?? "");
+    formData.append("part_of_speech", refs[4]?.value ?? "");
     putData(formData);
     return navigate(routeName);
   };
@@ -66,6 +67,22 @@ const EWordsEnglish = () => {
         inputType: "select",
         isRequired: false,
         data: categories?.map((cat) => ({ id: cat.id, value: cat.name })),
+      },
+      {
+        inputName: "Part of speech",
+        inputType: "select",
+        isRequired: false,
+        data: [
+          { id: "noun", value: "noun" },
+          { id: "verb", value: "verb" },
+          { id: "adjective", value: "adjective" },
+          { id: "adverbs", value: "adverbs" },
+          { id: "pronouns", value: "pronouns" },
+          { id: "articles", value: "articles" },
+          { id: "prepositions", value: "prepositions" },
+          { id: "conjunctions", value: "conjunctions" },
+          { id: "numerals", value: "numerals" },
+        ],
       },
     ],
     setRefs: function (): void {},
