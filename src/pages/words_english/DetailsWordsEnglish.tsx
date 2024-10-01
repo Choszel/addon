@@ -62,6 +62,7 @@ const DetailsWordsEnglish = () => {
           <p>{e.definition}</p>
           <p>{e.level}</p>
           <p>{e.category}</p>
+          <p>{e.part_of_speech}</p>
         </div>
       ))}
       <br></br>

@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 
 interface Props {
-  id: number;
+  id: number | string;
   value: string;
 }
 

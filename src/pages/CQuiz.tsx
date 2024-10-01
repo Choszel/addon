@@ -82,8 +82,7 @@ const CQuiz = () => {
       JSON.stringify([...savedPhrases, ...(phrasesData ?? [])])
     );
     postQuizQuestions(questionData);
-
-    //return navigate("/fishCards");
+    return navigate("/fishCards");
   };
 
   const handleCancel = () => {

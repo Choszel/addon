@@ -8,6 +8,7 @@ export interface EnglishWord{
     level: string;
     category: string;
     popularity: number | null;
+    part_of_speech: string | null;
 }
 
 const useWordsEnglish = (id?: number) => {

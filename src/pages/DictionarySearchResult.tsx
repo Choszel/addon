@@ -8,6 +8,7 @@ import { PolishWord } from "../hooks/useWordsPolish";
 import getCroppedImageUrl from "../services/image-url";
 import actionData from "../hooks/actionData";
 import usePhrasesStorage from "../hooks/usePhrasesStorage";
+import { HiSpeakerWave } from "react-icons/hi2";
 
 export interface Phrase {
   id: number;
@@ -18,6 +19,7 @@ export interface Phrase {
   category: string;
   level?: string | null;
   type?: string | null;
+  part_of_speech?: string | null;
 }
 
 const DictionarySearchResult = () => {
@@ -32,6 +34,7 @@ const DictionarySearchResult = () => {
   const navigate = useNavigate();
   const { putData } = actionData("/wordsEnglish/raisePopularity");
   const { addToSavedPhrases } = usePhrasesStorage("ENG");
+  const msg = new SpeechSynthesisUtterance();
 
   const Load = async () => {
     switch (code) {
@@ -111,6 +114,27 @@ const DictionarySearchResult = () => {
     window.location.reload();
   };
 
+  const handleSpeak = () => {
+    if (searchPhrase?.level) {
+      msg.lang = "en-US";
+
+      const voices = speechSynthesis
+        .getVoices()
+        .filter((voice) => voice.lang === "en-US");
+      msg.voice = voices[0];
+    } else {
+      msg.lang = "pl-PL";
+
+      const voices = speechSynthesis
+        .getVoices()
+        .filter((voice) => voice.lang === "pl-PL");
+      msg.voice = voices[1];
+    }
+
+    msg.text = searchPhrase?.word ?? "";
+    window.speechSynthesis.speak(msg);
+  };
+
   return (
     <>
       <HStack>
@@ -121,7 +145,16 @@ const DictionarySearchResult = () => {
           language={selectedLanguage}
         ></SearchInput>
       </HStack>
-      <h1>{searchPhrase?.word}</h1>
+      <HStack>
+        <h1>{searchPhrase?.word}</h1>
+        <HiSpeakerWave
+          size={40}
+          onClick={() => {
+            handleSpeak();
+          }}
+          cursor={"pointer"}
+        />
+      </HStack>
       <Img
         boxSize="22%"
         marginY="2%"
