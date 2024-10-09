@@ -53,7 +53,7 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
       (question) => question.done == true
     );
     setScore(
-      answeredQuestions.length / amountOfQuestions[0]?.amount_of_questions ?? 0
+      answeredQuestions.length / amountOfQuestions[0]?.amount_of_questions
     );
     let questionsCategories = [
       ...new Set(

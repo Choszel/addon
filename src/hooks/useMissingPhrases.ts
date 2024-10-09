@@ -4,8 +4,11 @@ export interface MissingPhrase{
     id: number;
     phrase: string;
     definition: string;
-    languages_id: number | string;
-    users_id: number | string;
+    user: number | string;
+    code: number | string;
+    level: number | string;
+    category: number | string;
+    part_of_speech: number | string;
 }
 
 const useMissingPhrases = (id?: number) => {

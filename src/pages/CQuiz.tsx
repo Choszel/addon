@@ -57,7 +57,7 @@ const CQuiz = () => {
 
     if (savedPhrases.length + (phrasesData?.length ?? 0) < 1) {
       toast({
-        title: "Minimalna wymagana ilość fraz wynosi 15. ",
+        title: "Minimalna wymagana ilość fraz wynosi 15.",
         status: "error",
         position: "bottom-right",
         duration: 5000,

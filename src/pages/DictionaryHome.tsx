@@ -59,13 +59,15 @@ const DictionaryHome = () => {
         <p>Wybrany język:</p>
         <SelectLanguage setSelectedLanguage={setSelectedLanguage} />
       </HStack>
-      <SearchInput
-        onSearch={(id, searchText) => onSearch(id, searchText)}
-        language={selectedLanguage ?? ""}
-      ></SearchInput>
-      <Button bgColor="var(--honeydew)" marginTop="10%">
-        Losuj frazę
-      </Button>
+      <HStack display="flex" justifyContent="center">
+        <SearchInput
+          onSearch={(id, searchText) => onSearch(id, searchText)}
+          language={selectedLanguage ?? ""}
+        ></SearchInput>
+        <Button bgColor="var(--honeydew)" marginX="2%">
+          Losuj frazę
+        </Button>
+      </HStack>
       <HStack display="flex" justifyContent="center" spacing={10} marginY="4%">
         <div className="gradient_box">
           <p>Popularne wyszukiwania w tym miesiącu</p>

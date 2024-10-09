@@ -31,19 +31,19 @@ const QuizDetails = ({
         <p>Kategria: </p>
         {categories.length > 3 ? (
           <HStack>
-            <button className="gradient_button">
+            <button className="tag_category">
               {categories[0] ?? "No category"}
             </button>
-            <button className="gradient_button">
+            <button className="tag_category">
               {categories[1] ?? "No category"}
             </button>
-            <button className="gradient_button">others</button>
+            <button className="tag_category">others</button>
           </HStack>
         ) : categories.length == 0 ? (
           <button className="tag_error">X</button>
         ) : (
           categories.map((cat) => (
-            <button className="gradient_button">{cat ?? "No category"}</button>
+            <button className="tag_category">{cat ?? "No category"}</button>
           ))
         )}
       </HStack>
@@ -55,11 +55,12 @@ const QuizDetails = ({
           <button className="tag_error">X</button>
         ) : (
           difficultyLevels.map((dl) => (
-            <button className="gradient_button">{dl ?? "No level"}</button>
+            <button className="tag_category">{dl ?? "No level"}</button>
           ))
         )}
       </HStack>
       <p>Data wykonania {quiz.execution_date?.toString().substring(0, 10)}</p>
+      <button className="gradient_button">Zagraj</button>
       <h1>Lista zwrotów</h1>
       {questions.map((question) => (
         <HStack marginY="3%">

@@ -227,11 +227,11 @@ app.get('/api/missingPhrases', async(req, res)=>{
 app.get('/api/missingPhrasesDetailed', async(req, res)=>{
     const { id } = req.query;
     try{
-        const condition = 'select m.id, code, login as login, phrase, definition, c.name as category, level ' 
+        const condition = 'select m.id, code, login as user, phrase, definition, c.name as category, level, part_of_speech ' 
             + 'from missing_phrases m, languages l, users u, categories c, difficulty_levels dl '
             + 'where m.languages_id=l.id and m.users_id=u.id and m.category=c.id and m.difficulty_level=dl.id ' 
             + 'AND m.id = ' + id + ';'
-        const result = await pool.query(id ? condition : 'select m.id, code, login as login, phrase, definition, c.name as category, level ' 
+        const result = await pool.query(id ? condition : 'select m.id, code, login as user, phrase, definition, c.name as category, level, part_of_speech ' 
             + 'from missing_phrases m, languages l, users u, categories c, difficulty_levels dl '
             + 'where m.languages_id=l.id and m.users_id=u.id and m.category=c.id and m.difficulty_level=dl.id ' 
             + 'ORDER BY m.id ASC;');

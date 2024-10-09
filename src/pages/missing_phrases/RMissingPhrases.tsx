@@ -8,7 +8,7 @@ import useMissingPhrases, {
 const RMissingPhrases = () => {
   const { data } = useMissingPhrases();
 
-  const headers = ["id", "phrase", "code", "level", "category", "login"];
+  const headers = ["id", "phrase", "code", "level", "category", "user"];
 
   const tableData: TableData<MissingPhrase> = {
     title: "Wykaz brakujących fraz",
