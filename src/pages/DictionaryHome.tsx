@@ -72,8 +72,10 @@ const DictionaryHome = () => {
         <div className="gradient_box">
           <p>Popularne wyszukiwania w tym miesiącu</p>
           {slicedArray.map((word, id) => (
-            <HStack>
-              <p>{id + 1}</p> <p>{word.word}</p> <p>{word.popularity}</p>
+            <HStack width="90%">
+              <p>{id + 1}.</p>
+              <p>{word.word}</p>
+              <p>{word.popularity}</p>
             </HStack>
           ))}
         </div>

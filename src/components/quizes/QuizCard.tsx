@@ -115,19 +115,19 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
               <p>Kategria: </p>
               {categoriesQuizzes.length > 3 ? (
                 <HStack>
-                  <button className="gradient_button">
+                  <button className="tag_category">
                     {categoriesQuizzes[0] ?? "No category"}
                   </button>
-                  <button className="gradient_button">
+                  <button className="tag_category">
                     {categoriesQuizzes[1] ?? "No category"}
                   </button>
-                  <button className="gradient_button">others</button>
+                  <button className="tag_category">others</button>
                 </HStack>
               ) : categoriesQuizzes.length == 0 ? (
                 <button className="tag_error">X</button>
               ) : (
                 categoriesQuizzes.map((cq) => (
-                  <button className="gradient_button">
+                  <button className="tag_category">
                     {cq ?? "No category"}
                   </button>
                 ))
@@ -141,9 +141,7 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
                 <button className="tag_error">X</button>
               ) : (
                 levelsQuizzes.map((lq) => (
-                  <button className="gradient_button">
-                    {lq ?? "No level"}
-                  </button>
+                  <button className="tag_category">{lq ?? "No level"}</button>
                 ))
               )}
             </HStack>
@@ -162,7 +160,7 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxW="100%" width="50%">
           <ModalBody>
             <HStack marginY="5%" width="75%" onClick={onClose} cursor="pointer">
               <LuArrowLeft size={32} />
@@ -183,7 +181,6 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
               difficultyLevels={levelsQuizzes}
             ></QuizDetails>
           </ModalBody>
-          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
 

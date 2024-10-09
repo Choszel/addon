@@ -29,6 +29,8 @@ import CWordsEnglish from "./pages/words_english/CWordsEnglish";
 import UserProfile from "./pages/user/UserProfile";
 import AlphabeticalSearch from "./pages/AlphabeticalSearch";
 import CQuiz from "./pages/CQuiz";
+import FishCardGame from "./pages/FishCardGame";
+import MatchGame from "./pages/MatchGame";
 
 function App() {
   return (
@@ -79,6 +81,8 @@ function App() {
           <Route path="/user" element={<RUser />} />
           <Route path="/user/details/:login" element={<UserProfile />} />
           <Route path="/quiz/create" element={<CQuiz />} />
+          <Route path="/quiz/fishCardGame/:id" element={<FishCardGame />} />
+          <Route path="/quiz/matchGame/:id" element={<MatchGame />} />
         </Route>
       </Routes>
     </Router>

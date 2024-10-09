@@ -1,6 +1,7 @@
 import { Card, CardBody, HStack } from "@chakra-ui/react";
 import { Quiz } from "../../hooks/useQuizzes";
 import { QuizQuestion } from "../../hooks/useQuizzesQuestions";
+import { Link } from "react-router-dom";
 
 interface Props {
   quiz: Quiz;
@@ -60,17 +61,46 @@ const QuizDetails = ({
         )}
       </HStack>
       <p>Data wykonania {quiz.execution_date?.toString().substring(0, 10)}</p>
-      <button className="gradient_button">Zagraj</button>
-      <h1>Lista zwrotów</h1>
+
+      <h1 style={{ textDecoration: "underline", marginTop: "4%" }}>Zagraj</h1>
+      <HStack>
+        <Link to={"/quiz/fishCardGame/" + quiz.id} className="game_type">
+          <p>Fiszki</p>
+        </Link>
+        <Link to={"/quiz/matchGame/" + quiz.id} className="game_type">
+          {" "}
+          <p>Dopasowanie</p>
+        </Link>
+        <div className="game_type">
+          <p>Test</p>
+        </div>
+      </HStack>
+      <h1 style={{ marginTop: "4%" }}>Lista zwrotów</h1>
       {questions.map((question) => (
-        <HStack marginY="3%">
-          <Card bg={userId ? (question.done ? "var(--nyanza)" : "red") : ""}>
-            <CardBody>
+        <HStack margin="3% 3%">
+          <Card
+            bg={userId ? (question.done ? "var(--nyanza)" : "red") : ""}
+            w="100%"
+            height="150px"
+          >
+            <CardBody
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
               <p>{question.word_polish}</p>
             </CardBody>
           </Card>
-          <Card bg={userId ? (question.done ? "var(--nyanza)" : "red") : ""}>
-            <CardBody>
+          <Card
+            bg={userId ? (question.done ? "var(--nyanza)" : "red") : ""}
+            w="100%"
+            height="150px"
+          >
+            <CardBody
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
               <p>{question.word_second}</p>
             </CardBody>
           </Card>
