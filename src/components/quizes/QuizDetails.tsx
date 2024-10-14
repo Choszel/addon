@@ -68,12 +68,11 @@ const QuizDetails = ({
           <p>Fiszki</p>
         </Link>
         <Link to={"/quiz/matchGame/" + quiz.id} className="game_type">
-          {" "}
           <p>Dopasowanie</p>
         </Link>
-        <div className="game_type">
+        <Link to={"/quiz/matchGame/" + quiz.id} className="game_type">
           <p>Test</p>
-        </div>
+        </Link>
       </HStack>
       <h1 style={{ marginTop: "4%" }}>Lista zwrotów</h1>
       {questions.map((question) => (

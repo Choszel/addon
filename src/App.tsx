@@ -31,6 +31,7 @@ import AlphabeticalSearch from "./pages/AlphabeticalSearch";
 import CQuiz from "./pages/CQuiz";
 import FishCardGame from "./pages/FishCardGame";
 import MatchGame from "./pages/MatchGame";
+import TestGame from "./pages/TestGame";
 
 function App() {
   return (
@@ -83,6 +84,7 @@ function App() {
           <Route path="/quiz/create" element={<CQuiz />} />
           <Route path="/quiz/fishCardGame/:id" element={<FishCardGame />} />
           <Route path="/quiz/matchGame/:id" element={<MatchGame />} />
+          <Route path="/quiz/testGame/:id" element={<TestGame />} />
         </Route>
       </Routes>
     </Router>
