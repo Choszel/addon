@@ -31,6 +31,7 @@ const NoTranslation = () => {
     formData.append("users_id", GetUserId().toString());
     formData.append("difficulty_level", refs[3]?.value ?? "");
     formData.append("category", refs[4]?.value ?? "");
+    formData.append("part_of_speech", refs[5]?.value ?? "");
     postData(formData);
     return navigate("/dictionary");
   };
@@ -66,6 +67,23 @@ const NoTranslation = () => {
         inputType: "select",
         isRequired: false,
         data: categories?.map((cat) => ({ id: cat.id, value: cat.name })),
+      },
+      {
+        inputName: "Part of speech",
+        inputType: "select",
+        isRequired: false,
+        data: [
+          { id: "noun", value: "noun" },
+          { id: "verb", value: "verb" },
+          { id: "adjective", value: "adjective" },
+          { id: "adverb", value: "adverb" },
+          { id: "pronoun", value: "pronoun" },
+          { id: "article", value: "article" },
+          { id: "preposition", value: "preposition" },
+          { id: "conjunction", value: "conjunction" },
+          { id: "numeral", value: "numeral" },
+          { id: "other", value: "other" },
+        ],
       },
     ],
     setRefs: function (): void {},

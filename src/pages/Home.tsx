@@ -25,6 +25,7 @@ const Home = () => {
             boxSize={20}
             marginTop={10}
             userSelect="none"
+            alignSelf="start"
           ></Image>
         </Link>
 

@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Select } from "@chakra-ui/react";
+import { Box, Button, HStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import SearchInput from "../dictionary/SearchInput";
 import { QuizzQuestion } from "../../pages/CQuiz";
@@ -17,7 +17,6 @@ const AddPhraseButton = ({ language, setPhrasesData, savedPhrases }: Props) => {
       id: number;
       translation_id?: number;
       word_pln?: string;
-      type: string;
       category?: string;
       level?: string;
     }[]
@@ -30,10 +29,7 @@ const AddPhraseButton = ({ language, setPhrasesData, savedPhrases }: Props) => {
   }>();
 
   const handleAddTranslation = () => {
-    setDataRow((dataRow) => [
-      ...dataRow,
-      { id: Date.now(), type: "pln_phrase" },
-    ]);
+    setDataRow((dataRow) => [...dataRow, { id: Date.now() }]);
   };
 
   const handleDeleteTranslation = (id: number) => {
@@ -72,7 +68,6 @@ const AddPhraseButton = ({ language, setPhrasesData, savedPhrases }: Props) => {
     setPhrasesData(
       dataRow.map((row) => ({
         translation_id: row.translation_id,
-        type: row.type,
         category: row.category,
         level: row.level,
       }))
@@ -100,26 +95,6 @@ const AddPhraseButton = ({ language, setPhrasesData, savedPhrases }: Props) => {
                 setTranslationId={setTranslationId}
                 rowId={row.id}
               />
-              <Select
-                width="25%"
-                onChange={(e) => {
-                  setDataRow((dataRow) =>
-                    dataRow.map((r) =>
-                      r.id === row.id
-                        ? {
-                            ...r,
-                            type: e.target.value,
-                          }
-                        : row
-                    )
-                  );
-                }}
-              >
-                <option value="pln_phrase">Polska Fraza</option>
-                <option value="photo">Obrazek</option>
-                <option value="pln_def">Polska definicja</option>
-                <option value={language + "_def"}>Angielska definicja</option>
-              </Select>
             </>
           ) : (
             <SearchInput

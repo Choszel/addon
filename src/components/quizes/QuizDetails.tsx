@@ -70,7 +70,7 @@ const QuizDetails = ({
         <Link to={"/quiz/matchGame/" + quiz.id} className="game_type">
           <p>Dopasowanie</p>
         </Link>
-        <Link to={"/quiz/matchGame/" + quiz.id} className="game_type">
+        <Link to={"/quiz/testGame/" + quiz.id} className="game_type">
           <p>Test</p>
         </Link>
       </HStack>

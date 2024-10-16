@@ -3,7 +3,7 @@ import FormTemplate, {
   FormData,
 } from "../components/crud_templates/CreateTemplate";
 import useLanguages from "../hooks/useLanguages";
-import { Box, Button, HStack, Select, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, HStack, Text, useToast } from "@chakra-ui/react";
 import usePhrasesStorage from "../hooks/usePhrasesStorage";
 import useTranslationPL_ENG from "../hooks/useTranslationPL_ENG";
 import actionData from "../hooks/actionData";
@@ -13,7 +13,6 @@ import AddPhraseButton from "../components/quizes/AddPhraseButton";
 
 export interface QuizzQuestion {
   translation_id: number | undefined;
-  type: string | undefined;
   category: string | undefined;
   level: string | undefined;
 }
@@ -40,9 +39,7 @@ const CQuiz = () => {
   const handleSave = async () => {
     if (
       savedPhrases.some((sp) =>
-        phrasesData?.some(
-          (pd) => pd.translation_id === sp.translation_id && pd.type === sp.type
-        )
+        phrasesData?.some((pd) => pd.translation_id === sp.translation_id)
       )
     ) {
       toast({
@@ -183,17 +180,6 @@ const CQuiz = () => {
             <Box className="question">
               <p>{phrase.word}</p>
             </Box>
-            <Select
-              width="25%"
-              onChange={(e) => {
-                phrase.type = e.target.value;
-              }}
-            >
-              <option value="pln_phrase">Polska Fraza</option>
-              <option value="photo">Obrazek</option>
-              <option value="pln_def">Polska definicja</option>
-              <option value="eng_def">Angielska definicja</option>
-            </Select>
             <Button onClick={() => console.log("savedPhrases", savedPhrases)}>
               Kliknij mnie
             </Button>
