@@ -112,7 +112,7 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
             <p>Język: {quiz.language ?? "No language"}</p>
             <HStack>
               {" "}
-              <p>Kategria: </p>
+              <p>Kategoria: </p>
               {categoriesQuizzes.length > 3 ? (
                 <HStack>
                   <button className="tag_category">
@@ -169,7 +169,6 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
                 className="product_list_text_main"
                 marginX="5%"
               >
-                {" "}
                 Powrót
               </Text>
             </HStack>

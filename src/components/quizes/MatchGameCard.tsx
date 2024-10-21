@@ -52,7 +52,7 @@ const MatchGameCard = ({
         opacity={isDisabled ? 0.5 : 1}
         padding={0}
       >
-        <p>{question?.word_polish}</p>
+        <p>{question?.word_second}</p>
       </Box>
       <HStack>
         {starsColors == 4 ? (

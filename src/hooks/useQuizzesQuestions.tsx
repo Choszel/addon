@@ -5,7 +5,6 @@ export interface QuizQuestion {
   id: number | null;
   quizzes_id: number | null;
   question_id: number | null;
-  type: string | null;
   word_second: string | null;
   ws_definition: string | null;
   ws_level_id: number | null;

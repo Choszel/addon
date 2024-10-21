@@ -72,7 +72,7 @@ const MatchGame = () => {
       {showConfetti && <Confetti recycle={false} gravity={0.2} />}
       {currentWord ? (
         <>
-          <h1>{currentWord.word_second}</h1>
+          <h1>{currentWord.word_polish}</h1>
           <SimpleGrid
             columns={{ sm: 3, md: 3, lg: 5, xl: 5 }}
             padding={8}
