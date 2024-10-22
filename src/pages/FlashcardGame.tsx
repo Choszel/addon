@@ -6,7 +6,7 @@ import { PiArrowsCounterClockwise } from "react-icons/pi";
 import { FaArrowLeft } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa6";
 
-const FishCardGame = () => {
+const FlashcardGame = () => {
   const { id } = useParams();
   const { fetchENG } = useQuizzesQuestions();
   const { data: questions } = fetchENG(parseInt(id ?? "0"));
@@ -124,4 +124,4 @@ const FishCardGame = () => {
   );
 };
 
-export default FishCardGame;
+export default FlashcardGame;

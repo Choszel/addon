@@ -7,6 +7,7 @@ export interface Quiz{
     user: string | null;
     language: string | null;
     execution_date: Date | string | null;
+    type: string | null;
 }
 
 const useQuizzes = (quizQuery: QuizQuery) => useData<Quiz>("/quizzes", 

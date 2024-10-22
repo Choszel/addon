@@ -63,48 +63,57 @@ const QuizDetails = ({
       <p>Data wykonania {quiz.execution_date?.toString().substring(0, 10)}</p>
 
       <h1 style={{ textDecoration: "underline", marginTop: "4%" }}>Zagraj</h1>
-      <HStack>
-        <Link to={"/quiz/fishCardGame/" + quiz.id} className="game_type">
-          <p>Fiszki</p>
+
+      {quiz.type == "quiz" ? (
+        <>
+          <HStack>
+            <Link to={"/quiz/flashcardGame/" + quiz.id} className="game_type">
+              <p>Fiszki</p>
+            </Link>
+            <Link to={"/quiz/matchGame/" + quiz.id} className="game_type">
+              <p>Dopasowanie</p>
+            </Link>
+            <Link to={"/quiz/testGame/" + quiz.id} className="game_type">
+              <p>Test</p>
+            </Link>
+          </HStack>
+          <h1 style={{ marginTop: "4%" }}>Lista zwrotów</h1>
+          {questions.map((question) => (
+            <HStack margin="3% 3%">
+              <Card
+                bg={userId ? (question.done ? "var(--nyanza)" : "red") : ""}
+                w="100%"
+                height="150px"
+              >
+                <CardBody
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <p>{question.word_polish}</p>
+                </CardBody>
+              </Card>
+              <Card
+                bg={userId ? (question.done ? "var(--nyanza)" : "red") : ""}
+                w="100%"
+                height="150px"
+              >
+                <CardBody
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <p>{question.word_second}</p>
+                </CardBody>
+              </Card>
+            </HStack>
+          ))}
+        </>
+      ) : (
+        <Link to={"/quiz/story/" + quiz.id} className="game_type">
+          <p>Tekst oraz quiz</p>
         </Link>
-        <Link to={"/quiz/matchGame/" + quiz.id} className="game_type">
-          <p>Dopasowanie</p>
-        </Link>
-        <Link to={"/quiz/testGame/" + quiz.id} className="game_type">
-          <p>Test</p>
-        </Link>
-      </HStack>
-      <h1 style={{ marginTop: "4%" }}>Lista zwrotów</h1>
-      {questions.map((question) => (
-        <HStack margin="3% 3%">
-          <Card
-            bg={userId ? (question.done ? "var(--nyanza)" : "red") : ""}
-            w="100%"
-            height="150px"
-          >
-            <CardBody
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <p>{question.word_polish}</p>
-            </CardBody>
-          </Card>
-          <Card
-            bg={userId ? (question.done ? "var(--nyanza)" : "red") : ""}
-            w="100%"
-            height="150px"
-          >
-            <CardBody
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <p>{question.word_second}</p>
-            </CardBody>
-          </Card>
-        </HStack>
-      ))}
+      )}
     </>
   );
 };

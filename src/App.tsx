@@ -2,7 +2,7 @@ import "./App.css";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import DictionaryHome from "./pages/DictionaryHome";
-import FishCardsHome from "./pages/FishCardsHome";
+import FlashcardsHome from "./pages/FlashcardsHome";
 import Layout from "./Layout";
 import NoTranslation from "./pages/missing_phrases/NoTranslation";
 import DictionarySearchResult from "./pages/DictionarySearchResult";
@@ -29,9 +29,10 @@ import CWordsEnglish from "./pages/words_english/CWordsEnglish";
 import UserProfile from "./pages/user/UserProfile";
 import AlphabeticalSearch from "./pages/AlphabeticalSearch";
 import CQuiz from "./pages/CQuiz";
-import FishCardGame from "./pages/FishCardGame";
+import FlashcardGame from "./pages/FlashcardGame";
 import MatchGame from "./pages/MatchGame";
 import TestGame from "./pages/TestGame";
+import StoryWithQuestions from "./pages/StoryWithQuestions";
 
 function App() {
   return (
@@ -44,7 +45,7 @@ function App() {
             path="/dictionary/alphabeticalSearch/:language/:letter"
             element={<AlphabeticalSearch />}
           />
-          <Route path="/fishCards" element={<FishCardsHome />} />
+          <Route path="/flashcards" element={<FlashcardsHome />} />
           <Route path="/noTranslation" element={<NoTranslation />} />
           <Route
             path="dictionary/searchResult/:id/:word/:code"
@@ -82,9 +83,10 @@ function App() {
           <Route path="/user" element={<RUser />} />
           <Route path="/user/details/:login" element={<UserProfile />} />
           <Route path="/quiz/create" element={<CQuiz />} />
-          <Route path="/quiz/fishCardGame/:id" element={<FishCardGame />} />
+          <Route path="/quiz/FlashcardGame/:id" element={<FlashcardGame />} />
           <Route path="/quiz/matchGame/:id" element={<MatchGame />} />
           <Route path="/quiz/testGame/:id" element={<TestGame />} />
+          <Route path="/quiz/story/:id" element={<StoryWithQuestions />} />
         </Route>
       </Routes>
     </Router>

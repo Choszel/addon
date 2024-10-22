@@ -5,7 +5,7 @@ import Flame from "../assets/Fire-Blaze-PNG-Image-Background.png";
 import { HStack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
-const FishCardsHome = () => {
+const FlashcardsHome = () => {
   const [quizQuery, setQuizQuery] = useState<QuizQuery>({} as QuizQuery);
   const navigate = useNavigate();
   return (
@@ -33,4 +33,4 @@ const FishCardsHome = () => {
   );
 };
 
-export default FishCardsHome;
+export default FlashcardsHome;

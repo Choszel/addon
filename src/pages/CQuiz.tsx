@@ -52,7 +52,7 @@ const CQuiz = () => {
       return;
     }
 
-    if (savedPhrases.length + (phrasesData?.length ?? 0) < 1) {
+    if (savedPhrases.length + (phrasesData?.length ?? 0) < 15) {
       toast({
         title: "Minimalna wymagana ilość fraz wynosi 15.",
         status: "error",
@@ -79,11 +79,11 @@ const CQuiz = () => {
       JSON.stringify([...savedPhrases, ...(phrasesData ?? [])])
     );
     postQuizQuestions(questionData);
-    return navigate("/fishCards");
+    return navigate("/flashcards");
   };
 
   const handleCancel = () => {
-    return navigate("/fishCards");
+    return navigate("/flashcards");
   };
 
   useEffect(() => {

@@ -593,7 +593,7 @@ app.post('/api/translationPLNENG', async (req, res) =>{
 app.get('/api/quizzes', async (req, res) => {
     try {
         const { id, user, language, name } = req.query;
-        let query = 'SELECT q.id, q.title, u.login as user, l.code as language, execution_date '
+        let query = 'SELECT q.id, q.title, u.login as user, l.code as language, execution_date, type '
         + 'FROM quizzes q, users u, languages l '
         + 'WHERE q.users_id=u.id AND q.languages_id=l.id ';
         const conditions = [];
@@ -605,7 +605,7 @@ app.get('/api/quizzes', async (req, res) => {
         if (conditions.length > 0) {
             query += ' AND ' + conditions.join(' AND ');
         }
-        query += ' ORDER BY q.popularity;';
+        query += ' ORDER BY q.popularity DESC;';
         
         const result = await pool.query(query);
         res.json(result.rows);
@@ -725,6 +725,45 @@ app.get('/api/usersQuizzesScores', async(req, res)=>{
         const result = await pool.query('SELECT q.id, q.title, u.login as user, l.code as language, execution_date '
         + 'FROM quizzes q, users u, languages l, users_quizzes_scores uqs '
         + 'WHERE uqs.quizzes_id=q.id AND q.users_id=u.id AND q.languages_id=l.id AND uqs.users_id=$1 ORDER BY uqs.id DESC;', [id]);
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+app.get('/api/stories', async(req, res)=>{
+    try{
+        const { quiz_id } = req.query;
+        const result = await pool.query('SELECT * '
+        + 'FROM stories '
+        + 'WHERE quiz_id = $1;', [quiz_id]);
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+app.get('/api/storiesQuestions', async(req, res)=>{
+    try{
+        const { quiz_id } = req.query;
+        const result = await pool.query('SELECT * '
+        + 'FROM stories_questions '
+        + 'WHERE quiz_id = $1;', [quiz_id]);
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+app.get('/api/storiesAnswers', async(req, res)=>{
+    try{
+        const { question_id } = req.query;
+        const result = await pool.query('SELECT * '
+        + 'FROM stories_answers '
+        + 'WHERE question_id = $1;', [question_id]);
         res.json(result.rows);
     }catch(err){
         console.error(err.message);

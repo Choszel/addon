@@ -29,7 +29,7 @@ const Home = () => {
           ></Image>
         </Link>
 
-        <Link to="/fishCards" className="gradient_box">
+        <Link to="/flashcards" className="gradient_box">
           <p className="p2">Fiszki i gry</p>
           <Image
             src={cards}
