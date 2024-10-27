@@ -1,9 +1,10 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useQuizzesQuestions from "../hooks/useQuizzesQuestions";
 import ChooseMatching from "../components/quizes/ChooseMatching";
 import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import TypeCorrectWord from "../components/quizes/TypeCorrectWord";
+import GoBack from "../components/GoBack";
 
 const TestGame = () => {
   const { id } = useParams();
@@ -13,6 +14,7 @@ const TestGame = () => {
   const [questionType, setQuestionType] = useState<number>(0);
   const [drawNumbersAnswers, setDrawNumbersAnswers] = useState<number[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
+  const navigate = useNavigate();
 
   const getRandomNumbers = () => {
     console.log("drawNumbers przed: ", drawNumbers);
@@ -89,6 +91,12 @@ const TestGame = () => {
 
   return (
     <div>
+      <GoBack
+        goBack={() => {
+          navigate("/flashcards");
+        }}
+        margin="2%"
+      />
       {showConfetti && <Confetti recycle={false} gravity={0.2} />}
       {questionType < 2 ? (
         <ChooseMatching

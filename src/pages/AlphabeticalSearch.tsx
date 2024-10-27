@@ -77,6 +77,9 @@ const AlphabeticalSearch = () => {
           phrase={word}
           index={index + 1}
           link={true}
+          handleAddToQuiz={function (id: number): void {
+            throw new Error("Function not implemented.");
+          }}
         ></TranslationTab>
       ))}
     </>

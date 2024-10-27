@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useQuizzesQuestions, {
   QuizQuestion,
 } from "../hooks/useQuizzesQuestions";
@@ -6,6 +6,7 @@ import { Box, SimpleGrid } from "@chakra-ui/react";
 import MatchGameCard from "../components/quizes/MatchGameCard";
 import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
+import GoBack from "../components/GoBack";
 
 const MatchGame = () => {
   const { id } = useParams();
@@ -15,6 +16,7 @@ const MatchGame = () => {
   const [currentWord, setCurrentWord] = useState<QuizQuestion | undefined>();
   const [wronglyAnswered, setWronglyAnswered] = useState<number[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
+  const navigate = useNavigate();
 
   const getRandomInt = () => {
     console.log("drawNumbers przed: ", drawNumbers);
@@ -68,31 +70,39 @@ const MatchGame = () => {
   };
 
   return (
-    <Box>
-      {showConfetti && <Confetti recycle={false} gravity={0.2} />}
-      {currentWord ? (
-        <>
-          <h1>{currentWord.word_polish}</h1>
-          <SimpleGrid
-            columns={{ sm: 3, md: 3, lg: 5, xl: 5 }}
-            padding={8}
-            spacing={6}
-          >
-            {questions.map((question) => (
-              <MatchGameCard
-                key={question.id}
-                question={question}
-                checkIfCorrect={checkIfCorrect}
-                setWronglyAnswered={setWronglyAnswered}
-              />
-            ))}
-          </SimpleGrid>
-        </>
-      ) : (
-        <p>Ładowanie pytań...</p>
-      )}
-      <button onClick={() => console.log(drawNumbers)}>Kliknij mnie</button>
-    </Box>
+    <>
+      <GoBack
+        goBack={() => {
+          navigate("/flashcards");
+        }}
+        margin="2%"
+      />
+      <Box>
+        {showConfetti && <Confetti recycle={false} gravity={0.2} />}
+        {currentWord ? (
+          <>
+            <h1>{currentWord.word_polish}</h1>
+            <SimpleGrid
+              columns={{ sm: 3, md: 3, lg: 5, xl: 5 }}
+              padding={8}
+              spacing={6}
+            >
+              {questions.map((question) => (
+                <MatchGameCard
+                  key={question.id}
+                  question={question}
+                  checkIfCorrect={checkIfCorrect}
+                  setWronglyAnswered={setWronglyAnswered}
+                />
+              ))}
+            </SimpleGrid>
+          </>
+        ) : (
+          <p>Ładowanie pytań...</p>
+        )}
+        <button onClick={() => console.log(drawNumbers)}>Kliknij mnie</button>
+      </Box>
+    </>
   );
 };
 

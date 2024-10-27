@@ -1,6 +1,7 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import { Outlet } from "react-router-dom";
+import "./index.css";
 
 const Layout = () => {
   return (
@@ -15,11 +16,27 @@ const Layout = () => {
           //lg: "200px 1fr",
         }}
         height="100%"
+        backgroundColor="var(--primary)"
+        // borderTopRadius="20px"
+        borderBottomRadius="30px"
+        // marginX="4%"
       >
-        <GridItem area="nav" marginX="4%">
+        <GridItem
+          area="nav"
+          backgroundColor="var(--primary)"
+          borderRadius="30px"
+          paddingX={10}
+          alignContent="center"
+        >
           <Navbar />
         </GridItem>
-        <GridItem area="main" height="100%" marginX="8%">
+        <GridItem
+          area="main"
+          height="100%"
+          backgroundColor="var(--foreground)"
+          borderRadius="20px"
+          padding={6}
+        >
           <main>
             <Outlet />
           </main>

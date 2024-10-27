@@ -1,23 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden; 
     font-size: 20px;
     height: 100%;
-  }
+}
+
+#html, body{
+    background-color: var(--background);
+}
 
 :root{
     height: 100%;
-    /* CSS HEX */
-    --powder-blue: #afc2d5ff;
-    --honeydew: #ccddd3ff;
-    --nyanza: #dfefcaff;
-    --vanilla: #fff9a5ff;
-    --red-munsell: #ec0b43ff;
-    --error: #ec0b43ff;
+    --primary: #d7352b;
+    --primary-content: #ffffff;
+    --primary-dark: #ae2921;
+    --primary-light: #df5e56;
 
-    /* SCSS Gradient */
-    --gradient-top: linear-gradient(0deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
+    --secondary: #77d72b;
+    --secondary-content: #010200;
+--secondary-dark: #5fae21;
+--secondary-light: #93df56;
+
+--background: #1b1818;
+--foreground: #292423;
+--border: #453c3b;
+
+--copy: #fbfbfb;
+--copy-light: #dcd6d6;
+--copy-lighter: #aca09f;
+
+--success: #2bd72b;
+--warning: #d7d72b;
+--error: #d72b2b;
+--success-content: #000200;
+--warning-content: #020200;
+--error-content: #ffffff;
+
+    --gradient-top: linear-gradient(0deg, var(--primary-light), var(--primary), var(--primary-dark));
     --gradient-right: linear-gradient(90deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
     --gradient-bottom: linear-gradient(180deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
     --gradient-left: linear-gradient(270deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
@@ -25,7 +47,7 @@ html, body {
     --gradient-bottom-right: linear-gradient(135deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
     --gradient-top-left: linear-gradient(225deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
     --gradient-bottom-left: linear-gradient(315deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
-    --gradient-radial: radial-gradient(#afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
+    --gradient-radial: radial-gradient(#afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff); 
 }
 
 h1{
@@ -38,6 +60,7 @@ h1{
 
 .gradient_box{
     background: var(--gradient-top);
+    color: var(--primary-content);
     padding: 4.7%;
     width: 40%;
     display: flex;
@@ -133,3 +156,9 @@ h1{
     margin: 20px 0px;
 }
 
+.button_primary{
+    border-radius: 20px;
+    background-color: var(--foreground);
+    color: var(--primary-light);
+    padding: 1%;
+}

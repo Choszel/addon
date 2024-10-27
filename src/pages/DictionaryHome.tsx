@@ -3,7 +3,7 @@ import SearchInput from "../components/dictionary/SearchInput";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SelectLanguage from "../components/SelectLanguage";
-import useWordsEnglish from "../hooks/useWordsEnglish";
+import useWordsEnglish, { EnglishWord } from "../hooks/useWordsEnglish";
 
 const DictionaryHome = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>("ENG_PLN");
@@ -53,6 +53,12 @@ const DictionaryHome = () => {
     );
   };
 
+  const redirectButton = (phrase: EnglishWord) => {
+    navigate(
+      "/dictionary/searchResult/" + phrase.id + "/" + phrase.word + "/ENG_PLN"
+    );
+  };
+
   return (
     <>
       <HStack>
@@ -72,7 +78,11 @@ const DictionaryHome = () => {
         <div className="gradient_box">
           <p>Popularne wyszukiwania w tym miesiącu</p>
           {slicedArray.map((word, id) => (
-            <HStack width="90%">
+            <HStack
+              width="90%"
+              onClick={() => redirectButton(word)}
+              cursor="pointer"
+            >
               <p>{id + 1}.</p>
               <p>{word.word}</p>
               <p>{word.popularity}</p>

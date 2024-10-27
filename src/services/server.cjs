@@ -593,7 +593,7 @@ app.post('/api/translationPLNENG', async (req, res) =>{
 app.get('/api/quizzes', async (req, res) => {
     try {
         const { id, user, language, name } = req.query;
-        let query = 'SELECT q.id, q.title, u.login as user, l.code as language, execution_date, type '
+        let query = 'SELECT q.id, q.title, u.login as user, l.code as language, execution_date, q.type '
         + 'FROM quizzes q, users u, languages l '
         + 'WHERE q.users_id=u.id AND q.languages_id=l.id ';
         const conditions = [];
@@ -632,7 +632,7 @@ app.post('/api/quizzes', async (req, res) =>{
     console.log("App ", title, users_id, languages_id, execution_date);
     try{
         const insertResult = await pool.query(
-            'INSERT INTO quizzes(title, users_id, languages_id, execution_date) VALUES ($1, $2, $3, $4) RETURNING id', [title, users_id, languages_id, execution_date]
+            'INSERT INTO quizzes(title, users_id, languages_id, execution_date, type) VALUES ($1, $2, $3, $4, quiz) RETURNING id', [title, users_id, languages_id, execution_date]
         );
         const newQuizId = insertResult.rows[0].id; 
 
@@ -722,7 +722,7 @@ app.get('/api/usersQuizzesQuestions', async(req, res)=>{
 app.get('/api/usersQuizzesScores', async(req, res)=>{
     try{
         const { id } = req.query;
-        const result = await pool.query('SELECT q.id, q.title, u.login as user, l.code as language, execution_date '
+        const result = await pool.query('SELECT q.id, q.title, u.login as user, l.code as language, execution_date, q.type '
         + 'FROM quizzes q, users u, languages l, users_quizzes_scores uqs '
         + 'WHERE uqs.quizzes_id=q.id AND q.users_id=u.id AND q.languages_id=l.id AND uqs.users_id=$1 ORDER BY uqs.id DESC;', [id]);
         res.json(result.rows);

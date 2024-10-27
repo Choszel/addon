@@ -61,12 +61,12 @@ const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
           <Text>{"[" + phrase.part_of_speech + "]"}</Text>
         ) : null}
         {phrase.level != undefined ? (
-          <button style={{ cursor: "default" }} className="gradient_button">
+          <button style={{ cursor: "default" }} className="tag_category">
             {phrase.level}
           </button>
         ) : null}
         {phrase.category != undefined ? (
-          <button style={{ cursor: "default" }} className="gradient_button">
+          <button style={{ cursor: "default" }} className="tag_category">
             {phrase.category}
           </button>
         ) : null}

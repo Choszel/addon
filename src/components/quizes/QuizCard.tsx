@@ -10,19 +10,18 @@ import {
   ModalFooter,
   ModalOverlay,
   useDisclosure,
-  Text,
   ModalCloseButton,
   Button,
 } from "@chakra-ui/react";
 import { Quiz } from "../../hooks/useQuizzes";
 import QuizDetails from "./QuizDetails";
-import { LuArrowLeft } from "react-icons/lu";
 import { useEffect, useState } from "react";
 import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
 import useCategories from "../../hooks/useCategories";
 import useDifficultyLevels from "../../hooks/useDifficultyLevels";
 import useTokenData from "../../others/useTokenData";
 import actionData from "../../hooks/actionData";
+import GoBack from "../GoBack";
 
 interface Props {
   quiz: Quiz;
@@ -52,9 +51,9 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
     const answeredQuestions = questions.filter(
       (question) => question.done == true
     );
-    setScore(
-      answeredQuestions.length / amountOfQuestions[0]?.amount_of_questions
-    );
+    const tempScore =
+      answeredQuestions.length / amountOfQuestions[0]?.amount_of_questions;
+    setScore(tempScore > 0 ? tempScore : 0);
     let questionsCategories = [
       ...new Set(
         questions.map(
@@ -110,41 +109,46 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
           >
             <p>Twórca: {quiz.user ?? "No user"}</p>
             <p>Język: {quiz.language ?? "No language"}</p>
-            <HStack>
-              {" "}
-              <p>Kategoria: </p>
-              {categoriesQuizzes.length > 3 ? (
+            {quiz.type == "quiz" ? (
+              <>
                 <HStack>
-                  <button className="tag_category">
-                    {categoriesQuizzes[0] ?? "No category"}
-                  </button>
-                  <button className="tag_category">
-                    {categoriesQuizzes[1] ?? "No category"}
-                  </button>
-                  <button className="tag_category">others</button>
+                  <p>Kategoria: </p>
+                  {categoriesQuizzes.length > 3 ? (
+                    <HStack>
+                      <button className="tag_category">
+                        {categoriesQuizzes[0] ?? "No category"}
+                      </button>
+                      <button className="tag_category">
+                        {categoriesQuizzes[1] ?? "No category"}
+                      </button>
+                      <button className="tag_category">others</button>
+                    </HStack>
+                  ) : categoriesQuizzes.length == 0 ? (
+                    <button className="tag_error">X</button>
+                  ) : (
+                    categoriesQuizzes.map((cq) => (
+                      <button className="tag_category">
+                        {cq ?? "No category"}
+                      </button>
+                    ))
+                  )}
                 </HStack>
-              ) : categoriesQuizzes.length == 0 ? (
-                <button className="tag_error">X</button>
-              ) : (
-                categoriesQuizzes.map((cq) => (
-                  <button className="tag_category">
-                    {cq ?? "No category"}
-                  </button>
-                ))
-              )}
-            </HStack>
-            <HStack>
-              <p>Poziom: </p>
-              {levelsQuizzes.length > 4 ? (
-                <button className="tag_infinity">∞</button>
-              ) : levelsQuizzes.length == 0 ? (
-                <button className="tag_error">X</button>
-              ) : (
-                levelsQuizzes.map((lq) => (
-                  <button className="tag_category">{lq ?? "No level"}</button>
-                ))
-              )}
-            </HStack>
+                <HStack>
+                  <p>Poziom: </p>
+                  {levelsQuizzes.length > 4 ? (
+                    <button className="tag_infinity">∞</button>
+                  ) : levelsQuizzes.length == 0 ? (
+                    <button className="tag_error">X</button>
+                  ) : (
+                    levelsQuizzes.map((lq) => (
+                      <button className="tag_category">
+                        {lq ?? "No level"}
+                      </button>
+                    ))
+                  )}
+                </HStack>
+              </>
+            ) : null}
           </Box>
           <div
             style={{
@@ -162,16 +166,7 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
         <ModalOverlay />
         <ModalContent maxW="100%" width="50%">
           <ModalBody>
-            <HStack marginY="5%" width="75%" onClick={onClose} cursor="pointer">
-              <LuArrowLeft size={32} />
-              <Text
-                textTransform="uppercase"
-                className="product_list_text_main"
-                marginX="5%"
-              >
-                Powrót
-              </Text>
-            </HStack>
+            <GoBack goBack={onClose} margin="5%" width="75%" />
             <QuizDetails
               quiz={quiz}
               userId={userId}

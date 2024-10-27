@@ -1,10 +1,11 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useQuizzesQuestions from "../hooks/useQuizzesQuestions";
 import { useEffect, useState } from "react";
 import { Box, Card, CardBody, HStack } from "@chakra-ui/react";
 import { PiArrowsCounterClockwise } from "react-icons/pi";
 import { FaArrowLeft } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa6";
+import GoBack from "../components/GoBack";
 
 const FlashcardGame = () => {
   const { id } = useParams();
@@ -16,6 +17,7 @@ const FlashcardGame = () => {
   const [rotation, setRotation] = useState(0);
   const [leftArrowPosition, setLeftArrowPosition] = useState(0);
   const [rightArrowPosition, setRightArrowPosition] = useState(0);
+  const navigate = useNavigate();
 
   const turnCard = () => {
     setIsFlipped(true);
@@ -71,56 +73,76 @@ const FlashcardGame = () => {
   }, [currentIndex, isPolishVisible]);
 
   return (
-    <Box width="40%">
-      <Card
-        height="200px"
-        onClick={currentIndex == questions.length ? goBack : turnCard}
-        cursor="pointer"
-        transform={isFlipped ? "rotateY(180deg)" : "rotateY(0)"}
-        transition="transform 0.5s ease-in-out"
-        style={{ backfaceVisibility: "hidden" }}
+    <>
+      <GoBack
+        goBack={() => {
+          navigate("/flashcards");
+        }}
+        margin="2%"
+      />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        <CardBody display="flex" justifyContent="center" alignItems="center">
-          {currentIndex === questions.length ? (
-            <p>Koniec quizu! Powrót</p>
-          ) : (
-            <p>
-              {isPolishVisible
-                ? questions[currentIndex]?.word_polish
-                : questions[currentIndex]?.word_second}
-            </p>
-          )}
-        </CardBody>
-      </Card>
-      <HStack display="flex" justifyContent="space-between" margin="2% 5%">
-        <div
-          className="circle"
-          style={{
-            transform: `translateX(${leftArrowPosition}px)`,
-            transition: "transform 0.3s ease-in-out",
-          }}
-        >
-          <FaArrowLeft size={20} onClick={goLeft} />
-        </div>
-        <PiArrowsCounterClockwise
-          size={40}
-          onClick={turnCard}
-          style={{
-            transform: `rotate(${rotation}deg)`,
-            transition: "transform 0.5s ease-in-out",
-          }}
-        />
-        <div
-          className="circle"
-          style={{
-            transform: `translateX(${rightArrowPosition}px)`,
-            transition: "transform 0.3s ease-in-out",
-          }}
-        >
-          <FaArrowRight size={20} onClick={goRight} />
-        </div>
-      </HStack>
-    </Box>
+        <Box width="40%">
+          <Card
+            height="200px"
+            onClick={currentIndex == questions.length ? goBack : turnCard}
+            cursor="pointer"
+            transform={isFlipped ? "rotateY(180deg)" : "rotateY(0)"}
+            transition="transform 0.5s ease-in-out"
+            style={{ backfaceVisibility: "hidden" }}
+          >
+            <CardBody
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              {currentIndex === questions.length ? (
+                <p>Koniec quizu! Powrót</p>
+              ) : (
+                <p>
+                  {isPolishVisible
+                    ? questions[currentIndex]?.word_polish
+                    : questions[currentIndex]?.word_second}
+                </p>
+              )}
+            </CardBody>
+          </Card>
+          <HStack display="flex" justifyContent="space-between" margin="2% 5%">
+            <div
+              className="circle"
+              style={{
+                transform: `translateX(${leftArrowPosition}px)`,
+                transition: "transform 0.3s ease-in-out",
+              }}
+            >
+              <FaArrowLeft size={20} onClick={goLeft} />
+            </div>
+            <PiArrowsCounterClockwise
+              size={40}
+              onClick={turnCard}
+              style={{
+                transform: `rotate(${rotation}deg)`,
+                transition: "transform 0.5s ease-in-out",
+              }}
+            />
+            <div
+              className="circle"
+              style={{
+                transform: `translateX(${rightArrowPosition}px)`,
+                transition: "transform 0.3s ease-in-out",
+              }}
+            >
+              <FaArrowRight size={20} onClick={goRight} />
+            </div>
+          </HStack>
+        </Box>
+      </div>
+    </>
   );
 };
 

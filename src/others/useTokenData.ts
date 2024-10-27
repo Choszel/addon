@@ -36,7 +36,7 @@ const useTokenData = () => {
         case "1":
           return "warden";
         default:
-          return "normal";
+          return "user";
       }
     }
     return "none"; 
