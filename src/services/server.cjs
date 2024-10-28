@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const {Pool} = require('pg');
+const { OpenAI } = require('openai');
 const app = express();
 const port = 3001;
 const jwt = require('jsonwebtoken');
@@ -20,8 +21,28 @@ app.use(cors({
     origin: 'http://localhost:5173' 
 }));
 
+app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
+app.post('/api/ai', async (req, res) => {
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const inputText = req.body.inputText;
+
+    try {
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages: [
+                { role: "system", content: "Translate the given text into Polish." },
+                { role: "user", content: `Please, translate this into Polish: "${inputText}"` }
+            ]
+        });
+
+        res.json({ analysis: completion.choices[0].message.content });
+    } catch (error) {
+        console.error("Error from OpenAI API:", error);
+        res.status(500).json({ error: "Translation failed" });
+    }
+});
 
 app.post('/api/register', async (req, res) => {
     const { login, password } = req.body;
