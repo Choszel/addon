@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import TypeCorrectWord from "../components/quizes/TypeCorrectWord";
 import GoBack from "../components/GoBack";
+import EndOfTheQuizModal from "../components/EndOfTheQuizModal";
+import actionData from "../hooks/actionData";
 
 const TestGame = () => {
   const { id } = useParams();
@@ -15,6 +17,10 @@ const TestGame = () => {
   const [drawNumbersAnswers, setDrawNumbersAnswers] = useState<number[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const navigate = useNavigate();
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
+  const { postData: postQuiz } = actionData("/quizzes");
+  const { postData: postQuizQuestions } = actionData("/quizzesQuestions/ENG");
 
   const getRandomNumbers = () => {
     console.log("drawNumbers przed: ", drawNumbers);
@@ -22,6 +28,12 @@ const TestGame = () => {
     if (drawNumbers.length === questions.length) {
       console.log("done");
       setShowConfetti(true);
+      setTimeout(() => {
+        setModalOpen(true);
+      }, 250);
+      console.log(correctAnswers);
+      console.log(questions);
+
       return;
     }
 
@@ -35,6 +47,29 @@ const TestGame = () => {
     } while (drawNumbers.includes(randomIndex) && maxAttempts > 0);
     setDrawNumbers((prevDrawNumbers) => [...prevDrawNumbers, randomIndex]);
     console.log("drawNumbers po: ", drawNumbers);
+  };
+
+  const handleSave = async () => {
+    if (correctAnswers.length < 0) return;
+
+    // const formData = new URLSearchParams();
+    // formData.append("title", refs[0]?.value ?? "");
+    // formData.append("users_id", GetUserId().toString());
+    // formData.append("languages_id", refs[1]?.value ?? "");
+    // const dateNow = new Date().toJSON().substring(0, 10);
+    // formData.append("execution_date", dateNow.toString());
+
+    // const response = await postQuiz(formData);
+    // console.log(response.id);
+
+    // const questionData = new URLSearchParams();
+    // questionData.append("quiz_id", (response.id ?? 0).toString());
+    // questionData.append(
+    //   "data",
+    //   JSON.stringify([...savedPhrases, ...(phrasesData ?? [])])
+    // );
+    // postQuizQuestions(questionData);
+    // return navigate("/flashcards");
   };
 
   const getRandomNumbersForAnswers = () => {
@@ -57,21 +92,23 @@ const TestGame = () => {
   };
 
   const checkIfCorrect = (word: string) => {
+    setTimeout(() => {
+      getRandomNumbers();
+    }, 2000);
     if (
       word ===
       (questionType < 2
         ? questions[drawNumbers[drawNumbers.length - 1]]?.word_polish
         : questions[drawNumbers[drawNumbers.length - 1]]?.word_second)
     ) {
-      setTimeout(() => {
-        getRandomNumbers();
-      }, 2000);
       console.log("correct");
+      const tempArray = correctAnswers;
+      tempArray.push(
+        questions[drawNumbers[drawNumbers.length - 1]]?.question_id ?? 0
+      );
+      setCorrectAnswers(tempArray);
       return true;
     } else {
-      setTimeout(() => {
-        getRandomNumbers();
-      }, 2000);
       console.log("false");
       return false;
     }
@@ -93,11 +130,13 @@ const TestGame = () => {
     <div>
       <GoBack
         goBack={() => {
-          navigate("/flashcards");
+          navigate("/flashcards/" + id);
         }}
         margin="2%"
       />
-      {showConfetti && <Confetti recycle={false} gravity={0.2} />}
+      {showConfetti && (
+        <Confetti recycle={false} gravity={0.2} width={window.innerWidth} />
+      )}
       {questionType < 2 ? (
         <ChooseMatching
           questions={[
@@ -125,6 +164,10 @@ const TestGame = () => {
       >
         Kliknij mnie
       </button>
+      <EndOfTheQuizModal
+        isOpen={isModalOpen}
+        goBackTo={"/flashcards/" + id}
+      ></EndOfTheQuizModal>
     </div>
   );
 };

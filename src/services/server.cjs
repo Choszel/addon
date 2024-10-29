@@ -718,8 +718,22 @@ app.get('/api/quizzesQuestions/Count', async(req, res)=>{
         res.status(500).send('Server error');
     }
 });
-   
+
 app.get('/api/usersQuizzesQuestions', async(req, res)=>{
+    try{
+        const { id } = req.query;
+        const condition = 'SELECT * FROM users_quizzes_questions uqq '
+        + 'WHERE users_quizzes_scores_id = ' + id + " "
+        + 'ORDER BY id ASC ;'
+        const result = await pool.query(userId ? condition : 'SELECT * FROM users_quizzes_questions uqq ORDER BY id ASC ;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+}); 
+   
+app.get('/api/usersQuizzesQuestionsDetailed', async(req, res)=>{
     try{
         const { id, userId } = req.query;
         const condition = 'SELECT qqe.id, qqe.quizzes_id, qqe.question_id, we.word as word_second, we.definition as ws_definition, '

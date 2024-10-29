@@ -132,6 +132,7 @@ const DictionarySearchResult = () => {
     }
 
     msg.text = searchPhrase?.word ?? "";
+    window.speechSynthesis.cancel();
     window.speechSynthesis.speak(msg);
   };
 

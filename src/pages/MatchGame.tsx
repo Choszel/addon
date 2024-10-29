@@ -7,6 +7,7 @@ import MatchGameCard from "../components/quizes/MatchGameCard";
 import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import GoBack from "../components/GoBack";
+import EndOfTheQuizModal from "../components/EndOfTheQuizModal";
 
 const MatchGame = () => {
   const { id } = useParams();
@@ -17,6 +18,7 @@ const MatchGame = () => {
   const [wronglyAnswered, setWronglyAnswered] = useState<number[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const navigate = useNavigate();
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
   const getRandomInt = () => {
     console.log("drawNumbers przed: ", drawNumbers);
@@ -24,6 +26,9 @@ const MatchGame = () => {
     if (drawNumbers.length === questions.length) {
       console.log("done");
       setShowConfetti(true);
+      setTimeout(() => {
+        setModalOpen(true);
+      }, 250);
       return;
     }
 
@@ -73,11 +78,13 @@ const MatchGame = () => {
     <>
       <GoBack
         goBack={() => {
-          navigate("/flashcards");
+          navigate("/flashcards/" + id);
         }}
         margin="2%"
       />
-      {showConfetti && <Confetti recycle={false} gravity={0.2} />}
+      {showConfetti && (
+        <Confetti recycle={false} gravity={0.2} width={window.innerWidth} />
+      )}
       <Box>
         {currentWord ? (
           <>
@@ -102,6 +109,10 @@ const MatchGame = () => {
         )}
         <button onClick={() => console.log(drawNumbers)}>Kliknij mnie</button>
       </Box>
+      <EndOfTheQuizModal
+        isOpen={isModalOpen}
+        goBackTo={"/flashcards/" + id}
+      ></EndOfTheQuizModal>
     </>
   );
 };

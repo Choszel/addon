@@ -16,9 +16,10 @@ export interface QuizQuery {
 
 interface Props {
   quizQuery: QuizQuery;
+  quiz_id?: string;
 }
 
-const QuizGrid = ({ quizQuery }: Props) => {
+const QuizGrid = ({ quizQuery, quiz_id }: Props) => {
   const { data, error, isLoading } = useQuizzes(quizQuery);
   const skeletons = [1, 2, 3, 4, 5, 6];
   const { GetUserId } = useTokenData();
@@ -44,6 +45,7 @@ const QuizGrid = ({ quizQuery }: Props) => {
               quiz={quiz}
               isScore={true}
               userId={GetUserId()}
+              open={quiz.id == parseInt(quiz_id ?? "0") ? true : false}
             ></QuizCard>
           </QuizCardContainer>
         ))}

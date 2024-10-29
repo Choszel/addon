@@ -1,7 +1,7 @@
 import { Box, Card, CardBody, HStack, Input, Text } from "@chakra-ui/react";
 import { QuizQuestion } from "../../hooks/useQuizzesQuestions";
 import { HiSpeakerWave } from "react-icons/hi2";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
   question: QuizQuestion;
@@ -18,15 +18,19 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
     const result = checkIfCorrect(word);
     setVerified(true);
     if (result) {
-      if (refInput.current)
-        refInput.current.style.backgroundColor = "var(--nyanza)";
+      if (refInput.current) {
+        refInput.current.style.backgroundColor = "var(--success)";
+        refInput.current.style.color = "var(--success-content)";
+      }
     } else {
-      if (refInput.current)
+      if (refInput.current) {
         refInput.current.style.backgroundColor = "var(--error)";
+        refInput.current.style.backgroundColor = "var(--error-content)";
+      }
     }
     setTimeout(() => {
       if (refInput.current) {
-        refInput.current.style.backgroundColor = "white";
+        refInput.current.style.backgroundColor = "var(--foreground)";
         refInput.current.value = "";
       }
       setVerified(false);
@@ -34,15 +38,29 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
   };
 
   const handleSpeak = () => {
+    console.log("speak", question?.word_second);
     msg.lang = "en-US";
-    const voices = speechSynthesis
-      .getVoices()
-      .filter((voice) => voice.lang === "en-US");
-    msg.voice = voices[0];
-
     msg.text = question?.word_second ?? "";
     window.speechSynthesis.speak(msg);
   };
+
+  useEffect(() => {
+    const loadVoices = () => {
+      const voices = window.speechSynthesis
+        .getVoices()
+        .filter((voice) => voice.lang === "en-US");
+      msg.voice = voices[0];
+      window.speechSynthesis.cancel();
+    };
+
+    window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
+
+    loadVoices();
+
+    return () => {
+      window.speechSynthesis.removeEventListener("voiceschanged", loadVoices);
+    };
+  }, []);
 
   const handleKeyPress = (event: { key: string }) => {
     if (event.key === "Enter") {
@@ -58,7 +76,15 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
       alignItems="center"
     >
       <Card height="200px" width="40%">
-        <CardBody display="flex" justifyContent="center" alignItems="center">
+        <CardBody
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          backgroundColor="var(--primary-dark)"
+          color="var(--copy)"
+          borderRadius="7px"
+          borderColor="var(--border)"
+        >
           {type === "speaker" ? (
             <HiSpeakerWave
               size={60}

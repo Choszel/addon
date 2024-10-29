@@ -45,7 +45,7 @@ function App() {
             path="/dictionary/alphabeticalSearch/:language/:letter"
             element={<AlphabeticalSearch />}
           />
-          <Route path="/flashcards" element={<FlashcardsHome />} />
+          <Route path="/flashcards/:id?" element={<FlashcardsHome />} />
           <Route path="/noTranslation" element={<NoTranslation />} />
           <Route
             path="dictionary/searchResult/:id/:word/:code"

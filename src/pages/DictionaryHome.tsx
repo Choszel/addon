@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SelectLanguage from "../components/SelectLanguage";
 import useWordsEnglish, { EnglishWord } from "../hooks/useWordsEnglish";
+import RandomPhrase from "../components/dictionary/RandomPhrase";
 
 const DictionaryHome = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>("ENG_PLN");
@@ -70,7 +71,10 @@ const DictionaryHome = () => {
           onSearch={(id, searchText) => onSearch(id, searchText)}
           language={selectedLanguage ?? ""}
         ></SearchInput>
-        <button className="add_to_quiz_button">Losuj frazę</button>
+        <RandomPhrase
+          onSearch={(id, searchText) => onSearch(id, searchText)}
+          language={selectedLanguage ?? ""}
+        ></RandomPhrase>
       </HStack>
       <HStack display="flex" justifyContent="center" spacing={10} marginY="4%">
         <div className="gradient_box">

@@ -19,10 +19,10 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
   const ref4 = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (ref1.current) ref1.current.style.backgroundColor = "white";
-    if (ref2.current) ref2.current.style.backgroundColor = "white";
-    if (ref3.current) ref3.current.style.backgroundColor = "white";
-    if (ref4.current) ref4.current.style.backgroundColor = "white";
+    if (ref1.current) ref1.current.style.backgroundColor = "var(--foreground)";
+    if (ref2.current) ref2.current.style.backgroundColor = "var(--foreground)";
+    if (ref3.current) ref3.current.style.backgroundColor = "var(--foreground)";
+    if (ref4.current) ref4.current.style.backgroundColor = "var(--foreground)";
   }, [shuffledNumbers]);
 
   const shuffle = () => {
@@ -44,25 +44,33 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
       const result = checkIfCorrect(word);
       setVerified(true);
       if (result) {
-        ref.style.backgroundColor = "var(--nyanza)";
+        ref.style.backgroundColor = "var(--success)";
       } else {
         ref.style.backgroundColor = "var(--error)";
         switch (shuffledNumbers.findIndex((value) => value == 0)) {
           case 0:
-            if (ref1.current)
-              ref1.current.style.backgroundColor = "var(--nyanza)";
+            if (ref1.current) {
+              ref1.current.style.backgroundColor = "var(--success)";
+              ref1.current.style.color = "var(--success-content)";
+            }
             break;
           case 1:
-            if (ref2.current)
-              ref2.current.style.backgroundColor = "var(--nyanza)";
+            if (ref2.current) {
+              ref2.current.style.backgroundColor = "var(--success)";
+              ref2.current.style.color = "var(--success-content)";
+            }
             break;
           case 2:
-            if (ref3.current)
-              ref3.current.style.backgroundColor = "var(--nyanza)";
+            if (ref3.current) {
+              ref3.current.style.backgroundColor = "var(--success)";
+              ref3.current.style.color = "var(--success-content)";
+            }
             break;
           case 3:
-            if (ref4.current)
-              ref4.current.style.backgroundColor = "var(--nyanza)";
+            if (ref4.current) {
+              ref4.current.style.backgroundColor = "var(--success)";
+              ref4.current.style.color = "var(--success-content)";
+            }
             break;
           default:
             break;
@@ -82,12 +90,21 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
       justifyContent="center"
       alignItems="center"
     >
-      <Card height="200px" width="40%" padding="0%">
+      <Card
+        height="200px"
+        width="40%"
+        padding="0%"
+        backgroundColor="var(--primary-dark)"
+      >
         <CardBody
           display="flex"
           justifyContent="center"
           alignItems="center"
           padding="0%"
+          backgroundColor="var(--primary-dark)"
+          color="var(--copy)"
+          borderRadius="7px"
+          borderColor="var(--border)"
         >
           {type === "photo" ? (
             <Box
@@ -114,7 +131,7 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
         <div
           ref={ref1}
           className="game_type"
-          style={{ backgroundColor: "white" }}
+          style={{ backgroundColor: "var(--foreground)" }}
           onClick={() =>
             checkCorrectness(
               ref1.current,

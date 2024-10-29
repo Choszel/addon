@@ -7,6 +7,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa6";
 import GoBack from "../components/GoBack";
 import Confetti from "react-confetti";
+import EndOfTheQuizModal from "../components/EndOfTheQuizModal";
 
 const FlashcardGame = () => {
   const { id } = useParams();
@@ -20,6 +21,7 @@ const FlashcardGame = () => {
   const [rightArrowPosition, setRightArrowPosition] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
   const navigate = useNavigate();
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
   const turnCard = () => {
     setIsFlipped(true);
@@ -67,8 +69,12 @@ const FlashcardGame = () => {
   };
 
   useEffect(() => {
-    if (currentIndex == questions.length && questions.length > 0)
+    if (currentIndex == questions.length && questions.length > 0) {
       setShowConfetti(true);
+      setTimeout(() => {
+        setModalOpen(true);
+      }, 250);
+    }
     window.addEventListener("keydown", handleKeyPress);
 
     return () => {
@@ -78,10 +84,12 @@ const FlashcardGame = () => {
 
   return (
     <>
-      {showConfetti && <Confetti recycle={false} gravity={0.2} />}
+      {showConfetti && (
+        <Confetti recycle={false} gravity={0.2} width={window.innerWidth} />
+      )}
       <GoBack
         goBack={() => {
-          navigate("/flashcards");
+          navigate("/flashcards/" + id);
         }}
         margin="2%"
       />
@@ -90,6 +98,7 @@ const FlashcardGame = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          height: "100%",
         }}
       >
         <Box width="40%">
@@ -149,6 +158,10 @@ const FlashcardGame = () => {
           </HStack>
         </Box>
       </div>
+      <EndOfTheQuizModal
+        isOpen={isModalOpen}
+        goBackTo={"/flashcards/" + id}
+      ></EndOfTheQuizModal>
     </>
   );
 };

@@ -21,23 +21,23 @@ html, body {
 
     --secondary: #77d72b;
     --secondary-content: #010200;
---secondary-dark: #5fae21;
---secondary-light: #93df56;
+    --secondary-dark: #5fae21;
+    --secondary-light: #93df56;
 
---background: #1b1818;
---foreground: #292423;
---border: #453c3b;
+    --background: #1b1818;
+    --foreground: #292423;
+    --border: #453c3b;
 
---copy: #fbfbfb;
---copy-light: #dcd6d6;
---copy-lighter: #aca09f;
+    --copy: #fbfbfb;
+    --copy-light: #dcd6d6;
+    --copy-lighter: #aca09f;
 
---success: #2bd72b;
---warning: #d7d72b;
---error: #d72b2b;
---success-content: #000200;
---warning-content: #020200;
---error-content: #ffffff;
+    --success: #2bd72b;
+    --warning: #d7d72b;
+    --error: #d72b2b;
+    --success-content: #000200;
+    --warning-content: #020200;
+    --error-content: #ffffff;
 
     --gradient-top: linear-gradient(0deg, var(--primary-light), var(--primary), var(--primary-dark));
     --gradient-right: linear-gradient(90deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
@@ -135,7 +135,8 @@ h1{
 
 .game_type{
     padding: 5%;
-    border-color: gainsboro;
+    background-color: var(--foreground);
+    border-color: var(--border);
     border-width: 1px;
     border-radius: 20px;
     cursor: pointer;
@@ -250,4 +251,9 @@ h1{
 
 .menu_list_item:hover{
     color: var(--secondary);
+}
+
+.basic_style{
+    background-color: var(--foreground);
+    color: var(--copy);
 }

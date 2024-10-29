@@ -22,14 +22,16 @@ import useDifficultyLevels from "../../hooks/useDifficultyLevels";
 import useTokenData from "../../others/useTokenData";
 import actionData from "../../hooks/actionData";
 import GoBack from "../GoBack";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   quiz: Quiz;
   isScore?: boolean;
   userId?: number;
+  open?: boolean;
 }
 
-const QuizCard = ({ quiz, isScore, userId }: Props) => {
+const QuizCard = ({ quiz, isScore, userId, open }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: deleteIsOpen,
@@ -37,8 +39,9 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
     onClose: deleteOnClose,
   } = useDisclosure();
   const [score, setScore] = useState<number>(0.0);
-  const { fetchUserQuestions, fetchAmountOfQuestions } = useQuizzesQuestions();
-  const { data: questions } = fetchUserQuestions(quiz.id ?? 0, userId);
+  const { fetchUserQuestionsDetailed, fetchAmountOfQuestions } =
+    useQuizzesQuestions();
+  const { data: questions } = fetchUserQuestionsDetailed(quiz.id ?? 0, userId);
   const { data: amountOfQuestions } = fetchAmountOfQuestions(quiz.id ?? 0);
   const [categoriesQuizzes, setCategoriesQuizzes] = useState<string[]>([""]);
   const [levelsQuizzes, setLevelsQuizzes] = useState<string[]>([""]);
@@ -46,6 +49,7 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
   const { data: difficultyLevels } = useDifficultyLevels();
   const { GetUserLogin } = useTokenData();
   const { deleteData } = actionData("/quizzes");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const answeredQuestions = questions.filter(
@@ -74,6 +78,10 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
     console.log("questionsCategories", questionsCategories);
     console.log("questionsLevels", questionsLevels);
   }, [amountOfQuestions, categories, difficultyLevels]);
+
+  useEffect(() => {
+    if (open) onOpen();
+  }, []);
 
   return (
     <>
@@ -119,7 +127,10 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
             display="flex"
             flexDirection="column"
             alignItems="flex-start"
-            onClick={onOpen}
+            onClick={() => {
+              navigate("/flashcards/" + quiz.id);
+              onOpen();
+            }}
           >
             <p>Twórca: {quiz.user ?? "No user"}</p>
             <p>Język: {quiz.language ?? "No language"}</p>
@@ -176,11 +187,24 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
         </CardBody>
       </Card>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          onClose();
+          navigate("/flashcards");
+        }}
+      >
         <ModalOverlay />
         <ModalContent maxW="100%" width="50%" bg="var(--foreground)">
           <ModalBody>
-            <GoBack goBack={onClose} margin="5%" width="75%" />
+            <GoBack
+              goBack={() => {
+                onClose();
+                navigate("/flashcards");
+              }}
+              margin="5%"
+              width="75%"
+            />
             <QuizDetails
               quiz={quiz}
               userId={userId}
@@ -196,14 +220,14 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody className="basic_style">
             <p>Czy na pewno chcesz usunąć dany quiz?</p>
             <p style={{ fontWeight: "bold" }}>
               UWAGA! Spowoduje to usunięcie wszytskich danych powiązanych z tym
               quizem!
             </p>
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter className="basic_style">
             <Button
               colorScheme="red"
               mr={3}

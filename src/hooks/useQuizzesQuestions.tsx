@@ -41,9 +41,19 @@ const useQuizzesQuestions = () => {
     );
   };
 
+  const fetchUserQuestionsDetailed = (id?: number, userId?: number) => {
+    return useData<QuizQuestion>(
+      "/usersQuizzesQuestionsDetailed",
+      {
+        params: { id: id, userId: userId },
+      },
+      [id, userId]
+    );
+  };
+
   const fetchUserQuestions = (id?: number, userId?: number) => {
     return useData<QuizQuestion>(
-      "/usersQuizzesQuestions",
+      "/usersQuizzesQuestionsDetailed",
       {
         params: { id: id, userId: userId },
       },
@@ -65,6 +75,7 @@ const useQuizzesQuestions = () => {
     fetchENG,
     fetchUserScores,
     fetchUserQuestions,
+    fetchUserQuestionsDetailed,
     fetchAmountOfQuestions,
   };
 };
