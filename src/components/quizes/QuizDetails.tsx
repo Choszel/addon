@@ -81,7 +81,20 @@ const QuizDetails = ({
           {questions.map((question) => (
             <HStack margin="3% 3%">
               <Card
-                bg={userId ? (question.done ? "var(--nyanza)" : "red") : ""}
+                bg={
+                  userId
+                    ? question.done
+                      ? "var(--success)"
+                      : "var(--error)"
+                    : ""
+                }
+                color={
+                  userId
+                    ? question.done
+                      ? "var(--success-content)"
+                      : "var(--error-content)"
+                    : ""
+                }
                 w="100%"
                 height="150px"
               >
@@ -94,7 +107,20 @@ const QuizDetails = ({
                 </CardBody>
               </Card>
               <Card
-                bg={userId ? (question.done ? "var(--nyanza)" : "red") : ""}
+                bg={
+                  userId
+                    ? question.done
+                      ? "var(--success)"
+                      : "var(--error)"
+                    : ""
+                }
+                color={
+                  userId
+                    ? question.done
+                      ? "var(--success-content)"
+                      : "var(--error-content)"
+                    : ""
+                }
                 w="100%"
                 height="150px"
               >

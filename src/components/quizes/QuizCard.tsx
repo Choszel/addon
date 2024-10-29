@@ -78,17 +78,31 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
   return (
     <>
       <Card
-        border="solid black 1px"
+        border="solid var(--border) 1px"
         borderRadius={10}
         overflow="hidden"
-        bg="white"
         display="flex"
         flexDirection="column"
         alignItems="center"
-        // color="var(--neutral1)"
         key={quiz.id}
+        bg="var(--foreground)"
       >
-        <CardBody w="100%">
+        <CardBody
+          w="100%"
+          className={
+            score === 0
+              ? "no_score"
+              : score <= 0.25
+              ? "low_score"
+              : score <= 0.5
+              ? "medium_score"
+              : score <= 0.75
+              ? "high_score"
+              : score < 1
+              ? "very_high_score"
+              : "max_score"
+          }
+        >
           <HStack justifyContent="space-between">
             <Heading fontSize="xl">{quiz?.title}</Heading>
             {GetUserLogin() == quiz.user ? (
@@ -164,7 +178,7 @@ const QuizCard = ({ quiz, isScore, userId }: Props) => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent maxW="100%" width="50%">
+        <ModalContent maxW="100%" width="50%" bg="var(--foreground)">
           <ModalBody>
             <GoBack goBack={onClose} margin="5%" width="75%" />
             <QuizDetails

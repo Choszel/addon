@@ -70,9 +70,7 @@ const DictionaryHome = () => {
           onSearch={(id, searchText) => onSearch(id, searchText)}
           language={selectedLanguage ?? ""}
         ></SearchInput>
-        <Button bgColor="var(--honeydew)" marginX="2%">
-          Losuj frazę
-        </Button>
+        <button className="add_to_quiz_button">Losuj frazę</button>
       </HStack>
       <HStack display="flex" justifyContent="center" spacing={10} marginY="4%">
         <div className="gradient_box">
@@ -114,7 +112,7 @@ const DictionaryHome = () => {
         <p>W słowniku brakuje jakiegoś zwrotu? Zgłoś brak tłumaczenia</p>
         <Link
           to="/noTranslation"
-          style={{ textDecoration: "underline", color: "#0000EE" }}
+          style={{ textDecoration: "underline", color: "var(--secondary)" }}
         >
           tutaj
         </Link>

@@ -15,30 +15,67 @@ const AdminPanel = () => {
         <MenuButton
           as={IconButton}
           aria-label="Options"
-          icon={<FiMenu color="var(--neutral4)" size={25} />}
+          icon={<FiMenu color="var(--content)" size={25} />}
           variant="outline"
+          borderColor="var(--border)"
+          borderWidth="2px"
         ></MenuButton>
-        <MenuList>
+        <MenuList bg="var(--foreground)" borderColor="var(--border)">
           <Link to="/category">
-            <MenuItem>Kategorie</MenuItem>
+            <MenuItem
+              bg="var(--foreground)"
+              _hover={{ color: "var(--secondary)" }}
+            >
+              Kategorie
+            </MenuItem>
           </Link>
           <Link to="/difficultyLevel">
-            <MenuItem>Poziomy Trudności</MenuItem>
+            <MenuItem
+              bg="var(--foreground)"
+              _hover={{ color: "var(--secondary)" }}
+            >
+              Poziomy Trudności
+            </MenuItem>
           </Link>
           <Link to="/language">
-            <MenuItem>Języki</MenuItem>
+            <MenuItem
+              bg="var(--foreground)"
+              _hover={{ color: "var(--secondary)" }}
+            >
+              Języki
+            </MenuItem>
           </Link>
           <Link to="/missingPhrases">
-            <MenuItem>Brakujące frazy</MenuItem>
+            <MenuItem
+              bg="var(--foreground)"
+              _hover={{ color: "var(--secondary)" }}
+            >
+              Brakujące frazy
+            </MenuItem>
           </Link>
           <Link to="/wordsPolish">
-            <MenuItem>Polskie słowa</MenuItem>
+            <MenuItem
+              bg="var(--foreground)"
+              _hover={{ color: "var(--secondary)" }}
+            >
+              Polskie słowa
+            </MenuItem>
           </Link>
           <Link to="/wordsEnglish">
-            <MenuItem>Angielskie słowa</MenuItem>
+            <MenuItem
+              bg="var(--foreground)"
+              _hover={{ color: "var(--secondary)" }}
+            >
+              Angielskie słowa
+            </MenuItem>
           </Link>
           <Link to="/user">
-            <MenuItem>Użytkownicy</MenuItem>
+            <MenuItem
+              bg="var(--foreground)"
+              _hover={{ color: "var(--secondary)" }}
+            >
+              Użytkownicy
+            </MenuItem>
           </Link>
         </MenuList>
       </Menu>

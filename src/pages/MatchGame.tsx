@@ -77,8 +77,8 @@ const MatchGame = () => {
         }}
         margin="2%"
       />
+      {showConfetti && <Confetti recycle={false} gravity={0.2} />}
       <Box>
-        {showConfetti && <Confetti recycle={false} gravity={0.2} />}
         {currentWord ? (
           <>
             <h1>{currentWord.word_polish}</h1>

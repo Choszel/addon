@@ -6,6 +6,7 @@ import { PiArrowsCounterClockwise } from "react-icons/pi";
 import { FaArrowLeft } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa6";
 import GoBack from "../components/GoBack";
+import Confetti from "react-confetti";
 
 const FlashcardGame = () => {
   const { id } = useParams();
@@ -17,6 +18,7 @@ const FlashcardGame = () => {
   const [rotation, setRotation] = useState(0);
   const [leftArrowPosition, setLeftArrowPosition] = useState(0);
   const [rightArrowPosition, setRightArrowPosition] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
   const navigate = useNavigate();
 
   const turnCard = () => {
@@ -65,6 +67,8 @@ const FlashcardGame = () => {
   };
 
   useEffect(() => {
+    if (currentIndex == questions.length && questions.length > 0)
+      setShowConfetti(true);
     window.addEventListener("keydown", handleKeyPress);
 
     return () => {
@@ -74,6 +78,7 @@ const FlashcardGame = () => {
 
   return (
     <>
+      {showConfetti && <Confetti recycle={false} gravity={0.2} />}
       <GoBack
         goBack={() => {
           navigate("/flashcards");
@@ -95,11 +100,13 @@ const FlashcardGame = () => {
             transform={isFlipped ? "rotateY(180deg)" : "rotateY(0)"}
             transition="transform 0.5s ease-in-out"
             style={{ backfaceVisibility: "hidden" }}
+            className="custom_card"
           >
             <CardBody
               display="flex"
               justifyContent="center"
               alignItems="center"
+              className="custom_card"
             >
               {currentIndex === questions.length ? (
                 <p>Koniec quizu! Powrót</p>
