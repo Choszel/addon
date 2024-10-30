@@ -723,9 +723,9 @@ app.get('/api/usersQuizzesQuestions', async(req, res)=>{
     try{
         const { id } = req.query;
         const condition = 'SELECT * FROM users_quizzes_questions uqq '
-        + 'WHERE users_quizzes_scores_id = ' + id + " "
+        + 'WHERE users_quizzes_scores_id = ' + id + ' ' 
         + 'ORDER BY id ASC ;'
-        const result = await pool.query(userId ? condition : 'SELECT * FROM users_quizzes_questions uqq ORDER BY id ASC ;');
+        const result = await pool.query(id ? condition : 'SELECT * FROM users_quizzes_questions uqq ORDER BY id ASC ;');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -754,16 +754,71 @@ app.get('/api/usersQuizzesQuestionsDetailed', async(req, res)=>{
     }
 });  
 
+app.post('/api/usersQuizzesQuestions', async (req, res) => {
+    const { quiz_score_id, data } = req.body;
+  
+    console.log(quiz_score_id, data)
+    try {
+      const questions = JSON.parse(data);
+      const values = questions.map((q) => [
+        quiz_score_id,
+        q,
+      ]);
+  
+      const query =
+        'INSERT INTO users_quizzes_questions(users_quizzes_scores_id, quizzes_questions_id) VALUES ($1, $2)';
+      const results = await Promise.all(
+        values.map((value) => {return pool.query(query, value)})
+      );
+  
+      res.json({ success: true, rows: results.map((result) => result.rows) });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
+    }
+});
+
 app.get('/api/usersQuizzesScores', async(req, res)=>{
     try{
         const { id } = req.query;
-        const result = await pool.query('SELECT q.id, q.title, u.login as user, l.code as language, execution_date, q.type '
+        const result = await pool.query('SELECT q.id, uqs.id as quiz_score_id, q.title, u.login as user, l.code as language, execution_date, q.type '
         + 'FROM quizzes q, users u, languages l, users_quizzes_scores uqs '
         + 'WHERE uqs.quizzes_id=q.id AND q.users_id=u.id AND q.languages_id=l.id AND uqs.users_id=$1 ORDER BY uqs.id DESC;', [id]);
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
         res.status(500).send('Server error');
+    }
+});
+
+app.post('/api/usersQuizzesScores', async(req, res)=>{
+    const { users_id, quizzes_id } = req.body;
+    console.log("usersQuizzesScores ", users_id, quizzes_id);
+    try{
+        const entityExists = await pool.query('SELECT * FROM users_quizzes_scores WHERE users_id = $1 AND quizzes_id = $2', [users_id, quizzes_id]);
+        if(entityExists.rows.length > 0){
+            return res.status(200).json({ message: "Rozpoczęto quiz" });
+        }
+        await pool.query(
+            'INSERT INTO users_quizzes_scores(users_id, quizzes_id) VALUES ($1, $2)', [users_id, quizzes_id]
+        );
+
+        res.status(200).json({ message: "Rozpoczęto quiz" });
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+});
+
+app.delete('/api/usersQuizzesScores', async (req, res) => {
+    try{
+        const { users_id, quizzes_id } = req.body;
+        console.log("usersQuizzesScores delete", users_id, quizzes_id);
+        const result = await pool.query('DELETE FROM users_quizzes_scores WHERE users_id = $1 AND quizzes_id = $2', [users_id, quizzes_id]);
+        res.status(200).json({message: result});
+    }catch(err){
+        console.log(err.message);
+        res.status(500).send("Server error");
     }
 });
 

@@ -1,7 +1,20 @@
-import { Card, CardBody, HStack } from "@chakra-ui/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  HStack,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { Quiz } from "../../hooks/useQuizzes";
 import { QuizQuestion } from "../../hooks/useQuizzesQuestions";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import actionData from "../../hooks/actionData";
 
 interface Props {
   quiz: Quiz;
@@ -20,12 +33,39 @@ const QuizDetails = ({
 }: Props) => {
   console.log(quiz);
   console.log(questions);
+  const { postData, deleteData } = actionData("/usersQuizzesScores");
+  const {
+    isOpen: deleteIsOpen,
+    onOpen: deleteOnOpen,
+    onClose: deleteOnClose,
+  } = useDisclosure();
+  const navigate = useNavigate();
+
+  const addToUserQuizzes = () => {
+    const formData = new URLSearchParams();
+    formData.append("users_id", (userId ?? 0).toString());
+    formData.append("quizzes_id", (quiz.id ?? 0).toString());
+    postData(formData);
+  };
+
+  const deleteProgress = () => {
+    const formData = new URLSearchParams();
+    formData.append("users_id", (userId ?? 0).toString());
+    formData.append("quizzes_id", (quiz.id ?? 0).toString());
+    deleteData(formData);
+    window.location.reload();
+  };
 
   return (
     <>
       <h1>Szczegóły</h1>
       <p>{quiz?.title}</p>
-      <p>Twórca: {quiz.user ?? "No user"}</p>
+      <p
+        style={{ cursor: "pointer" }}
+        onClick={() => navigate("/user/details/" + quiz.user)}
+      >
+        Twórca: {quiz.user ?? "No user"}
+      </p>
       <p>Język: {quiz.language ?? "No language"}</p>
       <HStack>
         {" "}
@@ -61,19 +101,34 @@ const QuizDetails = ({
         )}
       </HStack>
       <p>Data wykonania {quiz.execution_date?.toString().substring(0, 10)}</p>
+      <button className="button_primary" onClick={deleteOnOpen}>
+        Usuń postępy
+      </button>
 
       <h1 style={{ textDecoration: "underline", marginTop: "4%" }}>Zagraj</h1>
 
       {quiz.type == "quiz" ? (
         <>
           <HStack>
-            <Link to={"/quiz/flashcardGame/" + quiz.id} className="game_type">
+            <Link
+              to={"/quiz/flashcardGame/" + quiz.id}
+              className="game_type"
+              onClick={addToUserQuizzes}
+            >
               <p>Fiszki</p>
             </Link>
-            <Link to={"/quiz/matchGame/" + quiz.id} className="game_type">
+            <Link
+              to={"/quiz/matchGame/" + quiz.id}
+              className="game_type"
+              onClick={addToUserQuizzes}
+            >
               <p>Dopasowanie</p>
             </Link>
-            <Link to={"/quiz/testGame/" + quiz.id} className="game_type">
+            <Link
+              to={"/quiz/testGame/" + quiz.id}
+              className="game_type"
+              onClick={addToUserQuizzes}
+            >
               <p>Test</p>
             </Link>
           </HStack>
@@ -136,10 +191,36 @@ const QuizDetails = ({
           ))}
         </>
       ) : (
-        <Link to={"/quiz/story/" + quiz.id} className="game_type">
+        <Link
+          to={"/quiz/story/" + quiz.id}
+          className="game_type"
+          onClick={addToUserQuizzes}
+        >
           <p>Tekst oraz quiz</p>
         </Link>
       )}
+
+      <Modal isOpen={deleteIsOpen} onClose={deleteOnClose} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody className="basic_style">
+            <p>Czy na pewno chcesz usunąć dane tego quizu?</p>
+            <p style={{ fontWeight: "bold" }}>
+              UWAGA! Spowoduje to usunięcie wszytskich danych powiązanych z tym
+              quizem!
+            </p>
+          </ModalBody>
+          <ModalFooter className="basic_style">
+            <Button colorScheme="red" mr={3} onClick={deleteProgress}>
+              Usuń
+            </Button>
+            <Button colorScheme="blue" mr={3} onClick={deleteOnClose}>
+              Anuluj
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

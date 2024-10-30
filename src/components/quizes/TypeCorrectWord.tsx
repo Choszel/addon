@@ -41,6 +41,7 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
     console.log("speak", question?.word_second);
     msg.lang = "en-US";
     msg.text = question?.word_second ?? "";
+    window.speechSynthesis.cancel();
     window.speechSynthesis.speak(msg);
   };
 
@@ -50,7 +51,6 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
         .getVoices()
         .filter((voice) => voice.lang === "en-US");
       msg.voice = voices[0];
-      window.speechSynthesis.cancel();
     };
 
     window.speechSynthesis.addEventListener("voiceschanged", loadVoices);

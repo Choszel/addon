@@ -1,5 +1,5 @@
 import { Avatar, HStack, Spacer } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../others/AuthContext";
 import AdminPanel from "./AdminPanel";
@@ -9,6 +9,7 @@ import "./../index.css";
 const Navbar = () => {
   const authContext = useContext(AuthContext);
   const { CheckUserType, GetUserLogin } = useTokenData();
+  const navigate = useNavigate();
 
   return (
     <HStack
@@ -24,8 +25,15 @@ const Navbar = () => {
       <Spacer width="50%"></Spacer>
       {authContext && authContext.isLoggedIn ? (
         <>
-          <Avatar margin="0% 0% 0% 2%" boxSize={6}></Avatar>
-          <p style={{ margin: "0% 1% 0% 0%" }}>{GetUserLogin()}</p>
+          <HStack
+            onClick={() => navigate("/user/details/" + GetUserLogin())}
+            spacing={3}
+            marginX="2%"
+            cursor="pointer"
+          >
+            <Avatar boxSize={6} />
+            <p>{GetUserLogin()}</p>
+          </HStack>
           {CheckUserType() == "admin" && <AdminPanel />}
           <button
             className="button_primary"

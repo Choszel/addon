@@ -16,6 +16,12 @@ export interface QuizQuestion {
   done?: boolean | null;
 }
 
+export interface UserQuizQuestion {
+  id: number | null;
+  users_quizzes_scores_id: number | null;
+  quizzes_questions_id: number | null;
+}
+
 export interface AmountOfQuestions {
   amount_of_questions: number;
 }
@@ -51,13 +57,13 @@ const useQuizzesQuestions = () => {
     );
   };
 
-  const fetchUserQuestions = (id?: number, userId?: number) => {
-    return useData<QuizQuestion>(
-      "/usersQuizzesQuestionsDetailed",
+  const fetchUserQuestions = (id?: number) => {
+    return useData<UserQuizQuestion>(
+      "/usersQuizzesQuestions",
       {
-        params: { id: id, userId: userId },
+        params: { id: id },
       },
-      [id, userId]
+      [id]
     );
   };
 

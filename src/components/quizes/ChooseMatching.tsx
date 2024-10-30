@@ -19,10 +19,25 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
   const ref4 = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (ref1.current) ref1.current.style.backgroundColor = "var(--foreground)";
-    if (ref2.current) ref2.current.style.backgroundColor = "var(--foreground)";
-    if (ref3.current) ref3.current.style.backgroundColor = "var(--foreground)";
-    if (ref4.current) ref4.current.style.backgroundColor = "var(--foreground)";
+    if (ref1.current) {
+      ref1.current.style.backgroundColor = "var(--foreground)";
+      ref1.current.style.color = "var(--copy)";
+    }
+
+    if (ref2.current) {
+      ref2.current.style.backgroundColor = "var(--foreground)";
+      ref2.current.style.color = "var(--copy)";
+    }
+
+    if (ref3.current) {
+      ref3.current.style.backgroundColor = "var(--foreground)";
+      ref3.current.style.color = "var(--copy)";
+    }
+
+    if (ref4.current) {
+      ref4.current.style.backgroundColor = "var(--foreground)";
+      ref4.current.style.color = "var(--copy)";
+    }
   }, [shuffledNumbers]);
 
   const shuffle = () => {

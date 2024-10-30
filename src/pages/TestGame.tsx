@@ -7,11 +7,17 @@ import TypeCorrectWord from "../components/quizes/TypeCorrectWord";
 import GoBack from "../components/GoBack";
 import EndOfTheQuizModal from "../components/EndOfTheQuizModal";
 import actionData from "../hooks/actionData";
+import useTokenData from "../others/useTokenData";
 
 const TestGame = () => {
   const { id } = useParams();
-  const { fetchENG } = useQuizzesQuestions();
+  const { GetUserId } = useTokenData();
+  const { fetchENG, fetchUserScores, fetchUserQuestions } =
+    useQuizzesQuestions();
   const { data: questions } = fetchENG(parseInt(id ?? "0"));
+  const { data: userScores } = fetchUserScores(GetUserId());
+  const [currentScore, setCurrentScore] = useState<number>(0);
+  const { data: userQuestions } = fetchUserQuestions(currentScore);
   const [drawNumbers, setDrawNumbers] = useState<number[]>([]);
   const [questionType, setQuestionType] = useState<number>(0);
   const [drawNumbersAnswers, setDrawNumbersAnswers] = useState<number[]>([]);
@@ -19,8 +25,7 @@ const TestGame = () => {
   const navigate = useNavigate();
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
-  const { postData: postQuiz } = actionData("/quizzes");
-  const { postData: postQuizQuestions } = actionData("/quizzesQuestions/ENG");
+  const { postData: postUserQuestions } = actionData("/usersQuizzesQuestions");
 
   const getRandomNumbers = () => {
     console.log("drawNumbers przed: ", drawNumbers);
@@ -29,6 +34,7 @@ const TestGame = () => {
       console.log("done");
       setShowConfetti(true);
       setTimeout(() => {
+        handleSave();
         setModalOpen(true);
       }, 250);
       console.log(correctAnswers);
@@ -50,27 +56,27 @@ const TestGame = () => {
   };
 
   const handleSave = async () => {
-    if (correctAnswers.length < 0) return;
+    if (correctAnswers.length < 1) return;
 
-    // const formData = new URLSearchParams();
-    // formData.append("title", refs[0]?.value ?? "");
-    // formData.append("users_id", GetUserId().toString());
-    // formData.append("languages_id", refs[1]?.value ?? "");
-    // const dateNow = new Date().toJSON().substring(0, 10);
-    // formData.append("execution_date", dateNow.toString());
+    setCorrectAnswers(
+      correctAnswers.filter(
+        (answer) =>
+          !userQuestions.some((uq) => uq.users_quizzes_scores_id === answer)
+      )
+    );
 
-    // const response = await postQuiz(formData);
-    // console.log(response.id);
-
-    // const questionData = new URLSearchParams();
-    // questionData.append("quiz_id", (response.id ?? 0).toString());
-    // questionData.append(
-    //   "data",
-    //   JSON.stringify([...savedPhrases, ...(phrasesData ?? [])])
-    // );
-    // postQuizQuestions(questionData);
-    // return navigate("/flashcards");
+    const formData = new URLSearchParams();
+    formData.append("quiz_score_id", currentScore.toString());
+    formData.append("data", JSON.stringify([...correctAnswers]));
+    postUserQuestions(formData);
   };
+
+  useEffect(() => {
+    const currentScore = userScores.find(
+      (score) => score.id == parseInt(id ?? "0")
+    );
+    setCurrentScore(currentScore?.quiz_score_id ?? 0);
+  }, [userScores]);
 
   const getRandomNumbersForAnswers = () => {
     let maxAttempts2 = 100;
@@ -103,9 +109,7 @@ const TestGame = () => {
     ) {
       console.log("correct");
       const tempArray = correctAnswers;
-      tempArray.push(
-        questions[drawNumbers[drawNumbers.length - 1]]?.question_id ?? 0
-      );
+      tempArray.push(questions[drawNumbers[drawNumbers.length - 1]]?.id ?? 0);
       setCorrectAnswers(tempArray);
       return true;
     } else {

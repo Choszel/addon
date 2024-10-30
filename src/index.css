@@ -71,7 +71,7 @@ h1{
 }
 
 .gradient_button{
-    background: var(--nyanza);
+    background: var(--primary);
     padding: 2%;
     border-radius: 10px;
 }

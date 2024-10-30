@@ -3,6 +3,7 @@ import useData from "./useData";
 
 export interface Quiz{
     id: number | null;
+    quiz_score_id?: number | null;
     title: string | null;
     user: string | null;
     language: string | null;
