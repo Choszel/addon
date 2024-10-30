@@ -72,7 +72,7 @@ const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
         ) : null}
         {phrase?.level ? (
           <button
-            className="add_to_quiz_button"
+            className="button_secondary"
             onClick={() => handleAddToQuiz(index - 1)}
           >
             Dodaj do quizu

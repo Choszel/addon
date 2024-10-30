@@ -76,7 +76,7 @@ h1{
     border-radius: 10px;
 }
 
-.add_to_quiz_button{
+.button_secondary{
     background: var(--secondary-dark);
     color: var(--secondary-content);
     padding: 0.5%;
@@ -256,4 +256,9 @@ h1{
 .basic_style{
     background-color: var(--foreground);
     color: var(--copy);
+}
+
+.primary_style{
+    background: var(--primary-dark);
+    color: var(--primary-content);
 }

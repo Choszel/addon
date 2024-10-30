@@ -213,7 +213,7 @@ app.put('/api/language', async (req, res) =>{
     const { id, code } = req.body;
     console.log(id, " ", code);
     try{
-        const result = await pool.query('UPDATE languages SET code = $1 WHERE id = $2', [code, id]);
+        await pool.query('UPDATE languages SET code = $1 WHERE id = $2', [code, id]);
         res.status(200).json({message: "Updated successfully"})
     }catch(err){
         console.log(err.message)
@@ -232,6 +232,18 @@ app.get('/api/users', async(req, res)=>{
         res.status(500).send('Server error');
     }   
 });
+
+app.put('/api/users', async (req, res) =>{
+    const { login, user_type } = req.body;
+    console.log("users put", login, " ", user_type);
+    try{
+        await pool.query('UPDATE users SET user_type = $1 WHERE login = $2', [user_type, login]);
+        res.status(200).json({message: "Updated successfully"})
+    }catch(err){
+        console.log(err.message)
+        res.status(500).send("Server error");
+    }
+})
 
 app.get('/api/missingPhrases', async(req, res)=>{
     const { id } = req.query;

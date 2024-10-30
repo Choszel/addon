@@ -1,4 +1,4 @@
-import { Button, HStack } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import SearchInput from "../components/dictionary/SearchInput";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";

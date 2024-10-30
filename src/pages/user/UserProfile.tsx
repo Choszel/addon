@@ -9,6 +9,7 @@ import QuizCardContainer from "../../components/quizes/QuizCardContainer";
 import QuizCardSkeleton from "../../components/quizes/QuizCardSkeleton";
 import QuizCard from "../../components/quizes/QuizCard";
 import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
+import actionData from "../../hooks/actionData";
 
 const UserProfile = () => {
   const { login } = useParams();
@@ -18,10 +19,19 @@ const UserProfile = () => {
   const { fetchUserScores } = useQuizzesQuestions();
   const { data, error, isLoading } = fetchUserScores(userData[0]?.id);
   const skeletons = [1, 2, 3, 4, 5, 6];
+  const { putData } = actionData("/users");
 
   useEffect(() => {
     setQuizQuery({ ...quizQuery, user: userData[0]?.login });
   }, [userData]);
+
+  const upgradeUser = () => {
+    const formData = new URLSearchParams();
+    formData.append("login", userData[0].login);
+    formData.append("user_type", userData[0].user_type == 0 ? "1" : "0");
+    putData(formData);
+    window.location.reload();
+  };
 
   return (
     <>
@@ -33,11 +43,32 @@ const UserProfile = () => {
               <p>{user.login}</p>
               <p>{CheckUserType(user.user_type)}</p>
             </div>
+            {user.user_type != 2 && CheckUserType() == "admin" ? (
+              <button className="button_secondary" onClick={upgradeUser}>
+                {user.user_type == 0
+                  ? "Przemianuj użytkownika"
+                  : "Zdegraduj użytkownika"}
+              </button>
+            ) : null}
           </HStack>
           <Tabs isFitted variant="enclosed" marginTop="3%">
             <TabList mb="1em">
-              <Tab _selected={{ bg: "whitesmoke" }}>Rozpoczęte zestawy</Tab>
-              <Tab _selected={{ bg: "whitesmoke" }}>Utworzone zestawy</Tab>
+              <Tab
+                _selected={{
+                  background: "var(--primary-dark)",
+                  color: "var(--primary-content)",
+                }}
+              >
+                Rozpoczęte zestawy
+              </Tab>
+              <Tab
+                _selected={{
+                  background: "var(--primary-dark)",
+                  color: "var(--primary-content)",
+                }}
+              >
+                Utworzone zestawy
+              </Tab>
             </TabList>
             <TabPanels>
               <TabPanel>

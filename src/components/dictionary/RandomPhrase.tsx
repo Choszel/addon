@@ -35,7 +35,7 @@ const RandomPhrase = ({ onSearch, language }: Props) => {
   };
 
   return (
-    <button className="add_to_quiz_button" onClick={findRandomPhrase}>
+    <button className="button_secondary" onClick={findRandomPhrase}>
       Losuj frazę
     </button>
   );

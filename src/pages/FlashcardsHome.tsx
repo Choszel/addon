@@ -19,7 +19,7 @@ const FlashcardsHome = () => {
           language={""}
         ></SearchInput>
         <button
-          className="add_to_quiz_button"
+          className="button_secondary"
           onClick={() => navigate("/quiz/create")}
         >
           Stwórz własny quiz
