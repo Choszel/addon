@@ -1,5 +1,11 @@
 import "./App.css";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import Home from "./pages/Home";
 import DictionaryHome from "./pages/DictionaryHome";
 import FlashcardsHome from "./pages/FlashcardsHome";
@@ -33,60 +39,129 @@ import FlashcardGame from "./pages/FlashcardGame";
 import MatchGame from "./pages/MatchGame";
 import TestGame from "./pages/TestGame";
 import StoryWithQuestions from "./pages/StoryWithQuestions";
+import useTokenData from "./others/useTokenData";
+import { useToast } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 function App() {
+  const { CheckUserType } = useTokenData();
+  const toast = useToast();
+
+  const HighestProtectedRoute = () => {
+    const isAdmin = CheckUserType() === "admin";
+
+    useEffect(() => {
+      if (!isAdmin) {
+        toast({
+          title: "Treść tylko dla administratorów",
+          status: "error",
+          position: "bottom-right",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    }, [isAdmin, toast]);
+
+    return isAdmin ? <Outlet /> : <Navigate to="/" replace />;
+  };
+
+  const ProtectedRoute = () => {
+    const isAllowed = ["admin", "warden"].includes(CheckUserType());
+
+    useEffect(() => {
+      if (!isAllowed) {
+        toast({
+          title: "Treść tylko dla pracowników",
+          status: "error",
+          position: "bottom-right",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    }, [isAllowed, toast]);
+
+    return isAllowed ? <Outlet /> : <Navigate to="/" replace />;
+  };
+
+  const LowestProtectedRoute = () => {
+    const isLoggedIn = CheckUserType() !== "none";
+
+    useEffect(() => {
+      if (!isLoggedIn) {
+        toast({
+          title: "Treść tylko dla zalogowanych użytkowników",
+          status: "error",
+          position: "bottom-right",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    }, [isLoggedIn, toast]);
+
+    return isLoggedIn ? <Outlet /> : <Navigate to="/" replace />;
+  };
+
   return (
     <Router>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
+          <Route index path="/" element={<Home />} />
+          <Route path="*" element={<p>Not found: 404!</p>} />
           <Route path="/dictionary" element={<DictionaryHome />} />
           <Route
             path="/dictionary/alphabeticalSearch/:language/:letter"
             element={<AlphabeticalSearch />}
           />
-          <Route path="/flashcards/:id?" element={<FlashcardsHome />} />
-          <Route path="/noTranslation" element={<NoTranslation />} />
           <Route
             path="dictionary/searchResult/:id/:word/:code"
             element={<DictionarySearchResult />}
           />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/category" element={<RCategory />} />
-          <Route path="/category/create" element={<CCategory />} />
-          <Route path="/category/edit/:id" element={<ECategory />} />
-          <Route path="/difficultyLevel" element={<RDifficultyLevel />} />
-          <Route path="/language" element={<RLanguage />} />
-          <Route path="/language/create" element={<CLanguage />} />
-          <Route path="/language/edit/:id" element={<Elanguage />} />
-          <Route path="/missingPhrases" element={<RMissingPhrases />} />
-          <Route
-            path="/missingPhrases/details/:id"
-            element={<DetailsMissingPhrases />}
-          />
-          <Route path="/wordsPolish" element={<RWordsPolish />} />
-          <Route path="/wordsPolish/create" element={<CWordsPolish />} />
-          <Route path="/wordsPolish/edit/:id" element={<EWordsPolish />} />
-          <Route
-            path="/wordsPolish/details/:id"
-            element={<DetailsWordsPolish />}
-          />
-          <Route path="/wordsEnglish" element={<RWordsEnglish />} />
-          <Route path="/wordsEnglish/create" element={<CWordsEnglish />} />
-          <Route path="/wordsEnglish/edit/:id" element={<EWordsEnglish />} />
-
-          <Route
-            path="/wordsEnglish/details/:id"
-            element={<DetailsWordsEnglish />}
-          />
-          <Route path="/user" element={<RUser />} />
           <Route path="/user/details/:login" element={<UserProfile />} />
-          <Route path="/quiz/create" element={<CQuiz />} />
-          <Route path="/quiz/FlashcardGame/:id" element={<FlashcardGame />} />
-          <Route path="/quiz/matchGame/:id" element={<MatchGame />} />
-          <Route path="/quiz/testGame/:id" element={<TestGame />} />
-          <Route path="/quiz/story/:id" element={<StoryWithQuestions />} />
+
+          <Route element={<HighestProtectedRoute></HighestProtectedRoute>}>
+            <Route path="/user" element={<RUser />} />
+          </Route>
+
+          <Route element={<ProtectedRoute></ProtectedRoute>}>
+            <Route path="/category" element={<RCategory />} />
+            <Route path="/category/create" element={<CCategory />} />
+            <Route path="/category/edit/:id" element={<ECategory />} />
+            <Route path="/difficultyLevel" element={<RDifficultyLevel />} />
+            <Route path="/language" element={<RLanguage />} />
+            <Route path="/language/create" element={<CLanguage />} />
+            <Route path="/language/edit/:id" element={<Elanguage />} />
+            <Route path="/missingPhrases" element={<RMissingPhrases />} />
+            <Route
+              path="/missingPhrases/details/:id"
+              element={<DetailsMissingPhrases />}
+            />
+            <Route path="/wordsPolish" element={<RWordsPolish />} />
+            <Route path="/wordsPolish/create" element={<CWordsPolish />} />
+            <Route path="/wordsPolish/edit/:id" element={<EWordsPolish />} />
+            <Route
+              path="/wordsPolish/details/:id"
+              element={<DetailsWordsPolish />}
+            />
+            <Route path="/wordsEnglish" element={<RWordsEnglish />} />
+            <Route path="/wordsEnglish/create" element={<CWordsEnglish />} />
+            <Route path="/wordsEnglish/edit/:id" element={<EWordsEnglish />} />
+            <Route
+              path="/wordsEnglish/details/:id"
+              element={<DetailsWordsEnglish />}
+            />
+          </Route>
+
+          <Route element={<LowestProtectedRoute></LowestProtectedRoute>}>
+            <Route path="/noTranslation" element={<NoTranslation />} />
+            <Route path="/quiz/create" element={<CQuiz />} />
+            <Route path="/quiz/FlashcardGame/:id" element={<FlashcardGame />} />
+            <Route path="/quiz/matchGame/:id" element={<MatchGame />} />
+            <Route path="/quiz/testGame/:id" element={<TestGame />} />
+            <Route path="/quiz/story/:id" element={<StoryWithQuestions />} />
+            <Route path="/flashcards/:id?" element={<FlashcardsHome />} />
+          </Route>
         </Route>
       </Routes>
     </Router>

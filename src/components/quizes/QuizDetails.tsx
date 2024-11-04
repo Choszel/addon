@@ -68,7 +68,6 @@ const QuizDetails = ({
       </p>
       <p>Język: {quiz.language ?? "No language"}</p>
       <HStack>
-        {" "}
         <p>Kategria: </p>
         {categories.length > 3 ? (
           <HStack>

@@ -17,8 +17,8 @@ import { Quiz } from "../../hooks/useQuizzes";
 import QuizDetails from "./QuizDetails";
 import { useEffect, useState } from "react";
 import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
-import useCategories from "../../hooks/useCategories";
-import useDifficultyLevels from "../../hooks/useDifficultyLevels";
+import { Category } from "../../hooks/useCategories";
+import { DifficultyLevel } from "../../hooks/useDifficultyLevels";
 import useTokenData from "../../others/useTokenData";
 import actionData from "../../hooks/actionData";
 import GoBack from "../GoBack";
@@ -29,9 +29,22 @@ interface Props {
   isScore?: boolean;
   userId?: number;
   open?: boolean;
+  categories: Category[];
+  difficultyLevels: DifficultyLevel[];
+  selectedCategory: number;
+  selectedLevel: number;
 }
 
-const QuizCard = ({ quiz, isScore, userId, open }: Props) => {
+const QuizCard = ({
+  quiz,
+  isScore,
+  userId,
+  open,
+  categories,
+  difficultyLevels,
+  selectedCategory,
+  selectedLevel,
+}: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: deleteIsOpen,
@@ -45,8 +58,7 @@ const QuizCard = ({ quiz, isScore, userId, open }: Props) => {
   const { data: amountOfQuestions } = fetchAmountOfQuestions(quiz.id ?? 0);
   const [categoriesQuizzes, setCategoriesQuizzes] = useState<string[]>([""]);
   const [levelsQuizzes, setLevelsQuizzes] = useState<string[]>([""]);
-  const { data: categories } = useCategories();
-  const { data: difficultyLevels } = useDifficultyLevels();
+
   const { GetUserLogin } = useTokenData();
   const { deleteData } = actionData("/quizzes");
   const navigate = useNavigate();
@@ -61,7 +73,7 @@ const QuizCard = ({ quiz, isScore, userId, open }: Props) => {
     let questionsCategories = [
       ...new Set(
         questions.map(
-          (q) => categories.find((c) => c.id == q.ws_category_id)?.name ?? ""
+          (q) => categories?.find((c) => c.id == q.ws_category_id)?.name ?? ""
         )
       ),
     ];
@@ -69,7 +81,7 @@ const QuizCard = ({ quiz, isScore, userId, open }: Props) => {
       ...new Set(
         questions.map(
           (q) =>
-            difficultyLevels.find((df) => df.id == q.ws_level_id)?.level ?? ""
+            difficultyLevels?.find((df) => df.id == q.ws_level_id)?.level ?? ""
         )
       ),
     ];

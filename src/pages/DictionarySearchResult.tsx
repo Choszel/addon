@@ -1,4 +1,4 @@
-import { HStack, Img } from "@chakra-ui/react";
+import { HStack, Img, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SelectLanguage from "../components/SelectLanguage";
@@ -9,6 +9,7 @@ import getCroppedImageUrl from "../services/image-url";
 import actionData from "../hooks/actionData";
 import usePhrasesStorage from "../hooks/usePhrasesStorage";
 import { HiSpeakerWave } from "react-icons/hi2";
+import useTokenData from "../others/useTokenData";
 
 export interface Phrase {
   id: number;
@@ -34,6 +35,8 @@ const DictionarySearchResult = () => {
   const navigate = useNavigate();
   const { putData } = actionData("/wordsEnglish/raisePopularity");
   const { addToSavedPhrases } = usePhrasesStorage("ENG");
+  const { CheckUserType } = useTokenData();
+  const toast = useToast();
   const msg = new SpeechSynthesisUtterance();
 
   const Load = async () => {
@@ -99,7 +102,15 @@ const DictionarySearchResult = () => {
     console.log(translations[id]);
     // localStorage.removeItem("translations_pln_eng");
 
-    addToSavedPhrases(translations[id]);
+    if (CheckUserType() != "none") addToSavedPhrases(translations[id]);
+    else
+      toast({
+        title: "Treść tylko dla zalogowanych użytkowników",
+        status: "error",
+        position: "bottom-right",
+        duration: 5000,
+        isClosable: true,
+      });
   };
 
   const onSearch = (id: number, searchText: string) => {

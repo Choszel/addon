@@ -10,6 +10,8 @@ import QuizCardSkeleton from "../../components/quizes/QuizCardSkeleton";
 import QuizCard from "../../components/quizes/QuizCard";
 import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
 import actionData from "../../hooks/actionData";
+import useCategories from "../../hooks/useCategories";
+import useDifficultyLevels from "../../hooks/useDifficultyLevels";
 
 const UserProfile = () => {
   const { login } = useParams();
@@ -20,6 +22,8 @@ const UserProfile = () => {
   const { data, error, isLoading } = fetchUserScores(userData[0]?.id);
   const skeletons = [1, 2, 3, 4, 5, 6];
   const { putData } = actionData("/users");
+  const { data: categories } = useCategories();
+  const { data: difficultyLevels } = useDifficultyLevels();
 
   useEffect(() => {
     setQuizQuery({ ...quizQuery, user: userData[0]?.login });
@@ -89,13 +93,21 @@ const UserProfile = () => {
                         quiz={quiz}
                         isScore={true}
                         userId={userData[0]?.id}
+                        categories={categories}
+                        difficultyLevels={difficultyLevels}
+                        selectedCategory={0}
+                        selectedLevel={0}
                       ></QuizCard>
                     </QuizCardContainer>
                   ))}
                 </SimpleGrid>
               </TabPanel>
               <TabPanel>
-                <QuizGrid quizQuery={quizQuery}></QuizGrid>
+                <QuizGrid
+                  quizQuery={quizQuery}
+                  selectedCategory={0}
+                  selectedLevel={0}
+                ></QuizGrid>
               </TabPanel>
             </TabPanels>
           </Tabs>

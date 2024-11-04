@@ -4,13 +4,15 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Tooltip,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
+import { useDebounce } from "use-debounce";
 
 interface Props {
-  onSearch: (id: number, searchText: string) => void;
-  language: string;
+  searchValue: string;
+  setSearchValue: (searchValue: string) => void;
 }
 
 export interface WordsLike {
@@ -18,9 +20,17 @@ export interface WordsLike {
   word: string;
 }
 
-const SearchInput = ({}: Props) => {
-  const [searchValue, setSearchValue] = useState<string>("");
+const SearchInput = ({ setSearchValue }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [tempSearchValue, setTempSearchValue] = useState<string>("");
+  const [debounceSearchInput] = useDebounce(
+    tempSearchValue.toLowerCase(),
+    1000
+  );
+
+  useEffect(() => {
+    setSearchValue(debounceSearchInput);
+  }, [debounceSearchInput]);
 
   return (
     <Flex
@@ -31,25 +41,28 @@ const SearchInput = ({}: Props) => {
     >
       <form>
         <HStack>
-          (
-          <InputGroup
-            boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
-            borderRadius="20px"
+          <Tooltip
+            label="Wpisz @użytkownik, aby wyszukać po użytkowniku"
+            placement="top"
           >
-            <Input
-              width="500px"
-              borderRadius={20}
-              border="0px"
-              placeholder="Wyszukaj quiz..."
-              color="var(--neutral1)"
-              focusBorderColor="var(--primary)"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              ref={inputRef}
-            />
-            <InputRightElement children={<BsSearch />} />
-          </InputGroup>
-          )
+            <InputGroup
+              boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
+              borderRadius="20px"
+            >
+              <Input
+                width="500px"
+                borderRadius={20}
+                border="0px"
+                placeholder="Wyszukaj quiz..."
+                color="var(--neutral1)"
+                focusBorderColor="var(--primary)"
+                value={tempSearchValue}
+                onChange={(e) => setTempSearchValue(e.target.value)}
+                ref={inputRef}
+              />
+              <InputRightElement children={<BsSearch />} />
+            </InputGroup>
+          </Tooltip>
         </HStack>
       </form>
     </Flex>

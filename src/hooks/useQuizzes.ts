@@ -16,7 +16,7 @@ const useQuizzes = (quizQuery: QuizQuery) => useData<Quiz>("/quizzes",
     id: quizQuery.id,
     user: quizQuery.user,
     language: quizQuery.language,
-    name: quizQuery.quizName}}, 
+    title: quizQuery.title}}, 
 [quizQuery]);
 
   

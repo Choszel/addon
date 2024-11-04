@@ -56,7 +56,7 @@ app.post('/api/register', async (req, res) => {
         const hashedPass = await bcrypt.hash(password, 10);
 
         await pool.query(
-            'INSERT INTO users (login, password, user_type) VALUES ($1, $2, $3, 0)',
+            'INSERT INTO users (login, password, user_type) VALUES ($1, $2, 0)',
             [login, hashedPass]
         );
 
@@ -625,15 +625,15 @@ app.post('/api/translationPLNENG', async (req, res) =>{
 
 app.get('/api/quizzes', async (req, res) => {
     try {
-        const { id, user, language, name } = req.query;
+        const { id, user, language, title } = req.query;
         let query = 'SELECT q.id, q.title, u.login as user, l.code as language, execution_date, q.type '
         + 'FROM quizzes q, users u, languages l '
         + 'WHERE q.users_id=u.id AND q.languages_id=l.id ';
         const conditions = [];
         if (id) conditions.push(`q.id = ${id}`);
-        if (user) conditions.push(`u.login = '${user}'`);
+        if (user) conditions.push(`u.login LIKE '%${user}%'`);
         if (language) conditions.push(`l.code = '${language}'`);
-        if (name) conditions.push(`q.title LIKE '%${name}%'`);
+        if (title) conditions.push(`LOWER(q.title) LIKE '%${title}%'`);
         
         if (conditions.length > 0) {
             query += ' AND ' + conditions.join(' AND ');

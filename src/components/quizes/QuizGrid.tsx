@@ -4,6 +4,8 @@ import QuizCard from "./QuizCard";
 import QuizCardSkeleton from "./QuizCardSkeleton";
 import useQuizzes from "../../hooks/useQuizzes";
 import useTokenData from "../../others/useTokenData";
+import useCategories from "../../hooks/useCategories";
+import useDifficultyLevels from "../../hooks/useDifficultyLevels";
 
 export interface QuizQuery {
   id: number;
@@ -11,18 +13,27 @@ export interface QuizQuery {
   category: string;
   user: string;
   language: string;
-  quizName: string;
+  title: string;
 }
 
 interface Props {
   quizQuery: QuizQuery;
   quiz_id?: string;
+  selectedCategory: number;
+  selectedLevel: number;
 }
 
-const QuizGrid = ({ quizQuery, quiz_id }: Props) => {
+const QuizGrid = ({
+  quizQuery,
+  quiz_id,
+  selectedCategory,
+  selectedLevel,
+}: Props) => {
   const { data, error, isLoading } = useQuizzes(quizQuery);
   const skeletons = [1, 2, 3, 4, 5, 6];
   const { GetUserId } = useTokenData();
+  const { data: categories } = useCategories();
+  const { data: difficultyLevels } = useDifficultyLevels();
 
   if (error) return <Text>{error}</Text>;
 
@@ -46,6 +57,10 @@ const QuizGrid = ({ quizQuery, quiz_id }: Props) => {
               isScore={true}
               userId={GetUserId()}
               open={quiz.id == parseInt(quiz_id ?? "0") ? true : false}
+              categories={categories}
+              difficultyLevels={difficultyLevels}
+              selectedCategory={selectedCategory}
+              selectedLevel={selectedLevel}
             ></QuizCard>
           </QuizCardContainer>
         ))}
