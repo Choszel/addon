@@ -1,10 +1,23 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useStories from "../hooks/useStories";
 import StoryAnswers from "../components/quizes/StoryAnswers";
-import { Box, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  useDisclosure,
+  Button,
+} from "@chakra-ui/react";
 import TextTranslator from "../components/TextTranslator";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import GoBack from "../components/GoBack";
+import actionData from "../hooks/actionData";
+import useQuizzesQuestions from "../hooks/useQuizzesQuestions";
+import useTokenData from "../others/useTokenData";
 
 const StoryWithQuestions = () => {
   const { id } = useParams();
@@ -17,6 +30,15 @@ const StoryWithQuestions = () => {
   const popupRef = useRef<HTMLSpanElement | null>(null);
   const [checked, setChecked] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
+  const [correctCaptured, setCorrectCaptured] = useState<boolean>(false);
+  const { GetUserId } = useTokenData();
+  const [currentScore, setCurrentScore] = useState<number>(0);
+  const { fetchUserQuestions, fetchUserScores } = useQuizzesQuestions();
+  const { data: userScores } = fetchUserScores(GetUserId());
+  const { data: userQuestions } = fetchUserQuestions(currentScore);
+  const { postData: postUserQuestions } = actionData("/usersQuizzesQuestions");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   function getSelectionText(e: React.MouseEvent) {
     console.log("getSelectionText");
@@ -50,6 +72,31 @@ const StoryWithQuestions = () => {
     }
   }
 
+  useEffect(() => {
+    if (!correctCaptured) return;
+    if (correctAnswers.length < 1) return;
+
+    setCorrectAnswers(
+      correctAnswers.filter(
+        (answer) =>
+          !userQuestions.some((uq) => uq.users_quizzes_scores_id === answer)
+      )
+    );
+
+    const formData = new URLSearchParams();
+    formData.append("quiz_score_id", currentScore.toString());
+    formData.append("data", JSON.stringify([...correctAnswers]));
+    postUserQuestions(formData);
+    console.log("correctAnswers", correctAnswers);
+  }, [correctCaptured]);
+
+  useEffect(() => {
+    const currentScore = userScores.find(
+      (score) => score.id == parseInt(id ?? "0")
+    );
+    setCurrentScore(currentScore?.quiz_score_id ?? 0);
+  }, [userScores]);
+
   return (
     <div>
       <GoBack
@@ -73,19 +120,50 @@ const StoryWithQuestions = () => {
         alignItems="start"
         textAlign="left"
       >
-        {questions.map((question) => (
+        {questions.map((question, index) => (
           <Box marginBottom="2%" key={question.id}>
             <p style={{ fontWeight: "600" }}>{question.question}</p>
             <StoryAnswers
               question_id={question?.id ?? 0}
               checked={checked}
+              setCorrectAnswers={setCorrectAnswers}
+              correctAnswers={correctAnswers}
+              setCorrectCaptured={
+                index == questions.length - 1 ? setCorrectCaptured : undefined
+              }
             ></StoryAnswers>
           </Box>
         ))}
       </Box>
-      <button style={{ margin: "3%" }} onClick={() => setChecked(true)}>
+      <button
+        style={{ margin: "3%" }}
+        onClick={() => {
+          setChecked(true);
+          onOpen();
+        }}
+      >
         Sprawdź odpowiedzi
       </button>
+
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalBody className="basic_style">
+            <p style={{ fontWeight: "bold", margin: "2% 0%" }}>
+              Twój wynik to: {correctAnswers.length} / {questions.length}
+            </p>
+            <p>
+              Gratulacje ukończonej historyjki! Powrót do listy zwrotów znajduje
+              się na górze strony.
+            </p>
+          </ModalBody>
+          <ModalFooter className="basic_style">
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              OK
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

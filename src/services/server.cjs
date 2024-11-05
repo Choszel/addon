@@ -873,6 +873,33 @@ app.get('/api/storiesAnswers', async(req, res)=>{
     }
 });
 
+app.get('/api/storiesQuestions/Count', async(req, res)=>{
+    try{
+        const { id } = req.query;
+        const result = await pool.query('SELECT count(*) as amount_of_questions FROM stories_questions WHERE quiz_id=$1;', [id]);
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+app.get('/api/usersStoriesQuestions', async(req, res)=>{
+    try{
+        const { id, userId } = req.query;
+        const condition = 'SELECT sq.id, sq.quiz_id, sq.question, '
+        + 'EXISTS (SELECT 1 FROM users_quizzes_questions uqq, users_quizzes_scores uqs WHERE uqq.quizzes_questions_id = sq.id AND uqs.quizzes_id=sq.quiz_id AND uqs.users_id = ' + userId + ' AND uqq.users_quizzes_scores_id=uqs.id) AS done '
+        + 'FROM stories_questions sq WHERE sq.quiz_id = ' + id + ' ORDER BY sq.quiz_id ASC'
+        const result = await pool.query(userId ? condition : 'SELECT sq.id, sq.quiz_id, sq.question, '
+        + 'EXISTS (SELECT 1 FROM users_quizzes_questions uqq, users_quizzes_scores uqs WHERE uqq.quizzes_questions_id = sq.id AND uqs.quizzes_id=sq.quiz_id AND uqq.users_quizzes_scores_id=uqs.id) AS done '
+        + 'FROM stories_questions sq WHERE sq.quiz_id = ' + id + ' ORDER BY sq.quiz_id ASC');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});  
+
 
 app.listen(port, ()=>{
     console.log(`Server is running on http://localhost:${port}`);

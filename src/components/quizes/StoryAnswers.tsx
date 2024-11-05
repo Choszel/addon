@@ -5,9 +5,18 @@ import { Box } from "@chakra-ui/react";
 interface Props {
   question_id: number;
   checked: boolean;
+  correctAnswers: number[];
+  setCorrectAnswers: (ids: number[]) => void;
+  setCorrectCaptured?: (isCaptured: boolean) => void;
 }
 
-const StoryAnswers = ({ question_id, checked }: Props) => {
+const StoryAnswers = ({
+  question_id,
+  checked,
+  setCorrectAnswers,
+  correctAnswers,
+  setCorrectCaptured,
+}: Props) => {
   const [shuffledNumbers, setShuffledNumbers] = useState<number[]>([]);
   const { fetchStoriesAnswers } = useStories();
   const { data: answers } = fetchStoriesAnswers(question_id);
@@ -34,7 +43,14 @@ const StoryAnswers = ({ question_id, checked }: Props) => {
       if (correctAnswear.current) {
         correctAnswear.current.style.backgroundColor = "var(--success)";
         correctAnswear.current.style.color = "var(--success-content)";
+        correctAnswear.current.style.border = "2px solid var(--border)";
       }
+      if (selectedValue?.correct) {
+        const tempArray = correctAnswers;
+        tempArray.push(selectedValue?.question_id ?? 0);
+        setCorrectAnswers(tempArray);
+      }
+      if (setCorrectCaptured) setCorrectCaptured(true);
     }
   }, [checked]);
 

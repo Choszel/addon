@@ -1,4 +1,5 @@
 import useData from "./useData";
+import { AmountOfQuestions } from "./useQuizzesQuestions";
 
 export interface Story {
   id: number | null;
@@ -10,11 +11,12 @@ export interface StoryQuestion{
   id: number | null;
   quiz_id: number | null;
   question: string | null;
+  done?: boolean | null;
 }
 
 export interface StoryAnswear{
   id: number | null;
-  quiz_id: number | null;
+  question_id: number | null;
   answear: string | null;
   correct: boolean | null;
 }
@@ -57,6 +59,25 @@ const useStories = (quiz_id?: number) =>{
     );
   }
 
-  return {fetchStories, fetchStoriesQuestions,fetchStoriesAnswers}
+  const fetchUserQuestions = (id?: number, userId?: number) => {
+    return useData<StoryQuestion>(
+      "/usersStoriesQuestions",
+      {
+        params: { id: id, userId: userId },
+      },
+      [id, userId]
+    );
+  };
+
+  const fetchAmountOfQuestions = (id: number) => {
+    return useData<AmountOfQuestions>(
+      "/storiesQuestions/Count",
+      {
+        params: { id: id },
+      },
+      [id]
+    );
+  };
+  return {fetchStories, fetchStoriesQuestions,fetchStoriesAnswers, fetchUserQuestions, fetchAmountOfQuestions}
 }
 export default useStories;

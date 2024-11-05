@@ -6,6 +6,7 @@ import useQuizzes from "../../hooks/useQuizzes";
 import useTokenData from "../../others/useTokenData";
 import useCategories from "../../hooks/useCategories";
 import useDifficultyLevels from "../../hooks/useDifficultyLevels";
+import StoryCard from "./StoryCard";
 
 export interface QuizQuery {
   id: number;
@@ -52,16 +53,29 @@ const QuizGrid = ({
           ))}
         {data.map((quiz) => (
           <QuizCardContainer key={quiz.id}>
-            <QuizCard
-              quiz={quiz}
-              isScore={true}
-              userId={GetUserId()}
-              open={quiz.id == parseInt(quiz_id ?? "0") ? true : false}
-              categories={categories}
-              difficultyLevels={difficultyLevels}
-              selectedCategory={selectedCategory}
-              selectedLevel={selectedLevel}
-            ></QuizCard>
+            {quiz.type == "quiz" ? (
+              <QuizCard
+                quiz={quiz}
+                isScore={true}
+                userId={GetUserId()}
+                open={quiz.id == parseInt(quiz_id ?? "0") ? true : false}
+                categories={categories}
+                difficultyLevels={difficultyLevels}
+                selectedCategory={selectedCategory}
+                selectedLevel={selectedLevel}
+              ></QuizCard>
+            ) : (
+              <StoryCard
+                quiz={quiz}
+                isScore={true}
+                userId={GetUserId()}
+                open={quiz.id == parseInt(quiz_id ?? "0") ? true : false}
+                categories={categories}
+                difficultyLevels={difficultyLevels}
+                selectedCategory={selectedCategory}
+                selectedLevel={selectedLevel}
+              ></StoryCard>
+            )}
           </QuizCardContainer>
         ))}
       </SimpleGrid>

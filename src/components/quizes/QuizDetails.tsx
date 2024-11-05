@@ -99,105 +99,94 @@ const QuizDetails = ({
           ))
         )}
       </HStack>
-      <p>Data wykonania {quiz.execution_date?.toString().substring(0, 10)}</p>
+      <p>Data stworzenia {quiz.execution_date?.toString().substring(0, 10)}</p>
       <button className="button_primary" onClick={deleteOnOpen}>
         Usuń postępy
       </button>
 
       <h1 style={{ textDecoration: "underline", marginTop: "4%" }}>Zagraj</h1>
-
-      {quiz.type == "quiz" ? (
-        <>
-          <HStack>
-            <Link
-              to={"/quiz/flashcardGame/" + quiz.id}
-              className="game_type"
-              onClick={addToUserQuizzes}
+      <>
+        <HStack>
+          <Link
+            to={"/quiz/flashcardGame/" + quiz.id}
+            className="game_type"
+            onClick={addToUserQuizzes}
+          >
+            <p>Fiszki</p>
+          </Link>
+          <Link
+            to={"/quiz/matchGame/" + quiz.id}
+            className="game_type"
+            onClick={addToUserQuizzes}
+          >
+            <p>Dopasowanie</p>
+          </Link>
+          <Link
+            to={"/quiz/testGame/" + quiz.id}
+            className="game_type"
+            onClick={addToUserQuizzes}
+          >
+            <p>Test</p>
+          </Link>
+        </HStack>
+        <h1 style={{ marginTop: "4%" }}>Lista zwrotów</h1>
+        {questions.map((question) => (
+          <HStack margin="3% 3%">
+            <Card
+              bg={
+                userId
+                  ? question.done
+                    ? "var(--success)"
+                    : "var(--error)"
+                  : ""
+              }
+              color={
+                userId
+                  ? question.done
+                    ? "var(--success-content)"
+                    : "var(--error-content)"
+                  : ""
+              }
+              w="100%"
+              height="150px"
             >
-              <p>Fiszki</p>
-            </Link>
-            <Link
-              to={"/quiz/matchGame/" + quiz.id}
-              className="game_type"
-              onClick={addToUserQuizzes}
+              <CardBody
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <p>{question.word_polish}</p>
+              </CardBody>
+            </Card>
+            <Card
+              bg={
+                userId
+                  ? question.done
+                    ? "var(--success)"
+                    : "var(--error)"
+                  : ""
+              }
+              color={
+                userId
+                  ? question.done
+                    ? "var(--success-content)"
+                    : "var(--error-content)"
+                  : ""
+              }
+              w="100%"
+              height="150px"
             >
-              <p>Dopasowanie</p>
-            </Link>
-            <Link
-              to={"/quiz/testGame/" + quiz.id}
-              className="game_type"
-              onClick={addToUserQuizzes}
-            >
-              <p>Test</p>
-            </Link>
+              <CardBody
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <p>{question.word_second}</p>
+              </CardBody>
+            </Card>
           </HStack>
-          <h1 style={{ marginTop: "4%" }}>Lista zwrotów</h1>
-          {questions.map((question) => (
-            <HStack margin="3% 3%">
-              <Card
-                bg={
-                  userId
-                    ? question.done
-                      ? "var(--success)"
-                      : "var(--error)"
-                    : ""
-                }
-                color={
-                  userId
-                    ? question.done
-                      ? "var(--success-content)"
-                      : "var(--error-content)"
-                    : ""
-                }
-                w="100%"
-                height="150px"
-              >
-                <CardBody
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <p>{question.word_polish}</p>
-                </CardBody>
-              </Card>
-              <Card
-                bg={
-                  userId
-                    ? question.done
-                      ? "var(--success)"
-                      : "var(--error)"
-                    : ""
-                }
-                color={
-                  userId
-                    ? question.done
-                      ? "var(--success-content)"
-                      : "var(--error-content)"
-                    : ""
-                }
-                w="100%"
-                height="150px"
-              >
-                <CardBody
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <p>{question.word_second}</p>
-                </CardBody>
-              </Card>
-            </HStack>
-          ))}
-        </>
-      ) : (
-        <Link
-          to={"/quiz/story/" + quiz.id}
-          className="game_type"
-          onClick={addToUserQuizzes}
-        >
-          <p>Tekst oraz quiz</p>
-        </Link>
-      )}
+        ))}
+      </>
 
       <Modal isOpen={deleteIsOpen} onClose={deleteOnClose} isCentered>
         <ModalOverlay />

@@ -14,15 +14,13 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { Quiz } from "../../hooks/useQuizzes";
-import QuizDetails from "./QuizDetails";
 import { useEffect, useState } from "react";
-import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
-import { Category } from "../../hooks/useCategories";
-import { DifficultyLevel } from "../../hooks/useDifficultyLevels";
 import useTokenData from "../../others/useTokenData";
 import actionData from "../../hooks/actionData";
 import GoBack from "../GoBack";
 import { useNavigate } from "react-router-dom";
+import useStories from "../../hooks/useStories";
+import StoryDetails from "./StoryDetails";
 import { IoTrashOutline } from "react-icons/io5";
 
 interface Props {
@@ -30,22 +28,11 @@ interface Props {
   isScore?: boolean;
   userId?: number;
   open?: boolean;
-  categories: Category[];
-  difficultyLevels: DifficultyLevel[];
   selectedCategory: number;
   selectedLevel: number;
 }
 
-const QuizCard = ({
-  quiz,
-  isScore,
-  userId,
-  open,
-  categories,
-  difficultyLevels,
-  selectedCategory,
-  selectedLevel,
-}: Props) => {
+const StoryCard = ({ quiz, isScore, userId, open }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: deleteIsOpen,
@@ -53,12 +40,9 @@ const QuizCard = ({
     onClose: deleteOnClose,
   } = useDisclosure();
   const [score, setScore] = useState<number>(0.0);
-  const { fetchUserQuestionsDetailed, fetchAmountOfQuestions } =
-    useQuizzesQuestions();
-  const { data: questions } = fetchUserQuestionsDetailed(quiz.id ?? 0, userId);
+  const { fetchUserQuestions, fetchAmountOfQuestions } = useStories();
+  const { data: questions } = fetchUserQuestions(quiz.id ?? 0, userId);
   const { data: amountOfQuestions } = fetchAmountOfQuestions(quiz.id ?? 0);
-  const [categoriesQuizzes, setCategoriesQuizzes] = useState<string[]>([""]);
-  const [levelsQuizzes, setLevelsQuizzes] = useState<string[]>([""]);
 
   const { GetUserLogin } = useTokenData();
   const { deleteData } = actionData("/quizzes");
@@ -71,26 +55,7 @@ const QuizCard = ({
     const tempScore =
       answeredQuestions.length / amountOfQuestions[0]?.amount_of_questions;
     setScore(tempScore > 0 ? tempScore : 0);
-    let questionsCategories = [
-      ...new Set(
-        questions.map(
-          (q) => categories?.find((c) => c.id == q.ws_category_id)?.name ?? ""
-        )
-      ),
-    ];
-    let questionsLevels = [
-      ...new Set(
-        questions.map(
-          (q) =>
-            difficultyLevels?.find((df) => df.id == q.ws_level_id)?.level ?? ""
-        )
-      ),
-    ];
-    setCategoriesQuizzes(questionsCategories);
-    setLevelsQuizzes(questionsLevels);
-    console.log("questionsCategories", questionsCategories);
-    console.log("questionsLevels", questionsLevels);
-  }, [amountOfQuestions, categories, difficultyLevels]);
+  }, [amountOfQuestions]);
 
   useEffect(() => {
     if (open) onOpen();
@@ -155,42 +120,6 @@ const QuizCard = ({
           >
             <p>Twórca: {quiz.user ?? "No user"}</p>
             <p>Język: {quiz.language ?? "No language"}</p>
-            <>
-              <HStack>
-                <p>Kategoria: </p>
-                {categoriesQuizzes.length > 3 ? (
-                  <HStack>
-                    <button className="tag_category">
-                      {categoriesQuizzes[0] ?? "No category"}
-                    </button>
-                    <button className="tag_category">
-                      {categoriesQuizzes[1] ?? "No category"}
-                    </button>
-                    <button className="tag_category">others</button>
-                  </HStack>
-                ) : categoriesQuizzes.length == 0 ? (
-                  <button className="tag_error">X</button>
-                ) : (
-                  categoriesQuizzes.map((cq) => (
-                    <button className="tag_category">
-                      {cq ?? "No category"}
-                    </button>
-                  ))
-                )}
-              </HStack>
-              <HStack>
-                <p>Poziom: </p>
-                {levelsQuizzes.length > 4 ? (
-                  <button className="tag_infinity">∞</button>
-                ) : levelsQuizzes.length == 0 ? (
-                  <button className="tag_error">X</button>
-                ) : (
-                  levelsQuizzes.map((lq) => (
-                    <button className="tag_category">{lq ?? "No level"}</button>
-                  ))
-                )}
-              </HStack>
-            </>
           </Box>
           <div
             style={{
@@ -222,18 +151,16 @@ const QuizCard = ({
               margin="5%"
               width="75%"
             />
-            <QuizDetails
+            <StoryDetails
               quiz={quiz}
               userId={userId}
               questions={questions}
-              categories={categoriesQuizzes}
-              difficultyLevels={levelsQuizzes}
-            ></QuizDetails>
+            ></StoryDetails>
           </ModalBody>
         </ModalContent>
       </Modal>
 
-      <Modal isOpen={deleteIsOpen} onClose={deleteOnClose} isCentered>
+      <Modal isOpen={deleteIsOpen} onClose={deleteOnClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
@@ -269,4 +196,4 @@ const QuizCard = ({
   );
 };
 
-export default QuizCard;
+export default StoryCard;
