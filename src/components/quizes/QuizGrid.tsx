@@ -70,8 +70,6 @@ const QuizGrid = ({
                 isScore={true}
                 userId={GetUserId()}
                 open={quiz.id == parseInt(quiz_id ?? "0") ? true : false}
-                categories={categories}
-                difficultyLevels={difficultyLevels}
                 selectedCategory={selectedCategory}
                 selectedLevel={selectedLevel}
               ></StoryCard>

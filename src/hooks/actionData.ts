@@ -11,7 +11,7 @@ const actionData = (endpoint: string) => {
     return sendData(formData, method);
   };
 
-  const postData = async (formData: URLSearchParams): Promise<{ id?: number }> => {
+  const postData = async (formData: URLSearchParams): Promise<{ id?: number, message?: string | undefined  }> => {
     const method = "POST";
     return await sendData(formData, method);
   };
@@ -21,7 +21,7 @@ const actionData = (endpoint: string) => {
     return sendData(formData, method);
   };
 
-  const sendData = async (formData: URLSearchParams, method: string): Promise<{ id?: number | undefined }> => {
+  const sendData = async (formData: URLSearchParams, method: string): Promise<{ id?: number | undefined}> => {
     try {
       console.log(formData);
       console.log(formData.toString());

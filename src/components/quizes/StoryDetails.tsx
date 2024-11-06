@@ -2,7 +2,6 @@ import {
   Button,
   Card,
   CardBody,
-  HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -26,6 +25,7 @@ const StoryDetails = ({ quiz, userId, questions }: Props) => {
   console.log(quiz);
   console.log(questions);
   const { postData, deleteData } = actionData("/usersQuizzesScores");
+  const { putData } = actionData("/quizzes/raisePopularity");
   const {
     isOpen: deleteIsOpen,
     onOpen: deleteOnOpen,
@@ -33,11 +33,17 @@ const StoryDetails = ({ quiz, userId, questions }: Props) => {
   } = useDisclosure();
   const navigate = useNavigate();
 
-  const addToUserQuizzes = () => {
+  const addToUserQuizzes = async () => {
     const formData = new URLSearchParams();
     formData.append("users_id", (userId ?? 0).toString());
     formData.append("quizzes_id", (quiz.id ?? 0).toString());
-    postData(formData);
+    const response = await postData(formData);
+    console.log(response.message);
+    if (response.message == "Rozpoczęto nowy quiz") {
+      const formPutData = new URLSearchParams();
+      formPutData.append("id", (quiz.id ?? 0).toString());
+      putData(formPutData);
+    }
   };
 
   const deleteProgress = () => {

@@ -648,6 +648,17 @@ app.get('/api/quizzes', async (req, res) => {
     }
 });
 
+app.put('/api/quizzes/raisePopularity', async (req, res) =>{
+    const { id } = req.body;
+    console.log(id);
+    try {       
+        await pool.query('UPDATE quizzes SET popularity = popularity+1 WHERE id = $1', [id]);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+})
+
 app.delete('/api/quizzes', async (req, res) => {
     try{
         const { id } = req.body;
@@ -815,7 +826,7 @@ app.post('/api/usersQuizzesScores', async(req, res)=>{
             'INSERT INTO users_quizzes_scores(users_id, quizzes_id) VALUES ($1, $2)', [users_id, quizzes_id]
         );
 
-        res.status(200).json({ message: "Rozpoczęto quiz" });
+        res.status(200).json({ message: "Rozpoczęto nowy quiz" });
     }catch(err){
         console.error(err.message);
         res.status(500).send("Server error");

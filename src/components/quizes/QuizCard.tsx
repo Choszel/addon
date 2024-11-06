@@ -198,6 +198,10 @@ const QuizCard = ({
               flexDirection: "column",
               alignItems: "flex-end",
             }}
+            onClick={() => {
+              navigate("/flashcards/" + quiz.id);
+              onOpen();
+            }}
           >
             {isScore ? <p>{(score * 100).toFixed(0) + "%"}</p> : <p>0%</p>}
           </div>
