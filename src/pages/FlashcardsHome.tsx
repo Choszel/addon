@@ -50,48 +50,35 @@ const FlashcardsHome = () => {
           Stwórz własny quiz
         </button>
       </HStack>
-      <HStack display="flex" justifyContent="center" alignContent="center">
-        <Select
-          width="30%"
+      <HStack
+        display="flex"
+        justifyContent="center"
+        alignContent="center"
+        spacing={5}
+      >
+        <select
+          className="select-primary"
+          style={{ width: "30%" }}
           defaultValue={0}
-          sx={{
-            "> option": {
-              background: "var(--foreground)",
-              border: "1px solid var(--border)",
-              color: "white",
-            },
-            "> option:hover": {
-              background: "var(--primary)",
-              border: "1px solid var(--border)",
-              color: "white",
-            },
-          }}
           onChange={(e) => setSelectedCategory(parseInt(e.target.value))}
         >
-          <option key={"category0"} value={0}>
+          <option key={"category0"} value={0} className="select-primary-option">
             Wybierz kategorię
           </option>
           {categories.map((category) => (
-            <option key={"category" + category.id} value={category.id}>
+            <option
+              key={"category" + category.id}
+              value={category.id}
+              className="select-primary-option"
+            >
               {category.name}
             </option>
           ))}
-        </Select>
-        <Select
-          width="30%"
+        </select>
+        <select
+          className="select-primary"
+          style={{ width: "30%" }}
           defaultValue={0}
-          sx={{
-            "> option": {
-              background: "var(--foreground)",
-              border: "1px solid var(--border)",
-              color: "white",
-            },
-            "> option:hover": {
-              background: "var(--primary)",
-              border: "1px solid var(--border)",
-              color: "white",
-            },
-          }}
           onChange={(e) => setSelectedLevel(parseInt(e.target.value))}
         >
           <option key={"level0"} value={0}>
@@ -102,7 +89,7 @@ const FlashcardsHome = () => {
               {level.level}
             </option>
           ))}
-        </Select>
+        </select>
       </HStack>
       <HStack marginTop="2%">
         <h1>Lista zestawów do nauki na Topie</h1>

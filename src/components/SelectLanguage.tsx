@@ -1,4 +1,3 @@
-import { Select } from "@chakra-ui/react";
 import useLanguages from "../hooks/useLanguages";
 
 interface Props {
@@ -9,18 +8,20 @@ const SelectLanguage = ({ setSelectedLanguage }: Props) => {
   const { data } = useLanguages();
 
   return (
-    <Select
-      width="10%"
-      margin="0%"
+    <select
+      className="select-primary"
+      style={{ width: "7%", padding: "0.5%" }}
       onChange={(event) => {
         setSelectedLanguage(event.target.value + "_PLN");
         console.log(event.target.value);
       }}
     >
       {data.map((language) => (
-        <option key={language.id}>{language.code}</option>
+        <option key={language.id} className="select-primary-option">
+          {language.code}
+        </option>
       ))}
-    </Select>
+    </select>
   );
 };
 

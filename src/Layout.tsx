@@ -9,17 +9,13 @@ const Layout = () => {
       <Grid
         templateAreas={{
           base: `"nav" "main"`,
-          //lg: `"nav nav" "aside main"`,
         }}
         templateColumns={{
           base: "1fr",
-          //lg: "200px 1fr",
         }}
         height="100%"
         backgroundColor="var(--primary)"
-        // borderTopRadius="20px"
         borderBottomRadius="30px"
-        // marginX="4%"
       >
         <GridItem
           area="nav"
@@ -41,7 +37,6 @@ const Layout = () => {
             <Outlet />
           </main>
         </GridItem>
-        {/* <GridItem area="aside" bgColor="green"></GridItem> */}
       </Grid>
     </>
   );

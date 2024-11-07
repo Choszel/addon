@@ -1,6 +1,6 @@
-import { HStack } from "@chakra-ui/react";
+import { HStack, Spacer, Spinner } from "@chakra-ui/react";
 import SearchInput from "../components/dictionary/SearchInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SelectLanguage from "../components/SelectLanguage";
 import useWordsEnglish, { EnglishWord } from "../hooks/useWordsEnglish";
@@ -9,7 +9,8 @@ import RandomPhrase from "../components/dictionary/RandomPhrase";
 const DictionaryHome = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>("ENG_PLN");
   const { fetchAll } = useWordsEnglish();
-  const { data: popularEnglishWords } = fetchAll();
+  const { data: popularEnglishWords, isLoading, error } = fetchAll();
+  const [slicedArray, setSlicedArray] = useState<EnglishWord[]>([]);
   const navigate = useNavigate();
   const alphabet = [
     "A",
@@ -40,7 +41,9 @@ const DictionaryHome = () => {
     "Z",
   ];
 
-  const slicedArray = popularEnglishWords.slice(0, 5);
+  useEffect(() => {
+    setSlicedArray(popularEnglishWords.slice(0, 5));
+  }, [popularEnglishWords]);
 
   const onSearch = (id: number, searchText: string) => {
     console.log("onSearch", id, searchText);
@@ -78,26 +81,32 @@ const DictionaryHome = () => {
       </HStack>
       <HStack display="flex" justifyContent="center" spacing={10} marginY="4%">
         <div className="gradient_box">
-          <p>Popularne wyszukiwania w tym miesiącu</p>
+          <p style={{ marginBottom: "2%" }}>
+            Popularne wyszukiwania w tym miesiącu
+          </p>
+          {isLoading && <Spinner boxSize={100} marginY="9%" />}
+          {error && <p>Przepraszamy, wystąpił błąd serwera.</p>}
           {slicedArray.map((word, id) => (
             <HStack
               width="90%"
               onClick={() => redirectButton(word)}
               cursor="pointer"
+              marginY="0.7%"
             >
               <p>{id + 1}.</p>
               <p>{word.word}</p>
+              <Spacer />
               <p>{word.popularity}</p>
             </HStack>
           ))}
         </div>
-        <div className="gradient_box" style={{ height: "100%" }}>
+        <div className="gradient_box">
           <p>Przeszukiwanie alfabetyczne</p>
           <HStack
             display="flex"
             justifyContent="center"
             wrap="wrap"
-            spacing={4}
+            spacing={6}
             marginY="4%"
           >
             {alphabet.map((letter) => (
@@ -112,7 +121,6 @@ const DictionaryHome = () => {
         </div>
       </HStack>
       <HStack display="flex" alignContent="center" justifyContent="center">
-        {/**ten HStack psuje szerokość strony */}
         <p>W słowniku brakuje jakiegoś zwrotu? Zgłoś brak tłumaczenia</p>
         <Link
           to="/noTranslation"

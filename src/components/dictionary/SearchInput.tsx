@@ -24,7 +24,6 @@ const SearchInput = ({ onSearch, language }: Props) => {
   const [words, setWords] = useState<WordsLike[]>();
   const [searchValue, setSearchValue] = useState<string>("");
   const [debounceSearchInput] = useDebounce(searchValue.toLowerCase(), 1000);
-  // const [endpoint, setEndpoint] = useState<string>();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -103,7 +102,7 @@ const SearchInput = ({ onSearch, language }: Props) => {
         <HStack>
           (
           <InputGroup
-            boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
+            boxShadow="0 4px 8px var(--background)"
             borderRadius="20px"
           >
             <Input
@@ -111,7 +110,7 @@ const SearchInput = ({ onSearch, language }: Props) => {
               borderRadius={20}
               border="0px"
               placeholder="Wpisz szukaną frazę tutaj..."
-              color="var(--neutral1)"
+              className="basic_style"
               focusBorderColor="var(--primary)"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
@@ -121,6 +120,7 @@ const SearchInput = ({ onSearch, language }: Props) => {
             <InputRightElement
               children={<BsSearch />}
               onClick={() => handleKeyPress({ key: "Enter" })}
+              cursor="pointer"
             />
           </InputGroup>
           )

@@ -10,6 +10,7 @@ import actionData from "../hooks/actionData";
 import usePhrasesStorage from "../hooks/usePhrasesStorage";
 import { HiSpeakerWave } from "react-icons/hi2";
 import useTokenData from "../others/useTokenData";
+import RandomPhrase from "../components/dictionary/RandomPhrase";
 
 export interface Phrase {
   id: number;
@@ -149,42 +150,53 @@ const DictionarySearchResult = () => {
 
   return (
     <>
-      <HStack>
+      <HStack alignContent="center">
         <p>Wybrany język:</p>
         <SelectLanguage setSelectedLanguage={setSelectedLanguage} />
+        <div style={{ width: "5%" }}></div>
         <SearchInput
           onSearch={(id, searchText) => onSearch(id, searchText)}
           language={selectedLanguage}
         ></SearchInput>
+        <RandomPhrase
+          onSearch={(id, searchText) => onSearch(id, searchText)}
+          language={selectedLanguage ?? ""}
+        ></RandomPhrase>
       </HStack>
-      <HStack>
-        <h1>{searchPhrase?.word}</h1>
-        <HiSpeakerWave
-          size={40}
-          onClick={() => {
-            handleSpeak();
-          }}
-          cursor={"pointer"}
+      <HStack justifyContent="space-around">
+        <div>
+          <HStack marginBottom="3%">
+            <h1>{searchPhrase?.word}</h1>
+            <HiSpeakerWave
+              size={40}
+              onClick={() => {
+                handleSpeak();
+              }}
+              cursor={"pointer"}
+            />
+          </HStack>
+
+          <ul>
+            {translations.map((phrase, index) => (
+              <TranslationTab
+                key={phrase.id}
+                phrase={phrase}
+                index={index + 1}
+                link={true}
+                handleAddToQuiz={handleAddToQuiz}
+              ></TranslationTab>
+            ))}
+          </ul>
+        </div>
+        <Img
+          boxSize="22%"
+          marginY="2%"
+          borderRadius="20px"
+          src={getCroppedImageUrl(
+            searchPhrase?.photo ?? translations[0]?.photo ?? ""
+          )}
         />
       </HStack>
-      <Img
-        boxSize="22%"
-        marginY="2%"
-        src={getCroppedImageUrl(
-          searchPhrase?.photo ?? translations[0]?.photo ?? ""
-        )}
-      />
-      <ul>
-        {translations.map((phrase, index) => (
-          <TranslationTab
-            key={phrase.id}
-            phrase={phrase}
-            index={index + 1}
-            link={true}
-            handleAddToQuiz={handleAddToQuiz}
-          ></TranslationTab>
-        ))}
-      </ul>
     </>
   );
 };

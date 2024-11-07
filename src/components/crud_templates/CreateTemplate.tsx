@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState, ReactNode } from "react";
 import {
-  Button,
   HStack,
   Input,
   NumberDecrementStepper,
@@ -8,7 +7,6 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Select,
   Text,
 } from "@chakra-ui/react";
 
@@ -56,11 +54,13 @@ const FormTemplate = ({
 
   return (
     <>
-      <Text marginBottom="3%">{title}</Text>
+      <Text marginBottom="3%" className="p2">
+        {title}
+      </Text>
       {headers.map((input, index) => (
         <div key={index}>
           <HStack marginBottom="2%">
-            <Text>{input.inputName}</Text>
+            <Text marginRight="1%">{input.inputName}</Text>
             {input.inputType === "number" ? (
               <NumberInput
                 defaultValue={0}
@@ -79,7 +79,9 @@ const FormTemplate = ({
                 </NumberInputStepper>
               </NumberInput>
             ) : input.inputType === "select" ? (
-              <Select
+              <select
+                className="select-primary"
+                style={{ width: "10%" }}
                 ref={(el) => {
                   localRefs.current[index] = el;
                 }}
@@ -89,13 +91,16 @@ const FormTemplate = ({
                     {option.value}
                   </option>
                 ))}
-              </Select>
+              </select>
             ) : (
               <Input
+                className="basic_style"
                 ref={(el) => {
                   localRefs.current[index] = el;
                 }}
                 onChange={(e) => handleInputChange(e.target.value, index)}
+                _focus={{ border: "2px solid var(--secondary-dark)" }}
+                maxLength={250}
               />
             )}
           </HStack>
@@ -112,8 +117,9 @@ const FormTemplate = ({
         </div>
       ))}
       {others}
-      <HStack marginY="5%">
-        <Button
+      <HStack marginY="5%" justifyContent="center" spacing={6}>
+        <button
+          className="button_success"
           onClick={() => {
             const errorId = errors.findIndex(
               (e, index) => e == true && headers[index].isRequired
@@ -126,8 +132,10 @@ const FormTemplate = ({
           }}
         >
           Zapisz
-        </Button>
-        <Button onClick={onCancel}>Anuluj</Button>
+        </button>
+        <button className="button_error" onClick={onCancel}>
+          Anuluj
+        </button>
       </HStack>
     </>
   );

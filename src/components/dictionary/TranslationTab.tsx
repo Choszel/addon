@@ -15,7 +15,7 @@ const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
   const msg = new SpeechSynthesisUtterance();
 
   const handleSpeak = () => {
-    if (phrase.level) {
+    if (phrase?.level) {
       msg.lang = "en-US";
 
       const voices = speechSynthesis
@@ -32,6 +32,7 @@ const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
     }
 
     msg.text = phrase.word;
+    window.speechSynthesis.cancel();
     window.speechSynthesis.speak(msg);
   };
 
@@ -51,7 +52,7 @@ const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
           <p>{phrase.word}</p>
         </HStack>
         <HiSpeakerWave
-          size={25}
+          size={phrase?.level ? "5%" : "7%"}
           onClick={() => {
             handleSpeak();
           }}
@@ -74,6 +75,7 @@ const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
           <button
             className="button_secondary"
             onClick={() => handleAddToQuiz(index - 1)}
+            style={{ whiteSpace: "nowrap" }}
           >
             Dodaj do quizu
           </button>

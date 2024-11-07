@@ -6,6 +6,8 @@ html, body {
     overflow-x: hidden; 
     font-size: 20px;
     height: 100%;
+    scrollbar-color: var(--secondary) var(--background);
+    scrollbar-width: thin;
 }
 
 #html, body{
@@ -40,14 +42,14 @@ html, body {
     --error-content: #ffffff;
 
     --gradient-top: linear-gradient(0deg, var(--primary-light), var(--primary), var(--primary-dark));
-    --gradient-right: linear-gradient(90deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
-    --gradient-bottom: linear-gradient(180deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
-    --gradient-left: linear-gradient(270deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
-    --gradient-top-right: linear-gradient(45deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
-    --gradient-bottom-right: linear-gradient(135deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
-    --gradient-top-left: linear-gradient(225deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
-    --gradient-bottom-left: linear-gradient(315deg, #afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff);
-    --gradient-radial: radial-gradient(#afc2d5ff, #ccddd3ff, #dfefcaff, #fff9a5ff, #ec0b43ff); 
+    --gradient-right: linear-gradient(90deg, var(--primary-light), var(--primary), var(--primary-dark));
+    --gradient-bottom: linear-gradient(180deg, var(--primary-light), var(--primary), var(--primary-dark));
+    --gradient-left: linear-gradient(270deg, var(--primary-light), var(--primary), var(--primary-dark));
+    --gradient-top-right: linear-gradient(45deg, var(--primary-light), var(--primary), var(--primary-dark));
+    --gradient-bottom-right: linear-gradient(135deg, var(--primary-light), var(--primary), var(--primary-dark));
+    --gradient-top-left: linear-gradient(225deg, var(--primary-light), var(--primary), var(--primary-dark));
+    --gradient-bottom-left: linear-gradient(315deg, var(--primary-light), var(--primary), var(--primary-dark));
+    --gradient-radial: radial-gradient(var(--primary-light), var(--primary), var(--primary-dark)); 
 }
 
 h1{
@@ -61,7 +63,7 @@ h1{
 .gradient_box{
     background: var(--gradient-top);
     color: var(--primary-content);
-    padding: 4.7%;
+    padding: 3% 4.7%;
     width: 40%;
     display: flex;
     flex-direction: column;
@@ -79,6 +81,27 @@ h1{
 .button_secondary{
     background: var(--secondary-dark);
     color: var(--secondary-content);
+    padding: 0.5%;
+    padding-inline: 1.5%;
+    border-radius: 20px;
+   
+}
+
+.button_secondary:hover{
+    background: var(--secondary-light);
+}
+
+.button_success{
+    background: var(--success);
+    color: var(--success-content);
+    padding: 0.5%;
+    padding-inline: 1.5%;
+    border-radius: 20px;
+}
+
+.button_error{
+    background: var(--error);
+    color: var(--erroe-content);
     padding: 0.5%;
     padding-inline: 1.5%;
     border-radius: 20px;
@@ -257,6 +280,7 @@ h1{
 .basic_style{
     background-color: var(--foreground);
     color: var(--copy);
+    border: 1px solid var(--border);
 }
 
 .primary_style{
@@ -275,4 +299,17 @@ h1{
     max-height: 300px;
     overflow-y: scroll;
     position: absolute;
+}
+
+.select-primary{
+    background-color: var(--foreground);
+    background: var(--foreground);
+    color: var(--copy);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7%;
+}
+
+.select-primary-option:hover{
+    color: var(--secondary);
 }
