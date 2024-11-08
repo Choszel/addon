@@ -6,7 +6,7 @@ import useLanguages, { Language } from "../../hooks/useLanguages";
 
 const RLanguage = () => {
   const { data: headers } = useHeaders("languages");
-  const { data } = useLanguages();
+  const { data, isLoading, error } = useLanguages();
 
   const tableData: TableData<Language> = {
     title: "Wykaz języków",
@@ -16,6 +16,8 @@ const RLanguage = () => {
     canDelete: true,
     canEdit: true,
     routeName: "/language",
+    isLoading: isLoading,
+    error: error,
   };
   return <ReadTemplate {...tableData}></ReadTemplate>;
 };

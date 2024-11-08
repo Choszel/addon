@@ -5,6 +5,7 @@ import FormTemplate, {
 } from "../../components/crud_templates/CreateTemplate";
 import actionData from "../../hooks/actionData";
 import useLanguages from "../../hooks/useLanguages";
+import { Spinner, Text } from "@chakra-ui/react";
 
 const Elanguage = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,7 +16,7 @@ const Elanguage = () => {
   const routeName = "/language";
   const { putData } = actionData(routeName);
 
-  const { data, isLoading } = useLanguages(parseInt(id ?? "0"));
+  const { data, isLoading, error } = useLanguages(parseInt(id ?? "0"));
 
   const handleSave = () => {
     console.log("Refs:", refs);
@@ -36,7 +37,8 @@ const Elanguage = () => {
     }
   }, [data, refs]);
 
-  if (isLoading) return <div>Ładowanie danych...</div>;
+  if (isLoading) return <Spinner />;
+  if (error) return <Text color="var(--error)">{error}</Text>;
 
   const formData: FormData = {
     title: "Edytowanie Języka",

@@ -1,12 +1,17 @@
 import { Button, HStack, Input } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import postRegister from "../../hooks/postRegister";
+import postLogin from "../../hooks/postLogin";
+import useTokenData from "../../others/useTokenData";
 
 const Register = () => {
   const [loginInput, setLoginInput] = useState("");
   const [passInput, setPassInput] = useState("");
   const { isSending, sendRegisterForm } = postRegister();
+  const { sendLoginForm, isSending: isLoggingIn } = postLogin();
+  const { CheckUserType } = useTokenData();
+  const navigate = useNavigate();
 
   const refLogin = useRef<HTMLInputElement>(null);
   const refPassword = useRef<HTMLInputElement>(null);
@@ -22,6 +27,13 @@ const Register = () => {
       refPassword.current?.value ?? ""
     );
     if (!isSending) {
+      await sendLoginForm(
+        refLogin.current?.value ?? "",
+        refPassword.current?.value ?? ""
+      );
+      if (!isLoggingIn) {
+        if (CheckUserType() != "none") return navigate("/");
+      }
     }
   };
   return (
@@ -45,6 +57,7 @@ const Register = () => {
           type="password"
           ref={refPassword}
           onChange={(e) => setPassInput(e.target.value)}
+          autoComplete="new-password"
         ></Input>
       </HStack>
       {isPassError && (

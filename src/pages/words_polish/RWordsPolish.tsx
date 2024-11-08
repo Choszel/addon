@@ -8,7 +8,7 @@ import useWordsPolish, { PolishWord } from "../../hooks/useWordsPolish";
 const RWordsPolish = () => {
   const { data: headers } = useHeaders("words_polish");
   const { fetchWords } = useWordsPolish();
-  const { data } = fetchWords();
+  const { data, isLoading, error } = fetchWords();
 
   const [updatedHeaders, setUpdatedHeaders] = useState<string[]>([]);
 
@@ -25,6 +25,8 @@ const RWordsPolish = () => {
     title: "Wykaz Polskich słów",
     headers: updatedHeaders,
     data: data,
+    isLoading: isLoading,
+    error: error,
     canCreate: true,
     canDelete: true,
     canEdit: true,

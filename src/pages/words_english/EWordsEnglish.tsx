@@ -7,6 +7,7 @@ import FormTemplate, {
 import useCategories from "../../hooks/useCategories";
 import useWordsEnglish from "../../hooks/useWordsEnglish";
 import useDifficultyLevels from "../../hooks/useDifficultyLevels";
+import { Spinner, Text } from "@chakra-ui/react";
 
 const EWordsEnglish = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,10 +18,18 @@ const EWordsEnglish = () => {
   const routeName = "/wordsEnglish";
   const { putData } = actionData(routeName);
 
-  const { data: categories, isLoading } = useCategories();
-  const { data: difficultyLevels } = useDifficultyLevels();
+  const {
+    data: categories,
+    isLoading: catIsLoading,
+    error: catError,
+  } = useCategories();
+  const {
+    data: difficultyLevels,
+    isLoading: diffIsLoading,
+    error: diffError,
+  } = useDifficultyLevels();
   const { fetchAllDetailed } = useWordsEnglish(parseInt(id ?? "-1"));
-  const { data } = fetchAllDetailed();
+  const { data, isLoading, error } = fetchAllDetailed();
 
   const handleSave = () => {
     console.log("Refs:", refs);
@@ -46,7 +55,8 @@ const EWordsEnglish = () => {
     }
   }, [data, refs]);
 
-  if (isLoading) return <div>Ładowanie danych...</div>;
+  if (isLoading) return <Spinner size="xl" />;
+  if (error) return <Text color="var(--error)">{error}</Text>;
 
   const formData: FormData = {
     title: "Edytowanie Angielskiej Frazy",
@@ -61,12 +71,16 @@ const EWordsEnglish = () => {
           id: cat.id,
           value: cat.level,
         })),
+        isLoading: diffIsLoading,
+        error: diffError,
       },
       {
         inputName: "Category",
         inputType: "select",
         isRequired: false,
         data: categories?.map((cat) => ({ id: cat.id, value: cat.name })),
+        isLoading: catIsLoading,
+        error: catError,
       },
       {
         inputName: "Part of speech",

@@ -22,7 +22,11 @@ const CWordsPolish = () => {
   const routeName = "/wordsPolish";
   const { postData } = actionData(routeName);
   const { postData: postTranslations } = actionData("/translationPLNENG");
-  const { data: categories, isLoading } = useCategories();
+  const {
+    data: categories,
+    isLoading: catIsLoading,
+    error: catError,
+  } = useCategories();
 
   const handleSave = async () => {
     console.log("Refs:", refs);
@@ -67,8 +71,6 @@ const CWordsPolish = () => {
     return navigate(routeName);
   };
 
-  if (isLoading) return <div>Ładowanie danych...</div>;
-
   const formData: FormData = {
     title: "Dodawanie Polskiej Frazy",
     headers: [
@@ -79,6 +81,8 @@ const CWordsPolish = () => {
         inputType: "select",
         isRequired: false,
         data: categories?.map((cat) => ({ id: cat.id, value: cat.name })),
+        isLoading: catIsLoading,
+        error: catError,
       },
       { inputName: "Photo", inputType: "text", isRequired: false },
     ],

@@ -8,12 +8,14 @@ import useHeaders from "../../hooks/useHeaders";
 
 const RDifficultyLevel = () => {
   const { data: headers } = useHeaders("difficulty_levels");
-  const { data } = useDifficultyLevels();
+  const { data, isLoading, error } = useDifficultyLevels();
 
   const tableData: TableData<DifficultyLevel> = {
     title: "Wykaz poziomów trudności",
     headers: headers,
     data: data,
+    isLoading: isLoading,
+    error: error,
   };
   return <ReadTemplate {...tableData}></ReadTemplate>;
 };

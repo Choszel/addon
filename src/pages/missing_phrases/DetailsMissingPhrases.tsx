@@ -10,13 +10,26 @@ import useLanguages from "../../hooks/useLanguages";
 import AddTranslationButton from "../../components/dictionary/AddTranslationButton";
 import { Translation } from "../words_polish/CWordsPolish";
 import actionData from "../../hooks/actionData";
+import { Spinner, Text } from "@chakra-ui/react";
 
 const DetailsMissingPhrases = () => {
   const { id } = useParams<{ id: string }>();
-  const { data } = useMissingPhrases(parseInt(id ?? "0"));
-  const { data: categories } = useCategories();
-  const { data: difficultyLevels } = useDifficultyLevels();
-  const { data: languages } = useLanguages();
+  const { data, isLoading, error } = useMissingPhrases(parseInt(id ?? "0"));
+  const {
+    data: categories,
+    isLoading: catIsLoading,
+    error: catError,
+  } = useCategories();
+  const {
+    data: difficultyLevels,
+    isLoading: diffIsLoading,
+    error: diffError,
+  } = useDifficultyLevels();
+  const {
+    data: languages,
+    isLoading: langIsLoading,
+    error: langError,
+  } = useLanguages();
   const routeName = "/missingPhrases";
   const { postData } = actionData("/wordsEnglish");
   const { deleteData } = actionData(routeName);
@@ -98,18 +111,24 @@ const DetailsMissingPhrases = () => {
         inputType: "select",
         isRequired: false,
         data: languages?.map((lan) => ({ id: lan.id, value: lan.code })),
+        isLoading: langIsLoading,
+        error: langError,
       },
       {
         inputName: "Level",
         inputType: "select",
         isRequired: false,
         data: difficultyLevels?.map((df) => ({ id: df.id, value: df.level })),
+        isLoading: diffIsLoading,
+        error: diffError,
       },
       {
         inputName: "Category",
         inputType: "select",
         isRequired: false,
         data: categories?.map((cat) => ({ id: cat.id, value: cat.name })),
+        isLoading: catIsLoading,
+        error: catError,
       },
       {
         inputName: "Part of speech",
@@ -134,6 +153,9 @@ const DetailsMissingPhrases = () => {
     onCancel: () => navigate(routeName),
     others: <AddTranslationButton setTranslationsData={setTranslationsData} />,
   };
+
+  if (isLoading) return <Spinner />;
+  if (error) return <Text color="var(--error)">{error}</Text>;
 
   return <FormTemplate {...formData} setRefs={setRefs} />;
 };

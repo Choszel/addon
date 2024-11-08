@@ -36,13 +36,14 @@ const QuizGrid = ({
   const { data: categories } = useCategories();
   const { data: difficultyLevels } = useDifficultyLevels();
 
-  if (error) return <Text>{error}</Text>;
+  if (error) return <Text color="var(--error)">{error}</Text>;
+  if (data.length == 0) return <Text>Brak zestawów.</Text>;
 
   return (
     <div>
       <SimpleGrid
         columns={{ sm: 1, md: 2, lg: 2, xl: 3 }}
-        padding={8}
+        paddingX={8}
         spacing={6}
       >
         {isLoading &&

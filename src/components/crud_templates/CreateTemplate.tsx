@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, ReactNode } from "react";
 import {
+  Button,
   HStack,
   Input,
   NumberDecrementStepper,
@@ -7,6 +8,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Spinner,
   Text,
 } from "@chakra-ui/react";
 
@@ -22,6 +24,8 @@ export interface FormData {
     inputType: string;
     isRequired: boolean;
     data?: Props[];
+    isLoading?: boolean;
+    error?: string;
   }[];
   setRefs: (refs: (HTMLInputElement | HTMLSelectElement | null)[]) => void;
   onSave: () => void;
@@ -79,19 +83,25 @@ const FormTemplate = ({
                 </NumberInputStepper>
               </NumberInput>
             ) : input.inputType === "select" ? (
-              <select
-                className="select-primary"
-                style={{ width: "10%" }}
-                ref={(el) => {
-                  localRefs.current[index] = el;
-                }}
-              >
-                {input.data?.map((option) => (
-                  <option value={option.id} key={option.id}>
-                    {option.value}
-                  </option>
-                ))}
-              </select>
+              input?.isLoading ? (
+                <Spinner />
+              ) : input?.error ? (
+                <Text color="var(--error)">{input?.error}</Text>
+              ) : (
+                <select
+                  className="select-primary"
+                  style={{ width: "10%" }}
+                  ref={(el) => {
+                    localRefs.current[index] = el;
+                  }}
+                >
+                  {input.data?.map((option) => (
+                    <option value={option.id} key={option.id}>
+                      {option.value}
+                    </option>
+                  ))}
+                </select>
+              )
             ) : (
               <Input
                 className="basic_style"
@@ -118,8 +128,8 @@ const FormTemplate = ({
       ))}
       {others}
       <HStack marginY="5%" justifyContent="center" spacing={6}>
-        <button
-          className="button_success"
+        <Button
+          colorScheme="blue"
           onClick={() => {
             const errorId = errors.findIndex(
               (e, index) => e == true && headers[index].isRequired
@@ -132,10 +142,10 @@ const FormTemplate = ({
           }}
         >
           Zapisz
-        </button>
-        <button className="button_error" onClick={onCancel}>
+        </Button>
+        <Button colorScheme="red" onClick={onCancel}>
           Anuluj
-        </button>
+        </Button>
       </HStack>
     </>
   );

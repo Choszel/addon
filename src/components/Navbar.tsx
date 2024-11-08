@@ -34,7 +34,7 @@ const Navbar = () => {
             <Avatar boxSize={6} />
             <p>{GetUserLogin()}</p>
           </HStack>
-          {CheckUserType() == "admin" && <AdminPanel />}
+          {["admin", "warden"].includes(CheckUserType()) && <AdminPanel />}
           <button
             className="button_primary"
             onClick={authContext.logout}

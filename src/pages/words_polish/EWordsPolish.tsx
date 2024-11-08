@@ -6,6 +6,7 @@ import FormTemplate, {
   FormData,
 } from "../../components/crud_templates/CreateTemplate";
 import useCategories from "../../hooks/useCategories";
+import { Spinner, Text } from "@chakra-ui/react";
 
 const EWordsPolish = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,9 +16,13 @@ const EWordsPolish = () => {
   const navigate = useNavigate();
   const routeName = "/wordsPolish";
   const { putData } = actionData(routeName);
-  const { data: categories, isLoading } = useCategories();
+  const {
+    data: categories,
+    isLoading: catIsLoading,
+    error: catError,
+  } = useCategories();
   const { fetchWords } = useWordsPolish();
-  const { data } = fetchWords(parseInt(id ?? "0"));
+  const { data, isLoading, error } = fetchWords(parseInt(id ?? "0"));
 
   const handleSave = () => {
     console.log("Refs:", refs);
@@ -43,7 +48,8 @@ const EWordsPolish = () => {
     }
   }, [data, refs]);
 
-  if (isLoading) return <div>Ładowanie danych...</div>;
+  if (isLoading) return <Spinner size="xl" />;
+  if (error) return <Text color="var(--error)">{error}</Text>;
 
   const formData: FormData = {
     title: "Edytowanie Polskiej Frazy",
@@ -55,6 +61,8 @@ const EWordsPolish = () => {
         inputType: "select",
         isRequired: false,
         data: categories?.map((cat) => ({ id: cat.id, value: cat.name })),
+        isLoading: catIsLoading,
+        error: catError,
       },
       { inputName: "Photo", inputType: "text", isRequired: false },
     ],

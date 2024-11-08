@@ -37,7 +37,7 @@ const postLogin = () => {
         });
       } else if (response.status === 500 || response.status === 400) {
         toast({
-          title: "Wystąpił błąd",
+          title: "Niepoprawne dane logowania.",
           status: "error",
           position: "bottom-right",
           duration: 5000,

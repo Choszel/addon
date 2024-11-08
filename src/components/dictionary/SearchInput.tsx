@@ -4,6 +4,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Text,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
@@ -25,6 +26,7 @@ const SearchInput = ({ onSearch, language }: Props) => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [debounceSearchInput] = useDebounce(searchValue.toLowerCase(), 1000);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [noResponse, setNoResponse] = useState<boolean>(false);
 
   useEffect(() => {
     const getWords = async () => {
@@ -91,6 +93,12 @@ const SearchInput = ({ onSearch, language }: Props) => {
     onSearch(id, word);
   };
 
+  useEffect(() => {
+    if (words?.length == 0 && debounceSearchInput.trim() !== "")
+      setNoResponse(true);
+    else setNoResponse(false);
+  }, [words]);
+
   return (
     <Flex
       display="flex"
@@ -100,7 +108,6 @@ const SearchInput = ({ onSearch, language }: Props) => {
     >
       <form>
         <HStack>
-          (
           <InputGroup
             boxShadow="0 4px 8px var(--background)"
             borderRadius="20px"
@@ -123,13 +130,17 @@ const SearchInput = ({ onSearch, language }: Props) => {
               cursor="pointer"
             />
           </InputGroup>
-          )
         </HStack>
         {words && (
           <SearchResultList
             results={words ?? null}
             listElementClicked={handleResultClick}
           />
+        )}
+        {noResponse && (
+          <Text marginTop="1%" style={{ color: "var(--error)" }}>
+            Nieznana fraza.
+          </Text>
         )}
       </form>
     </Flex>

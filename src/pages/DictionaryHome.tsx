@@ -80,7 +80,7 @@ const DictionaryHome = () => {
         ></RandomPhrase>
       </HStack>
       <HStack display="flex" justifyContent="center" spacing={10} marginY="4%">
-        <div className="gradient_box">
+        <div className="gradient_box" style={{ height: "300px" }}>
           <p style={{ marginBottom: "2%" }}>
             Popularne wyszukiwania w tym miesiącu
           </p>
@@ -100,7 +100,7 @@ const DictionaryHome = () => {
             </HStack>
           ))}
         </div>
-        <div className="gradient_box">
+        <div className="gradient_box" style={{ height: "300px" }}>
           <p>Przeszukiwanie alfabetyczne</p>
           <HStack
             display="flex"

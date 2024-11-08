@@ -9,7 +9,9 @@ import {
   ModalContent,
   ModalFooter,
   ModalOverlay,
+  Spinner,
   useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import { Quiz } from "../../hooks/useQuizzes";
 import { QuizQuestion } from "../../hooks/useQuizzesQuestions";
@@ -20,6 +22,8 @@ interface Props {
   quiz: Quiz;
   userId?: number;
   questions: QuizQuestion[];
+  isLoading: boolean;
+  error: string;
   categories: string[];
   difficultyLevels: string[];
 }
@@ -28,6 +32,8 @@ const QuizDetails = ({
   quiz,
   userId,
   questions,
+  isLoading,
+  error,
   categories,
   difficultyLevels,
 }: Props) => {
@@ -111,7 +117,7 @@ const QuizDetails = ({
         Usuń postępy
       </button>
 
-      <h1 style={{ textDecoration: "underline", marginTop: "4%" }}>Zagraj</h1>
+      <h1 style={{ marginTop: "4%" }}>Zagraj</h1>
       <>
         <HStack>
           <Link
@@ -137,6 +143,8 @@ const QuizDetails = ({
           </Link>
         </HStack>
         <h1 style={{ marginTop: "4%" }}>Lista zwrotów</h1>
+        {isLoading && <Spinner size="xl" />}
+        {error && <Text color="var(--error)">{error}</Text>}
         {questions.map((question) => (
           <HStack margin="3% 3%">
             <Card

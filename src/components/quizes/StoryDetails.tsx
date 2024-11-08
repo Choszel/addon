@@ -8,7 +8,9 @@ import {
   ModalContent,
   ModalFooter,
   ModalOverlay,
+  Spinner,
   useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import { Quiz } from "../../hooks/useQuizzes";
 import { Link, useNavigate } from "react-router-dom";
@@ -19,9 +21,11 @@ interface Props {
   quiz: Quiz;
   userId?: number;
   questions: StoryQuestion[];
+  isLoading: boolean;
+  error: string;
 }
 
-const StoryDetails = ({ quiz, userId, questions }: Props) => {
+const StoryDetails = ({ quiz, userId, questions, isLoading, error }: Props) => {
   console.log(quiz);
   console.log(questions);
   const { postData, deleteData } = actionData("/usersQuizzesScores");
@@ -70,17 +74,20 @@ const StoryDetails = ({ quiz, userId, questions }: Props) => {
         Usuń postępy
       </button>
 
-      <h1 style={{ textDecoration: "underline", marginTop: "4%" }}>Zagraj</h1>
+      <h1 style={{ marginTop: "4%" }}>Zagraj</h1>
 
       <>
         <Link
           to={"/quiz/story/" + quiz.id}
           className="game_type"
           onClick={addToUserQuizzes}
+          style={{ justifySelf: "center" }}
         >
           <p>Tekst oraz quiz</p>
         </Link>
         <h1 style={{ marginTop: "4%" }}>Lista pytań</h1>
+        {isLoading && <Spinner size="xl" />}
+        {error && <Text color="var(--error)">{error}</Text>}
         {questions.map((question) => (
           <Card
             bg={

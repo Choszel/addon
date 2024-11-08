@@ -7,8 +7,11 @@ import {
 } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import useTokenData from "../others/useTokenData";
 
 const AdminPanel = () => {
+  const { CheckUserType } = useTokenData();
+
   return (
     <>
       <Menu>
@@ -37,14 +40,7 @@ const AdminPanel = () => {
               Poziomy Trudności
             </MenuItem>
           </Link>
-          <Link to="/language">
-            <MenuItem
-              bg="var(--foreground)"
-              _hover={{ color: "var(--secondary)" }}
-            >
-              Języki
-            </MenuItem>
-          </Link>
+
           <Link to="/missingPhrases">
             <MenuItem
               bg="var(--foreground)"
@@ -69,14 +65,26 @@ const AdminPanel = () => {
               Angielskie słowa
             </MenuItem>
           </Link>
-          <Link to="/user">
-            <MenuItem
-              bg="var(--foreground)"
-              _hover={{ color: "var(--secondary)" }}
-            >
-              Użytkownicy
-            </MenuItem>
-          </Link>
+          {CheckUserType() == "admin" ? (
+            <>
+              <Link to="/language">
+                <MenuItem
+                  bg="var(--foreground)"
+                  _hover={{ color: "var(--secondary)" }}
+                >
+                  Języki
+                </MenuItem>
+              </Link>
+              <Link to="/user">
+                <MenuItem
+                  bg="var(--foreground)"
+                  _hover={{ color: "var(--secondary)" }}
+                >
+                  Użytkownicy
+                </MenuItem>
+              </Link>
+            </>
+          ) : null}
         </MenuList>
       </Menu>
     </>

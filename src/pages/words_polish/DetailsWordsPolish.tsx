@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useWordsPolish from "../../hooks/useWordsPolish";
 import useTranslationPL_ENG, {
   TranslationPL_ENG,
@@ -7,20 +7,26 @@ import ReadTemplate, {
   TableData,
 } from "../../components/crud_templates/ReadTemplate";
 import getCroppedImageUrl from "../../services/image-url";
-import { Button, Image } from "@chakra-ui/react";
+import { Button, HStack, Image, Spinner, Text } from "@chakra-ui/react";
 import AddTranslationButton from "../../components/dictionary/AddTranslationButton";
 import { useState } from "react";
 import { Translation } from "./CWordsPolish";
 import actionData from "../../hooks/actionData";
+import GoBack from "../../components/GoBack";
 
 const DetailsWordsPolish = () => {
   const { id } = useParams<{ id: string }>();
   const { fetchWords } = useWordsPolish();
-  const { data } = fetchWords(parseInt(id ?? "-1"));
+  const { data, isLoading, error } = fetchWords(parseInt(id ?? "-1"));
   const { fetchForPLN } = useTranslationPL_ENG();
-  const { data: translations } = fetchForPLN(parseInt(id ?? "-1"));
+  const {
+    data: translations,
+    isLoading: tranIsLoading,
+    error: tranError,
+  } = fetchForPLN(parseInt(id ?? "-1"));
   const [translationsData, setTranslationsData] = useState<Translation[]>();
   const { postData: postTranslations } = actionData("/translationPLNENG");
+  const navigate = useNavigate();
 
   const handleSave = async () => {
     console.log("translationData:", translationsData);
@@ -40,6 +46,19 @@ const DetailsWordsPolish = () => {
     return window.location.reload();
   };
 
+  if (isLoading) return <Spinner size="xl" />;
+  if (error)
+    return (
+      <>
+        <GoBack
+          goBack={() => {
+            navigate("/wordsPolish");
+          }}
+        ></GoBack>
+        <Text color="var(--error)">{error}</Text>
+      </>
+    );
+
   const tableData: TableData<TranslationPL_ENG> = {
     title: "Tłumaczenia",
     headers: ["id", "word"],
@@ -52,21 +71,44 @@ const DetailsWordsPolish = () => {
           langugeOption
           setTranslationsData={setTranslationsData}
         />
-        <Button onClick={handleSave}>Zapisz</Button>
+        <Button colorScheme="blue" onClick={handleSave}>
+          Zapisz zmiany
+        </Button>
       </>
     ),
+    isLoading: tranIsLoading,
+    error: tranError,
   };
 
   return (
     <>
+      <GoBack
+        goBack={() => {
+          navigate("/wordsPolish");
+        }}
+      ></GoBack>
       {data.map((e) => (
-        <div key={e.id}>
-          <p>{e.id}</p>
-          <p>{e.word}</p>
-          <p>{e.definition}</p>
-          <Image boxSize="20%" src={getCroppedImageUrl(e.photo)}></Image>
-          <p>{e.category}</p>
-        </div>
+        <HStack spacing="15%" marginX="2%">
+          <div key={e.id} style={{ textAlign: "left" }}>
+            <p>
+              <strong>ID:</strong> {e.id}
+            </p>
+            <p>
+              <strong>Słowo:</strong> {e.word}
+            </p>
+            <p>
+              <strong>Definicja:</strong> {e.definition}
+            </p>
+            <p>
+              <strong>Kategoria:</strong> {e.category}
+            </p>
+          </div>
+          <Image
+            boxSize="20%"
+            src={getCroppedImageUrl(e.photo)}
+            borderRadius="20px"
+          ></Image>
+        </HStack>
       ))}
       <br></br>
       <ReadTemplate {...tableData}></ReadTemplate>

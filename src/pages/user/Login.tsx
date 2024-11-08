@@ -2,16 +2,18 @@ import { Button, HStack, Input } from "@chakra-ui/react";
 import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import postLogin from "../../hooks/postLogin";
+import useTokenData from "../../others/useTokenData";
 
 const Login = () => {
   const { isSending, sendLoginForm } = postLogin();
+  const { CheckUserType } = useTokenData();
 
   const refLogin = useRef<HTMLInputElement>(null);
   const refPassword = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
 
-  const handleLogin = async (event: React.FormEvent) => {
+  const handleLogin = async () => {
     event?.preventDefault();
     if (!refLogin.current || !refPassword.current) return;
     await sendLoginForm(
@@ -19,7 +21,13 @@ const Login = () => {
       refPassword.current?.value ?? ""
     );
     if (!isSending) {
-      return navigate("/");
+      if (CheckUserType() != "none") return navigate("/");
+    }
+  };
+
+  const handleKeyPress = (event: { key: string }) => {
+    if (event.key === "Enter") {
+      if (refPassword.current?.value.length ?? 0 > 0) handleLogin();
     }
   };
 
@@ -32,7 +40,11 @@ const Login = () => {
       </HStack>
       <HStack width="50%" marginY="3%">
         <p>Hasło</p>
-        <Input type="password" ref={refPassword}></Input>
+        <Input
+          type="password"
+          ref={refPassword}
+          onKeyUp={handleKeyPress}
+        ></Input>
       </HStack>
       <Button onClick={handleLogin}>Zaloguj się</Button>
       <HStack width="50%" marginY="3%">

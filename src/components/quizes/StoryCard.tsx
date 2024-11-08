@@ -41,7 +41,11 @@ const StoryCard = ({ quiz, isScore, userId, open }: Props) => {
   } = useDisclosure();
   const [score, setScore] = useState<number>(0.0);
   const { fetchUserQuestions, fetchAmountOfQuestions } = useStories();
-  const { data: questions } = fetchUserQuestions(quiz.id ?? 0, userId);
+  const {
+    data: questions,
+    isLoading: quesIsLoading,
+    error: quesError,
+  } = fetchUserQuestions(quiz.id ?? 0, userId);
   const { data: amountOfQuestions } = fetchAmountOfQuestions(quiz.id ?? 0);
 
   const { GetUserLogin } = useTokenData();
@@ -159,6 +163,8 @@ const StoryCard = ({ quiz, isScore, userId, open }: Props) => {
               quiz={quiz}
               userId={userId}
               questions={questions}
+              isLoading={quesIsLoading}
+              error={quesError}
             ></StoryDetails>
           </ModalBody>
         </ModalContent>

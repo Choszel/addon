@@ -8,6 +8,7 @@ import useLanguages from "../../hooks/useLanguages";
 import useCategories from "../../hooks/useCategories";
 import useDifficultyLevels from "../../hooks/useDifficultyLevels";
 import useTokenData from "../../others/useTokenData";
+import { Spinner, Text } from "@chakra-ui/react";
 
 const NoTranslation = () => {
   const [refs, setRefs] = useState<
@@ -16,9 +17,21 @@ const NoTranslation = () => {
   const navigate = useNavigate();
   const routeName = "/missingPhrases";
   const { postData } = actionData(routeName);
-  const { data: languages } = useLanguages();
-  const { data: levels } = useDifficultyLevels();
-  const { data: categories } = useCategories();
+  const {
+    data: languages,
+    isLoading: langIsLoading,
+    error: langError,
+  } = useLanguages();
+  const {
+    data: levels,
+    isLoading: levelsAreLoading,
+    error: levelsError,
+  } = useDifficultyLevels();
+  const {
+    data: categories,
+    isLoading: catIsLoading,
+    error: catError,
+  } = useCategories();
   const { GetUserId } = useTokenData();
 
   const handleSave = () => {
@@ -90,6 +103,12 @@ const NoTranslation = () => {
     onSave: handleSave,
     onCancel: handleCancel,
   };
+
+  if (langIsLoading || levelsAreLoading || catIsLoading) return <Spinner />;
+  if (langError || levelsError || catError)
+    return (
+      <Text color="var(--error)">{langError || levelsError || catError}</Text>
+    );
 
   return <FormTemplate {...formData} setRefs={setRefs} />;
 };

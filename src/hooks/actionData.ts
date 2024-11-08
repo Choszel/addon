@@ -47,7 +47,8 @@ const actionData = (endpoint: string) => {
         return responseData;
       } else {
         toast({
-          title: "Błąd " + (responseData.error || response.statusText),
+          title: "Błąd",
+          description: responseData || response.statusText,
           status: "error",
           position: "bottom-right",
           duration: 5000,
@@ -59,7 +60,8 @@ const actionData = (endpoint: string) => {
     } catch (err) {
       if (err instanceof CanceledError) return {id: -1};
       toast({
-        title: "Błąd: " + err,
+        title: "Błąd",
+        description: "" + err,
         status: "error",
         position: "bottom-right",
         duration: 5000,

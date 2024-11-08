@@ -122,6 +122,9 @@ function App() {
 
           <Route element={<HighestProtectedRoute></HighestProtectedRoute>}>
             <Route path="/user" element={<RUser />} />
+            <Route path="/language" element={<RLanguage />} />
+            <Route path="/language/create" element={<CLanguage />} />
+            <Route path="/language/edit/:id" element={<Elanguage />} />
           </Route>
 
           <Route element={<ProtectedRoute></ProtectedRoute>}>
@@ -129,9 +132,6 @@ function App() {
             <Route path="/category/create" element={<CCategory />} />
             <Route path="/category/edit/:id" element={<ECategory />} />
             <Route path="/difficultyLevel" element={<RDifficultyLevel />} />
-            <Route path="/language" element={<RLanguage />} />
-            <Route path="/language/create" element={<CLanguage />} />
-            <Route path="/language/edit/:id" element={<Elanguage />} />
             <Route path="/missingPhrases" element={<RMissingPhrases />} />
             <Route
               path="/missingPhrases/details/:id"

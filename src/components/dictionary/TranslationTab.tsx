@@ -7,7 +7,7 @@ interface Props {
   phrase: Phrase;
   index: number;
   link?: boolean;
-  handleAddToQuiz: (id: number) => void;
+  handleAddToQuiz?: (id: number) => void;
 }
 
 const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
@@ -52,7 +52,7 @@ const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
           <p>{phrase.word}</p>
         </HStack>
         <HiSpeakerWave
-          size={phrase?.level ? "5%" : "7%"}
+          size={phrase?.level ? "5%" : "5%"}
           onClick={() => {
             handleSpeak();
           }}
@@ -74,7 +74,9 @@ const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
         {phrase?.level ? (
           <button
             className="button_secondary"
-            onClick={() => handleAddToQuiz(index - 1)}
+            onClick={() => {
+              if (handleAddToQuiz) handleAddToQuiz(index - 1);
+            }}
             style={{ whiteSpace: "nowrap" }}
           >
             Dodaj do quizu

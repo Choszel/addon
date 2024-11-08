@@ -6,12 +6,14 @@ import useUsers, { User } from "../../hooks/useUsers";
 
 const RUser = () => {
   const { data: headers } = useHeaders("users");
-  const { data } = useUsers();
+  const { data, isLoading, error } = useUsers();
 
   const tableData: TableData<User> = {
     title: "Wykaz użytkowników",
     headers: headers,
     data: data,
+    isLoading: isLoading,
+    error: error,
     details: true,
     routeName: "/user",
   };

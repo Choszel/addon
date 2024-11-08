@@ -1,4 +1,4 @@
-import { HStack } from "@chakra-ui/react";
+import { HStack, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import SelectLanguage from "../components/SelectLanguage";
 import SearchInput from "../components/dictionary/SearchInput";
@@ -16,6 +16,7 @@ const AlphabeticalSearch = () => {
   );
   const [words, setWords] = useState<Phrase[]>();
   const navigate = useNavigate();
+  const [error, setError] = useState<boolean>(false);
 
   const Load = async () => {
     switch (language) {
@@ -29,6 +30,7 @@ const AlphabeticalSearch = () => {
           setWords(data);
         } catch (err) {
           console.log(err);
+          setError(true);
         }
         break;
       default:
@@ -41,6 +43,7 @@ const AlphabeticalSearch = () => {
           setWords(data);
         } catch (err) {
           console.log(err);
+          setError(true);
         }
         break;
     }
@@ -72,16 +75,20 @@ const AlphabeticalSearch = () => {
         onSearch={(id, searchText) => onSearch(id, searchText)}
         language={selectedLanguage ?? ""}
       ></SearchInput>
-      {words?.map((word, index) => (
-        <TranslationTab
-          phrase={word}
-          index={index + 1}
-          link={true}
-          handleAddToQuiz={function (id: number): void {
-            throw new Error("Function not implemented.");
-          }}
-        ></TranslationTab>
-      ))}
+      {error ? (
+        <Text marginBottom="2%" style={{ color: "var(--error)" }}>
+          Błąd serwera.
+        </Text>
+      ) : (
+        words?.map((word, index) => (
+          <TranslationTab
+            phrase={word}
+            index={index + 1}
+            link={true}
+            handleAddToQuiz={undefined}
+          ></TranslationTab>
+        ))
+      )}
     </>
   );
 };

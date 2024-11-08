@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import QuizGrid, { QuizQuery } from "../components/quizes/QuizGrid";
 import SearchInput from "../components/quizes/SearchInput";
 import Flame from "../assets/Fire-Blaze-PNG-Image-Background.png";
-import { HStack, Select } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import useCategories from "../hooks/useCategories";
 import useDifficultyLevels from "../hooks/useDifficultyLevels";
@@ -92,7 +92,7 @@ const FlashcardsHome = () => {
         </select>
       </HStack>
       <HStack marginTop="2%">
-        <h1>Lista zestawów do nauki na Topie</h1>
+        <h1 style={{ marginBottom: "2%" }}>Lista zestawów do nauki na Topie</h1>
         <img src={Flame} width="4%"></img>
       </HStack>
       <QuizGrid

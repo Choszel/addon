@@ -5,13 +5,15 @@ import ReadTemplate, {
 
 const RWordsEnglish = () => {
   const { fetchAllDetailed } = useWordsEnglish();
-  const { data } = fetchAllDetailed();
+  const { data, isLoading, error } = fetchAllDetailed();
   const headers = ["id", "word", "category", "level", "part of speech"];
 
   const tableData: TableData<EnglishWord> = {
     title: "Wykaz Angielskich słów",
     headers: headers,
     data: data,
+    isLoading: isLoading,
+    error: error,
     canCreate: true,
     canDelete: true,
     canEdit: true,

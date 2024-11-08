@@ -5,6 +5,7 @@ import FormTemplate, {
 } from "../../components/crud_templates/CreateTemplate";
 import useCategories from "../../hooks/useCategories";
 import actionData from "../../hooks/actionData";
+import { Spinner, Text } from "@chakra-ui/react";
 
 const ECategory = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,7 +16,11 @@ const ECategory = () => {
   const routeName = "/category";
   const { putData } = actionData(routeName);
 
-  const { data: categoryData, isLoading } = useCategories(parseInt(id ?? "0"));
+  const {
+    data: categoryData,
+    isLoading,
+    error,
+  } = useCategories(parseInt(id ?? "0"));
 
   const handleSave = () => {
     console.log("Refs:", refs);
@@ -36,7 +41,8 @@ const ECategory = () => {
     }
   }, [categoryData, refs]);
 
-  if (isLoading) return <div>Ładowanie danych...</div>;
+  if (isLoading) return <Spinner />;
+  if (error) return <Text color="var(--error)">{error}</Text>;
 
   const formData: FormData = {
     title: "Edytowanie Kategorii",

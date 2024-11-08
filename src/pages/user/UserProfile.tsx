@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import useUsers from "../../hooks/useUsers";
-import { Avatar, HStack, SimpleGrid } from "@chakra-ui/react";
+import { Avatar, HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
 import useTokenData from "../../others/useTokenData";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import QuizGrid, { QuizQuery } from "../../components/quizes/QuizGrid";
@@ -12,10 +12,15 @@ import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
 import actionData from "../../hooks/actionData";
 import useCategories from "../../hooks/useCategories";
 import useDifficultyLevels from "../../hooks/useDifficultyLevels";
+import StoryCard from "../../components/quizes/StoryCard";
 
 const UserProfile = () => {
   const { login } = useParams();
-  const { data: userData } = useUsers(login);
+  const {
+    data: userData,
+    isLoading: userIsLoading,
+    error: userError,
+  } = useUsers(login);
   const { CheckUserType } = useTokenData();
   const [quizQuery, setQuizQuery] = useState<QuizQuery>({} as QuizQuery);
   const { fetchUserScores } = useQuizzesQuestions();
@@ -36,6 +41,10 @@ const UserProfile = () => {
     putData(formData);
     window.location.reload();
   };
+
+  if (userIsLoading || isLoading) return <Spinner size="xl" />;
+  if (userError || error)
+    return <Text color="var(--error)">{userError || error}</Text>;
 
   return (
     <>
@@ -76,31 +85,45 @@ const UserProfile = () => {
             </TabList>
             <TabPanels>
               <TabPanel>
-                <SimpleGrid
-                  columns={{ sm: 1, md: 2, lg: 2, xl: 3 }}
-                  padding={8}
-                  spacing={6}
-                >
-                  {isLoading &&
-                    skeletons.map((skeleton) => (
-                      <QuizCardContainer key={skeleton}>
-                        <QuizCardSkeleton />
-                      </QuizCardContainer>
-                    ))}
-                  {data.map((quiz) => (
-                    <QuizCardContainer key={quiz.id}>
-                      <QuizCard
-                        quiz={quiz}
-                        isScore={true}
-                        userId={userData[0]?.id}
-                        categories={categories}
-                        difficultyLevels={difficultyLevels}
-                        selectedCategory={0}
-                        selectedLevel={0}
-                      ></QuizCard>
-                    </QuizCardContainer>
-                  ))}
-                </SimpleGrid>
+                {data.length == 0 ? (
+                  <Text>Brak zestawów.</Text>
+                ) : (
+                  <SimpleGrid
+                    columns={{ sm: 1, md: 2, lg: 2, xl: 3 }}
+                    paddingX={8}
+                    spacing={6}
+                  >
+                    {isLoading &&
+                      skeletons.map((skeleton) => (
+                        <QuizCardContainer key={skeleton}>
+                          <QuizCardSkeleton />
+                        </QuizCardContainer>
+                      ))}
+                    {data.map((quiz) =>
+                      quiz.type == "quiz" ? (
+                        <QuizCardContainer key={quiz.id}>
+                          <QuizCard
+                            quiz={quiz}
+                            isScore={true}
+                            userId={userData[0]?.id}
+                            categories={categories}
+                            difficultyLevels={difficultyLevels}
+                            selectedCategory={0}
+                            selectedLevel={0}
+                          ></QuizCard>
+                        </QuizCardContainer>
+                      ) : (
+                        <StoryCard
+                          quiz={quiz}
+                          isScore={true}
+                          userId={userData[0]?.id}
+                          selectedCategory={0}
+                          selectedLevel={0}
+                        ></StoryCard>
+                      )
+                    )}
+                  </SimpleGrid>
+                )}
               </TabPanel>
               <TabPanel>
                 <QuizGrid

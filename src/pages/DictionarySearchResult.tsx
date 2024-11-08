@@ -1,4 +1,4 @@
-import { HStack, Img, useToast } from "@chakra-ui/react";
+import { HStack, Img, useToast, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SelectLanguage from "../components/SelectLanguage";
@@ -39,6 +39,7 @@ const DictionarySearchResult = () => {
   const { CheckUserType } = useTokenData();
   const toast = useToast();
   const msg = new SpeechSynthesisUtterance();
+  const [error, setError] = useState<boolean>(false);
 
   const Load = async () => {
     switch (code) {
@@ -79,6 +80,7 @@ const DictionarySearchResult = () => {
           }
         } catch (err) {
           console.log(err);
+          setError(true);
         }
         break;
       default:
@@ -175,18 +177,23 @@ const DictionarySearchResult = () => {
               cursor={"pointer"}
             />
           </HStack>
-
-          <ul>
-            {translations.map((phrase, index) => (
-              <TranslationTab
-                key={phrase.id}
-                phrase={phrase}
-                index={index + 1}
-                link={true}
-                handleAddToQuiz={handleAddToQuiz}
-              ></TranslationTab>
-            ))}
-          </ul>
+          {error ? (
+            <Text display="flex" style={{ color: "var(--error)" }}>
+              Błąd wczytywania tłumaczeń.
+            </Text>
+          ) : (
+            <ul>
+              {translations.map((phrase, index) => (
+                <TranslationTab
+                  key={phrase.id}
+                  phrase={phrase}
+                  index={index + 1}
+                  link={true}
+                  handleAddToQuiz={handleAddToQuiz}
+                ></TranslationTab>
+              ))}
+            </ul>
+          )}
         </div>
         <Img
           boxSize="22%"

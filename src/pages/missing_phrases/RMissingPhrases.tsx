@@ -6,7 +6,7 @@ import useMissingPhrases, {
 } from "../../hooks/useMissingPhrases";
 
 const RMissingPhrases = () => {
-  const { data } = useMissingPhrases();
+  const { data, isLoading, error } = useMissingPhrases();
 
   const headers = ["id", "phrase", "code", "level", "category", "user"];
 
@@ -17,6 +17,8 @@ const RMissingPhrases = () => {
     canDelete: true,
     details: true,
     routeName: "/missingPhrases",
+    isLoading: isLoading,
+    error: error,
   };
 
   return <ReadTemplate {...tableData}></ReadTemplate>;

@@ -15,6 +15,7 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  Spinner,
 } from "@chakra-ui/react";
 import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +25,8 @@ export interface TableData<T> {
   title: string;
   headers: string[];
   data: T[];
+  isLoading: boolean;
+  error: string;
   canCreate?: boolean;
   canDelete?: boolean;
   canEdit?: boolean;
@@ -36,6 +39,8 @@ const ReadTemplate = <T extends object>({
   title,
   headers,
   data,
+  isLoading,
+  error,
   canCreate,
   canDelete,
   canEdit,
@@ -50,16 +55,39 @@ const ReadTemplate = <T extends object>({
 
   return (
     <>
-      <Text>{title}</Text>
+      <Text className="p2" marginBottom="1%">
+        {title}
+      </Text>
       {canCreate && (
-        <Button onClick={() => navigate(routeName + "/create")}>Dodaj</Button>
+        <button
+          className="button_secondary"
+          onClick={() => navigate(routeName + "/create")}
+        >
+          Dodaj
+        </button>
       )}
-      <TableContainer>
-        <Table>
+      {error && (
+        <Text marginTop="2%" color="var(--error)">
+          {error}
+        </Text>
+      )}
+      {isLoading && (
+        <div>
+          <Spinner marginTop="2%" size="xl"></Spinner>
+        </div>
+      )}
+      <TableContainer marginX="10%">
+        <Table size="lg">
           <Thead>
             <Tr>
               {headers.map((element, index) => (
-                <Th key={index}>{element}</Th>
+                <Th
+                  key={index}
+                  color="var(--primary-light)"
+                  borderBottom="2px solid var(--copy)"
+                >
+                  {element}
+                </Th>
               ))}
             </Tr>
           </Thead>
@@ -75,8 +103,9 @@ const ReadTemplate = <T extends object>({
                 ))}
                 <Td>
                   {details && (
-                    <Button
-                      marginRight="2%"
+                    <button
+                      style={{ marginRight: "2%" }}
+                      className="button_secondary"
                       onClick={() =>
                         navigate(
                           routeName +
@@ -88,11 +117,12 @@ const ReadTemplate = <T extends object>({
                       }
                     >
                       Szczegóły
-                    </Button>
+                    </button>
                   )}
                   {canEdit && (
-                    <Button
-                      marginRight="2%"
+                    <button
+                      style={{ marginRight: "2%" }}
+                      className="button_secondary"
                       onClick={() =>
                         navigate(
                           routeName + "/edit/" + (row as any)[headers[0]]
@@ -100,17 +130,18 @@ const ReadTemplate = <T extends object>({
                       }
                     >
                       Edytuj
-                    </Button>
+                    </button>
                   )}
                   {canDelete && (
-                    <Button
+                    <button
+                      className="button_secondary"
                       onClick={() => {
                         setSelectedRow((row as any)[headers[0]]);
                         onOpen();
                       }}
                     >
                       Usuń
-                    </Button>
+                    </button>
                   )}
                 </Td>
               </Tr>
@@ -121,9 +152,9 @@ const ReadTemplate = <T extends object>({
       {others}
 
       {canDelete && (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
           <ModalOverlay />
-          <ModalContent>
+          <ModalContent bg="var(--foreground)">
             <ModalCloseButton />
             <ModalBody>
               Czy na pewno chcesz usunąć rekord o id {selectedRow}?

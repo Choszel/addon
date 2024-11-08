@@ -6,12 +6,14 @@ import useHeaders from "../../hooks/useHeaders";
 
 const RCategory = () => {
   const { data: headers } = useHeaders("categories");
-  const { data } = useCategories();
+  const { data, isLoading, error } = useCategories();
 
   const tableData: TableData<Category> = {
     title: "Wykaz kategorii",
     headers: headers,
     data: data,
+    isLoading: isLoading,
+    error: error,
     canCreate: true,
     canDelete: true,
     canEdit: true,

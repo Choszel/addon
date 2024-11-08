@@ -217,7 +217,7 @@ app.put('/api/language', async (req, res) =>{
         res.status(200).json({message: "Updated successfully"})
     }catch(err){
         console.log(err.message)
-        res.status(500).send("Server error");
+        res.status(500).json(err.message);
     }
 })
 

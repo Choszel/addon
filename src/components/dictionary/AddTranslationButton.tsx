@@ -1,4 +1,4 @@
-import { Button, HStack, Select, useToast } from "@chakra-ui/react";
+import { Button, HStack, useToast } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import SearchInput from "./SearchInput";
 import useLanguages from "../../hooks/useLanguages";
@@ -69,15 +69,18 @@ const AddTranslationButton = ({
 
   return (
     <>
-      <HStack marginY="2%">
+      <HStack margin="4% 2% 2% 2%">
         <p className="p2">Tłumaczenia</p>
-        <Button onClick={handleAddTranslation}>Dodaj</Button>
+        <button className="button_secondary" onClick={handleAddTranslation}>
+          Dodaj
+        </button>
       </HStack>
       {dataRow.map((row) => (
-        <HStack key={row.id} marginTop="10px">
+        <HStack key={row.id} margin="2%">
           {langugeOption && (
-            <Select
-              width="20%"
+            <select
+              style={{ width: "20%" }}
+              className="select-primary"
               ref={(el) => {
                 localRefs.current[row.id] = { languageRef: el };
               }}
@@ -89,7 +92,7 @@ const AddTranslationButton = ({
                   {language.code}
                 </option>
               ))}
-            </Select>
+            </select>
           )}
           <div style={{ marginInline: "1%" }}>
             {row.word ? (
@@ -110,7 +113,12 @@ const AddTranslationButton = ({
               />
             )}
           </div>
-          <Button onClick={() => handleDeleteTranslation(row.id)}>Usuń</Button>
+          <Button
+            colorScheme="red"
+            onClick={() => handleDeleteTranslation(row.id)}
+          >
+            Usuń
+          </Button>
         </HStack>
       ))}
     </>
