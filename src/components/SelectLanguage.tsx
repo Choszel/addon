@@ -10,7 +10,7 @@ const SelectLanguage = ({ setSelectedLanguage }: Props) => {
   return (
     <select
       className="select-primary"
-      style={{ width: "7%", padding: "0.5%" }}
+      style={{ padding: "0.5%" }}
       onChange={(event) => {
         setSelectedLanguage(event.target.value + "_PLN");
         console.log(event.target.value);

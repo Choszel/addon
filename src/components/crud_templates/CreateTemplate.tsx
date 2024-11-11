@@ -63,8 +63,10 @@ const FormTemplate = ({
       </Text>
       {headers.map((input, index) => (
         <div key={index}>
-          <HStack marginBottom="2%">
-            <Text marginRight="1%">{input.inputName}</Text>
+          <HStack marginBottom={{ base: "10%", md: "5%", lg: "2%" }}>
+            <Text marginRight="1%" textAlign="left">
+              {input.inputName}
+            </Text>
             {input.inputType === "number" ? (
               <NumberInput
                 defaultValue={0}
@@ -90,7 +92,6 @@ const FormTemplate = ({
               ) : (
                 <select
                   className="select-primary"
-                  style={{ width: "10%" }}
                   ref={(el) => {
                     localRefs.current[index] = el;
                   }}

@@ -1,4 +1,4 @@
-import { HStack, Img, useToast, Text } from "@chakra-ui/react";
+import { HStack, Img, useToast, Text, Stack, Show } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SelectLanguage from "../components/SelectLanguage";
@@ -152,7 +152,12 @@ const DictionarySearchResult = () => {
 
   return (
     <>
-      <HStack alignContent="center">
+      <Stack
+        justify={{ base: "center", sm: "unset" }}
+        align="center"
+        direction={{ base: "column", md: "row" }}
+        marginBottom={{ base: "5%", md: "unset" }}
+      >
         <p>Wybrany język:</p>
         <SelectLanguage setSelectedLanguage={setSelectedLanguage} />
         <div style={{ width: "5%" }}></div>
@@ -164,7 +169,7 @@ const DictionarySearchResult = () => {
           onSearch={(id, searchText) => onSearch(id, searchText)}
           language={selectedLanguage ?? ""}
         ></RandomPhrase>
-      </HStack>
+      </Stack>
       <HStack justifyContent="space-around">
         <div>
           <HStack marginBottom="3%">
@@ -177,6 +182,16 @@ const DictionarySearchResult = () => {
               cursor={"pointer"}
             />
           </HStack>
+          <Show below="md">
+            <Img
+              boxSize="50%"
+              marginY="4%"
+              borderRadius="20px"
+              src={getCroppedImageUrl(
+                searchPhrase?.photo ?? translations[0]?.photo ?? ""
+              )}
+            />
+          </Show>
           {error ? (
             <Text display="flex" style={{ color: "var(--error)" }}>
               Błąd wczytywania tłumaczeń.
@@ -195,14 +210,16 @@ const DictionarySearchResult = () => {
             </ul>
           )}
         </div>
-        <Img
-          boxSize="22%"
-          marginY="2%"
-          borderRadius="20px"
-          src={getCroppedImageUrl(
-            searchPhrase?.photo ?? translations[0]?.photo ?? ""
-          )}
-        />
+        <Show above="md">
+          <Img
+            boxSize="22%"
+            marginY="2%"
+            borderRadius="20px"
+            src={getCroppedImageUrl(
+              searchPhrase?.photo ?? translations[0]?.photo ?? ""
+            )}
+          />
+        </Show>
       </HStack>
     </>
   );

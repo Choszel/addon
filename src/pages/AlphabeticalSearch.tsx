@@ -1,4 +1,4 @@
-import { HStack, Text } from "@chakra-ui/react";
+import { HStack, Show, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import SelectLanguage from "../components/SelectLanguage";
 import SearchInput from "../components/dictionary/SearchInput";
@@ -67,7 +67,7 @@ const AlphabeticalSearch = () => {
 
   return (
     <>
-      <HStack>
+      <HStack marginBottom={{ base: "5%", md: "unset" }}>
         <p>Wybrany język:</p>
         <SelectLanguage setSelectedLanguage={setSelectedLanguage} />
       </HStack>
@@ -75,6 +75,9 @@ const AlphabeticalSearch = () => {
         onSearch={(id, searchText) => onSearch(id, searchText)}
         language={selectedLanguage ?? ""}
       ></SearchInput>
+      <Show below="md">
+        <br />
+      </Show>
       {error ? (
         <Text marginBottom="2%" style={{ color: "var(--error)" }}>
           Błąd serwera.

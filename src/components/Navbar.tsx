@@ -1,4 +1,4 @@
-import { Avatar, HStack, Spacer } from "@chakra-ui/react";
+import { Avatar, HStack, Show, Spacer } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../others/AuthContext";
@@ -32,25 +32,32 @@ const Navbar = () => {
             cursor="pointer"
           >
             <Avatar boxSize={6} />
-            <p>{GetUserLogin()}</p>
+            <Show above="sm">
+              <p>{GetUserLogin()}</p>
+            </Show>
           </HStack>
-          {["admin", "warden"].includes(CheckUserType()) && <AdminPanel />}
-          <button
-            className="button_primary"
-            onClick={authContext.logout}
-            style={{ margin: "0% 0% 0% 2%" }}
-          >
-            Wyloguj się
-          </button>
+          {["admin", "warden"].includes(CheckUserType()) ? (
+            <AdminPanel />
+          ) : (
+            <button
+              className="button_primary"
+              onClick={authContext.logout}
+              style={{ margin: "0% 0% 0% 2%" }}
+            >
+              Wyloguj się
+            </button>
+          )}
         </>
       ) : (
         <>
           <Link to="/login">
             <button className="button_primary">Zaloguj się</button>
           </Link>
-          <Link to="/register">
-            <button className="button_primary">Zarejestruj się</button>
-          </Link>
+          <Show above="sm">
+            <Link to="/register">
+              <button className="button_primary">Zarejestruj się</button>
+            </Link>
+          </Show>
         </>
       )}
     </HStack>

@@ -76,8 +76,8 @@ const ReadTemplate = <T extends object>({
           <Spinner marginTop="2%" size="xl"></Spinner>
         </div>
       )}
-      <TableContainer marginX="10%">
-        <Table size="lg">
+      <TableContainer marginX={{ base: "1%", md: "7%" }}>
+        <Table size={{ base: "sm", md: "lg" }}>
           <Thead>
             <Tr>
               {headers.map((element, index) => (
@@ -98,7 +98,7 @@ const ReadTemplate = <T extends object>({
                   <Td key={cellIndex}>
                     {(row as any)[header]?.length > 20
                       ? (row as any)[header].substring(0, 20) + "..."
-                      : (row as any)[header]}{" "}
+                      : (row as any)[header]}
                   </Td>
                 ))}
                 <Td>

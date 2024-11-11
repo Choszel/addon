@@ -1,4 +1,4 @@
-import { HStack, Spacer, Spinner } from "@chakra-ui/react";
+import { Box, HStack, Spacer, Spinner, Stack } from "@chakra-ui/react";
 import SearchInput from "../components/dictionary/SearchInput";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -69,7 +69,12 @@ const DictionaryHome = () => {
         <p>Wybrany język:</p>
         <SelectLanguage setSelectedLanguage={setSelectedLanguage} />
       </HStack>
-      <HStack display="flex" justifyContent="center">
+      <Stack
+        direction={{ base: "column", md: "row" }}
+        justify="center"
+        align="center"
+        marginY={{ base: "10%", md: "unset" }}
+      >
         <SearchInput
           onSearch={(id, searchText) => onSearch(id, searchText)}
           language={selectedLanguage ?? ""}
@@ -78,9 +83,15 @@ const DictionaryHome = () => {
           onSearch={(id, searchText) => onSearch(id, searchText)}
           language={selectedLanguage ?? ""}
         ></RandomPhrase>
-      </HStack>
-      <HStack display="flex" justifyContent="center" spacing={10} marginY="4%">
-        <div className="gradient_box" style={{ height: "300px" }}>
+      </Stack>
+      <Stack
+        justify="center"
+        align="center"
+        spacing={10}
+        margin="2% 0% 4% 0%"
+        direction={{ base: "column", md: "row" }}
+      >
+        <Box className="gradient_box" width={{ base: "unset", md: "40%" }}>
           <p style={{ marginBottom: "2%" }}>
             Popularne wyszukiwania w tym miesiącu
           </p>
@@ -99,8 +110,8 @@ const DictionaryHome = () => {
               <p>{word.popularity}</p>
             </HStack>
           ))}
-        </div>
-        <div className="gradient_box" style={{ height: "300px" }}>
+        </Box>
+        <Box className="gradient_box" width={{ base: "unset", lg: "40%" }}>
           <p>Przeszukiwanie alfabetyczne</p>
           <HStack
             display="flex"
@@ -118,9 +129,14 @@ const DictionaryHome = () => {
               </Link>
             ))}
           </HStack>
-        </div>
-      </HStack>
-      <HStack display="flex" alignContent="center" justifyContent="center">
+        </Box>
+      </Stack>
+      <Stack
+        direction={{ base: "column", md: "row" }}
+        justify="center"
+        align="center"
+        marginTop={{ base: "10%", md: "unset" }}
+      >
         <p>W słowniku brakuje jakiegoś zwrotu? Zgłoś brak tłumaczenia</p>
         <Link
           to="/noTranslation"
@@ -128,7 +144,7 @@ const DictionaryHome = () => {
         >
           tutaj
         </Link>
-      </HStack>
+      </Stack>
     </>
   );
 };

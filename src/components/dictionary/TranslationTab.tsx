@@ -1,4 +1,4 @@
-import { HStack, Text } from "@chakra-ui/react";
+import { Box, HStack, Show, Text } from "@chakra-ui/react";
 import { Phrase } from "../../pages/DictionarySearchResult";
 import { useNavigate } from "react-router-dom";
 import { HiSpeakerWave } from "react-icons/hi2";
@@ -45,8 +45,8 @@ const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
   };
 
   return (
-    <div style={{ marginBottom: "2%" }}>
-      <HStack key={phrase.id} marginBottom="1%">
+    <Box marginBottom={{ base: "10%", md: "4%" }}>
+      <HStack key={phrase.id} marginBottom="1%" width="120%">
         <HStack onClick={redirectButton} cursor={link ? "pointer" : "default"}>
           <p>{index}.</p>
           <p>{phrase.word}</p>
@@ -71,22 +71,37 @@ const TranslationTab = ({ phrase, index, link, handleAddToQuiz }: Props) => {
             {phrase.category}
           </button>
         ) : null}
+        <Show above="md">
+          {phrase?.level ? (
+            <button
+              className="button_secondary"
+              onClick={() => {
+                if (handleAddToQuiz) handleAddToQuiz(index - 1);
+              }}
+              style={{ whiteSpace: "nowrap" }}
+            >
+              Dodaj do quizu
+            </button>
+          ) : null}
+        </Show>
+      </HStack>
+      <p style={{ display: "flex", marginInline: "25px" }}>
+        {phrase.definition}
+      </p>
+      <Show below="md">
         {phrase?.level ? (
           <button
             className="button_secondary"
             onClick={() => {
               if (handleAddToQuiz) handleAddToQuiz(index - 1);
             }}
-            style={{ whiteSpace: "nowrap" }}
+            style={{ whiteSpace: "nowrap", margin: "3% 0% 0% 0%" }}
           >
             Dodaj do quizu
           </button>
         ) : null}
-      </HStack>
-      <p style={{ display: "flex", marginInline: "25px" }}>
-        {phrase.definition}
-      </p>
-    </div>
+      </Show>
+    </Box>
   );
 };
 
