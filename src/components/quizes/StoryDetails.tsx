@@ -101,8 +101,8 @@ const StoryDetails = ({ quiz, userId, questions, isLoading, error }: Props) => {
                 : ""
             }
             w="100%"
-            height="120px"
-            marginY="2%"
+            height="auto"
+            marginY={{ base: "5%", md: "2%" }}
           >
             <CardBody
               display="flex"

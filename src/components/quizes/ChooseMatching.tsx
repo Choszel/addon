@@ -1,4 +1,4 @@
-import { Box, Card, CardBody, HStack, Img } from "@chakra-ui/react";
+import { Box, Card, CardBody, Img, Stack } from "@chakra-ui/react";
 import { QuizQuestion } from "../../hooks/useQuizzesQuestions";
 import getCroppedImageUrl from "../../services/image-url";
 import { useEffect, useRef, useState } from "react";
@@ -106,8 +106,8 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
       alignItems="center"
     >
       <Card
-        height="200px"
-        width="40%"
+        height={{ base: "200px", md: "250px" }}
+        width={{ base: "90%", md: "40%" }}
         padding="0%"
         backgroundColor="var(--primary-dark)"
       >
@@ -142,7 +142,7 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
         </CardBody>
       </Card>
 
-      <HStack margin="2%" width="100%">
+      <Stack margin="2%" width="100%" direction={{ base: "column", md: "row" }}>
         <div
           ref={ref1}
           className="game_type"
@@ -192,7 +192,7 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
         >
           <p>{questions[shuffledNumbers[3]]?.word_second}</p>
         </div>
-      </HStack>
+      </Stack>
     </Box>
   );
 };

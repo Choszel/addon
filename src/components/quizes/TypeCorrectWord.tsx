@@ -1,4 +1,4 @@
-import { Box, Card, CardBody, HStack, Input, Text } from "@chakra-ui/react";
+import { Box, Card, CardBody, Input, Stack, Text } from "@chakra-ui/react";
 import { QuizQuestion } from "../../hooks/useQuizzesQuestions";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { useEffect, useRef, useState } from "react";
@@ -75,7 +75,10 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
       justifyContent="center"
       alignItems="center"
     >
-      <Card height="200px" width="40%">
+      <Card
+        height={{ base: "200px", md: "250px" }}
+        width={{ base: "90%", md: "40%" }}
+      >
         <CardBody
           display="flex"
           justifyContent="center"
@@ -98,7 +101,13 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
           )}
         </CardBody>
       </Card>
-      <HStack margin="2%" width="50%">
+      <Stack
+        width={{ base: "100%", md: "50%" }}
+        align="center"
+        justify="center"
+        direction={{ base: "column", md: "row" }}
+        marginTop={{ base: "5%", md: "2%" }}
+      >
         <p>Przetłumacz:</p>
         <Input
           ref={refInput}
@@ -109,7 +118,7 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
         <button onClick={() => checkCorectness(refInput.current?.value ?? "")}>
           Zatwierdź
         </button>
-      </HStack>
+      </Stack>
       <Text
         visibility={
           refInput.current

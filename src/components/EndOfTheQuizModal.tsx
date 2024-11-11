@@ -11,9 +11,10 @@ import { useNavigate } from "react-router-dom";
 interface Props {
   isOpen: boolean;
   goBackTo: string;
+  saveProgress?: boolean;
 }
 
-const EndOfTheQuizModal = ({ isOpen, goBackTo }: Props) => {
+const EndOfTheQuizModal = ({ isOpen, goBackTo, saveProgress }: Props) => {
   const navigate = useNavigate();
 
   const onClose = () => {
@@ -27,8 +28,8 @@ const EndOfTheQuizModal = ({ isOpen, goBackTo }: Props) => {
         <ModalHeader className="basic_style">Koniec quizu</ModalHeader>
         <ModalBody className="basic_style">
           <p>
-            Gratulacje! Udało ci się dotrzeć do końca quizu. Postępy zostały
-            zapisane.
+            Gratulacje! Udało ci się dotrzeć do końca quizu.{" "}
+            {saveProgress == true ? "Postępy zostały zapisane." : null}
           </p>
         </ModalBody>
 

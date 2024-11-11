@@ -12,6 +12,7 @@ import {
   useDisclosure,
   ModalCloseButton,
   Button,
+  Show,
 } from "@chakra-ui/react";
 import { Quiz } from "../../hooks/useQuizzes";
 import QuizDetails from "./QuizDetails";
@@ -24,6 +25,7 @@ import actionData from "../../hooks/actionData";
 import GoBack from "../GoBack";
 import { useNavigate } from "react-router-dom";
 import { IoTrashOutline } from "react-icons/io5";
+import { FaCirclePlus } from "react-icons/fa6";
 
 interface Props {
   quiz: Quiz;
@@ -162,30 +164,50 @@ const QuizCard = ({
             <>
               <HStack>
                 <p>Kategorie: </p>
-                {categoriesQuizzes.length > 3 ? (
-                  <HStack>
-                    <button className="tag_category">
-                      {categoriesQuizzes[0] ?? "No category"}
-                    </button>
-                    <button className="tag_category">
-                      {categoriesQuizzes[1] ?? "No category"}
-                    </button>
-                    <button className="tag_category">others</button>
-                  </HStack>
-                ) : categoriesQuizzes.length == 0 ? (
-                  <button className="tag_error">X</button>
-                ) : (
-                  categoriesQuizzes.map((cq) => (
-                    <button className="tag_category">
-                      {cq ?? "No category"}
-                    </button>
-                  ))
-                )}
+                <Show above="md">
+                  {categoriesQuizzes.length > 3 ? (
+                    <HStack>
+                      <button className="tag_category">
+                        {categoriesQuizzes[0] ?? "No category"}
+                      </button>
+                      <button className="tag_category">
+                        {categoriesQuizzes[1] ?? "No category"}
+                      </button>
+                      <FaCirclePlus color="var(--primary)" size="40px" />
+                    </HStack>
+                  ) : categoriesQuizzes.length == 0 ? (
+                    <button className="tag_error">X</button>
+                  ) : (
+                    categoriesQuizzes.map((cq) => (
+                      <button className="tag_category">
+                        {cq ?? "No category"}
+                      </button>
+                    ))
+                  )}
+                </Show>
+                <Show below="md">
+                  {categoriesQuizzes.length > 1 ? (
+                    <HStack>
+                      <button className="tag_category">
+                        {categoriesQuizzes[0] ?? "No category"}
+                      </button>
+                      <FaCirclePlus color="var(--primary)" size="35px" />
+                    </HStack>
+                  ) : categoriesQuizzes.length == 0 ? (
+                    <button className="tag_error">X</button>
+                  ) : (
+                    categoriesQuizzes.map((cq) => (
+                      <button className="tag_category">
+                        {cq ?? "No category"}
+                      </button>
+                    ))
+                  )}
+                </Show>
               </HStack>
               <HStack>
                 <p>Poziom: </p>
                 {levelsQuizzes.length > 4 ? (
-                  <button className="tag_infinity">∞</button>
+                  <FaCirclePlus color="var(--primary)" size="30px" />
                 ) : levelsQuizzes.length == 0 ? (
                   <button className="tag_error">X</button>
                 ) : (
@@ -220,7 +242,11 @@ const QuizCard = ({
         }}
       >
         <ModalOverlay />
-        <ModalContent maxW="100%" width="50%" bg="var(--foreground)">
+        <ModalContent
+          maxW="100%"
+          width={{ base: "90%", md: "50%" }}
+          bg="var(--foreground)"
+        >
           <ModalBody>
             <GoBack
               goBack={() => {

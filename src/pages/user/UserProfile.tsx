@@ -64,7 +64,11 @@ const UserProfile = () => {
               </button>
             ) : null}
           </HStack>
-          <Tabs isFitted variant="enclosed" marginTop="3%">
+          <Tabs
+            isFitted
+            variant="enclosed"
+            marginTop={{ base: "10%", md: "3%" }}
+          >
             <TabList mb="1em">
               <Tab
                 _selected={{
@@ -84,13 +88,13 @@ const UserProfile = () => {
               </Tab>
             </TabList>
             <TabPanels>
-              <TabPanel>
+              <TabPanel padding={{ base: "0", md: "4" }}>
                 {data.length == 0 ? (
                   <Text>Brak zestawów.</Text>
                 ) : (
                   <SimpleGrid
                     columns={{ sm: 1, md: 2, lg: 2, xl: 3 }}
-                    paddingX={8}
+                    paddingX={{ base: "0", md: "8" }}
                     spacing={6}
                   >
                     {isLoading &&

@@ -101,9 +101,12 @@ const FlashcardGame = () => {
           height: "100%",
         }}
       >
-        <Box width="40%">
+        <Box
+          width={{ base: "90%", md: "40%" }}
+          marginTop={{ base: "5%", md: "0%" }}
+        >
           <Card
-            height="200px"
+            height={{ base: "200px", md: "250px" }}
             onClick={currentIndex == questions.length ? goBack : turnCard}
             cursor="pointer"
             transform={isFlipped ? "rotateY(180deg)" : "rotateY(0)"}

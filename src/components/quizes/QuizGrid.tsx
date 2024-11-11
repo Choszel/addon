@@ -43,7 +43,7 @@ const QuizGrid = ({
     <div>
       <SimpleGrid
         columns={{ sm: 1, md: 2, lg: 2, xl: 3 }}
-        paddingX={8}
+        paddingX={{ base: "0", md: "8" }}
         spacing={6}
       >
         {isLoading &&

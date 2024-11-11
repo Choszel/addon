@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import QuizGrid, { QuizQuery } from "../components/quizes/QuizGrid";
 import SearchInput from "../components/quizes/SearchInput";
 import Flame from "../assets/Fire-Blaze-PNG-Image-Background.png";
-import { HStack } from "@chakra-ui/react";
+import { HStack, Show, Stack, Text } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import useCategories from "../hooks/useCategories";
 import useDifficultyLevels from "../hooks/useDifficultyLevels";
@@ -38,7 +38,12 @@ const FlashcardsHome = () => {
 
   return (
     <>
-      <HStack display="flex" justifyContent="center" alignContent="center">
+      <Stack
+        display="flex"
+        justify="center"
+        align="center"
+        direction={{ base: "column", md: "row" }}
+      >
         <SearchInput
           searchValue={searchValue}
           setSearchValue={setSearchValue}
@@ -49,16 +54,17 @@ const FlashcardsHome = () => {
         >
           Stwórz własny quiz
         </button>
-      </HStack>
-      <HStack
+      </Stack>
+      <Stack
         display="flex"
-        justifyContent="center"
-        alignContent="center"
+        justify="center"
+        align="center"
         spacing={5}
+        direction={{ base: "column", md: "row" }}
+        marginY={{ base: "10%", md: "1%" }}
       >
         <select
           className="select-primary"
-          style={{ width: "30%" }}
           defaultValue={0}
           onChange={(e) => setSelectedCategory(parseInt(e.target.value))}
         >
@@ -77,7 +83,6 @@ const FlashcardsHome = () => {
         </select>
         <select
           className="select-primary"
-          style={{ width: "30%" }}
           defaultValue={0}
           onChange={(e) => setSelectedLevel(parseInt(e.target.value))}
         >
@@ -90,10 +95,16 @@ const FlashcardsHome = () => {
             </option>
           ))}
         </select>
-      </HStack>
-      <HStack marginTop="2%">
-        <h1 style={{ marginBottom: "2%" }}>Lista zestawów do nauki na Topie</h1>
-        <img src={Flame} width="4%"></img>
+      </Stack>
+      <HStack marginY="2%" align="center">
+        <Show above="md">
+          <h1>Lista zestawów do nauki na Topie</h1>
+          <img src={Flame} width="60px"></img>
+        </Show>
+        <Show below="md">
+          <Text className="p2">Lista zestawów do nauki na Topie</Text>
+          <img src={Flame} width="50px"></img>
+        </Show>
       </HStack>
       <QuizGrid
         quizQuery={quizQuery}

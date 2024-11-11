@@ -12,11 +12,13 @@ import {
   Spinner,
   useDisclosure,
   Text,
+  Stack,
 } from "@chakra-ui/react";
 import { Quiz } from "../../hooks/useQuizzes";
 import { QuizQuestion } from "../../hooks/useQuizzesQuestions";
 import { Link, useNavigate } from "react-router-dom";
 import actionData from "../../hooks/actionData";
+import { FaCirclePlus } from "react-icons/fa6";
 
 interface Props {
   quiz: Quiz;
@@ -90,7 +92,7 @@ const QuizDetails = ({
             <button className="tag_category">
               {categories[1] ?? "No category"}
             </button>
-            <button className="tag_category">others</button>
+            <FaCirclePlus color="var(--primary)" size="35px" />
           </HStack>
         ) : categories.length == 0 ? (
           <button className="tag_error">X</button>
@@ -103,7 +105,7 @@ const QuizDetails = ({
       <HStack>
         <p>Poziom: </p>
         {difficultyLevels.length > 4 ? (
-          <button className="tag_infinity">∞</button>
+          <FaCirclePlus color="var(--primary)" size="30px" />
         ) : difficultyLevels.length == 0 ? (
           <button className="tag_error">X</button>
         ) : (
@@ -119,7 +121,11 @@ const QuizDetails = ({
 
       <h1 style={{ marginTop: "4%" }}>Zagraj</h1>
       <>
-        <HStack>
+        <Stack
+          direction={{ base: "column", md: "row" }}
+          justify="center"
+          align="center"
+        >
           <Link
             to={"/quiz/flashcardGame/" + quiz.id}
             className="game_type"
@@ -141,12 +147,12 @@ const QuizDetails = ({
           >
             <p>Test</p>
           </Link>
-        </HStack>
+        </Stack>
         <h1 style={{ marginTop: "4%" }}>Lista zwrotów</h1>
         {isLoading && <Spinner size="xl" />}
         {error && <Text color="var(--error)">{error}</Text>}
         {questions.map((question) => (
-          <HStack margin="3% 3%">
+          <HStack margin={{ base: "6% 3%", md: "3% 3%" }}>
             <Card
               bg={
                 userId
@@ -163,7 +169,7 @@ const QuizDetails = ({
                   : ""
               }
               w="100%"
-              height="150px"
+              height={{ base: "110px", md: "150px" }}
             >
               <CardBody
                 display="flex"
@@ -189,7 +195,7 @@ const QuizDetails = ({
                   : ""
               }
               w="100%"
-              height="150px"
+              height={{ base: "110px", md: "150px" }}
             >
               <CardBody
                 display="flex"

@@ -76,9 +76,12 @@ const StoryCard = ({ quiz, isScore, userId, open }: Props) => {
         alignItems="center"
         key={quiz.id}
         bg="var(--foreground)"
+        height="100%"
       >
         <CardBody
           w="100%"
+          height="100%"
+          position="relative"
           className={
             score === 0
               ? "no_score"
@@ -130,6 +133,9 @@ const StoryCard = ({ quiz, isScore, userId, open }: Props) => {
               display: "flex",
               flexDirection: "column",
               alignItems: "flex-end",
+              position: "absolute",
+              bottom: "30px",
+              right: "20px",
             }}
             onClick={() => {
               navigate("/flashcards/" + quiz.id);
@@ -149,7 +155,11 @@ const StoryCard = ({ quiz, isScore, userId, open }: Props) => {
         }}
       >
         <ModalOverlay />
-        <ModalContent maxW="100%" width="50%" bg="var(--foreground)">
+        <ModalContent
+          maxW="100%"
+          width={{ base: "90%", md: "50%" }}
+          bg="var(--foreground)"
+        >
           <ModalBody>
             <GoBack
               goBack={() => {

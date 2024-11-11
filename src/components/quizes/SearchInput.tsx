@@ -50,7 +50,7 @@ const SearchInput = ({ setSearchValue }: Props) => {
               borderRadius="20px"
             >
               <Input
-                width="500px"
+                width={{ base: "unset", md: "500px" }}
                 borderRadius={20}
                 border="0px"
                 placeholder="Wyszukaj quiz..."

@@ -8,6 +8,7 @@ import GoBack from "../components/GoBack";
 import EndOfTheQuizModal from "../components/EndOfTheQuizModal";
 import actionData from "../hooks/actionData";
 import useTokenData from "../others/useTokenData";
+import { Show } from "@chakra-ui/react";
 
 const TestGame = () => {
   const { id } = useParams();
@@ -141,6 +142,9 @@ const TestGame = () => {
       {showConfetti && (
         <Confetti recycle={false} gravity={0.2} width={window.innerWidth} />
       )}
+      <Show below="md">
+        <br />
+      </Show>
       {questionType < 2 ? (
         <ChooseMatching
           questions={[
@@ -159,18 +163,10 @@ const TestGame = () => {
           checkIfCorrect={checkIfCorrect}
         ></TypeCorrectWord>
       )}
-
-      <button
-        onClick={() => {
-          console.log(drawNumbers);
-          console.log(drawNumbersAnswers);
-        }}
-      >
-        Kliknij mnie
-      </button>
       <EndOfTheQuizModal
         isOpen={isModalOpen}
         goBackTo={"/flashcards/" + id}
+        saveProgress={true}
       ></EndOfTheQuizModal>
     </div>
   );
