@@ -16,6 +16,8 @@ import {
   ModalCloseButton,
   useDisclosure,
   Spinner,
+  Stack,
+  Show,
 } from "@chakra-ui/react";
 import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -76,18 +78,36 @@ const ReadTemplate = <T extends object>({
           <Spinner marginTop="2%" size="xl"></Spinner>
         </div>
       )}
-      <TableContainer marginX={{ base: "1%", md: "7%" }}>
-        <Table size={{ base: "sm", md: "lg" }}>
+      <TableContainer
+        marginX={{ base: "0%", md: "7%" }}
+        marginY={{ base: "5%", md: "0%" }}
+      >
+        <Table size={{ base: "xs", md: "lg" }}>
           <Thead>
             <Tr>
               {headers.map((element, index) => (
-                <Th
-                  key={index}
-                  color="var(--primary-light)"
-                  borderBottom="2px solid var(--copy)"
-                >
-                  {element}
-                </Th>
+                <>
+                  <Show above="md">
+                    <Th
+                      key={index}
+                      color="var(--primary-light)"
+                      borderBottom="2px solid var(--copy)"
+                    >
+                      {element}
+                    </Th>
+                  </Show>
+                  <Show below="md">
+                    {index < 2 ? (
+                      <Th
+                        key={index}
+                        color="var(--primary-light)"
+                        borderBottom="2px solid var(--copy)"
+                      >
+                        {element}
+                      </Th>
+                    ) : null}
+                  </Show>
+                </>
               ))}
             </Tr>
           </Thead>
@@ -95,54 +115,74 @@ const ReadTemplate = <T extends object>({
             {data.map((row, rowIndex) => (
               <Tr key={rowIndex}>
                 {headers.map((header, cellIndex) => (
-                  <Td key={cellIndex}>
-                    {(row as any)[header]?.length > 20
-                      ? (row as any)[header].substring(0, 20) + "..."
-                      : (row as any)[header]}
-                  </Td>
+                  <>
+                    <Show above="md">
+                      <Td key={cellIndex}>
+                        {(row as any)[header]?.length > 20
+                          ? (row as any)[header].substring(0, 20) + "..."
+                          : (row as any)[header]}
+                      </Td>
+                    </Show>
+                    <Show below="md">
+                      {cellIndex < 2 ? (
+                        <Td key={cellIndex}>
+                          {(row as any)[header]?.length > 20
+                            ? (row as any)[header].substring(0, 20) + "..."
+                            : (row as any)[header]}
+                        </Td>
+                      ) : null}
+                    </Show>
+                  </>
                 ))}
                 <Td>
-                  {details && (
-                    <button
-                      style={{ marginRight: "2%" }}
-                      className="button_secondary"
-                      onClick={() =>
-                        navigate(
-                          routeName +
-                            "/details/" +
-                            (routeName == "/user"
-                              ? (row as any)[headers[2]]
-                              : (row as any)[headers[0]])
-                        )
-                      }
-                    >
-                      Szczegóły
-                    </button>
-                  )}
-                  {canEdit && (
-                    <button
-                      style={{ marginRight: "2%" }}
-                      className="button_secondary"
-                      onClick={() =>
-                        navigate(
-                          routeName + "/edit/" + (row as any)[headers[0]]
-                        )
-                      }
-                    >
-                      Edytuj
-                    </button>
-                  )}
-                  {canDelete && (
-                    <button
-                      className="button_secondary"
-                      onClick={() => {
-                        setSelectedRow((row as any)[headers[0]]);
-                        onOpen();
-                      }}
-                    >
-                      Usuń
-                    </button>
-                  )}
+                  <Stack
+                    direction={{ base: "column", md: "row" }}
+                    justify="center"
+                    align="center"
+                    marginY={{ base: "5%", md: "0%" }}
+                  >
+                    {details && (
+                      <button
+                        style={{ marginRight: "2%" }}
+                        className="button_secondary"
+                        onClick={() =>
+                          navigate(
+                            routeName +
+                              "/details/" +
+                              (routeName == "/user"
+                                ? (row as any)[headers[1]]
+                                : (row as any)[headers[0]])
+                          )
+                        }
+                      >
+                        Szczegóły
+                      </button>
+                    )}
+                    {canEdit && (
+                      <button
+                        style={{ marginRight: "2%" }}
+                        className="button_secondary"
+                        onClick={() =>
+                          navigate(
+                            routeName + "/edit/" + (row as any)[headers[0]]
+                          )
+                        }
+                      >
+                        Edytuj
+                      </button>
+                    )}
+                    {canDelete && (
+                      <button
+                        className="button_secondary"
+                        onClick={() => {
+                          setSelectedRow((row as any)[headers[0]]);
+                          onOpen();
+                        }}
+                      >
+                        Usuń
+                      </button>
+                    )}
+                  </Stack>
                 </Td>
               </Tr>
             ))}

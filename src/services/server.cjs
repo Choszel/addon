@@ -262,11 +262,11 @@ app.get('/api/missingPhrasesDetailed', async(req, res)=>{
     try{
         const condition = 'select m.id, code, login as user, phrase, definition, c.name as category, level, part_of_speech ' 
             + 'from missing_phrases m, languages l, users u, categories c, difficulty_levels dl '
-            + 'where m.languages_id=l.id and m.users_id=u.id and m.category=c.id and m.difficulty_level=dl.id ' 
+            + 'where m.language_id=l.id and m.user_id=u.id and m.category_id=c.id and m.difficulty_level_id=dl.id ' 
             + 'AND m.id = ' + id + ';'
         const result = await pool.query(id ? condition : 'select m.id, code, login as user, phrase, definition, c.name as category, level, part_of_speech ' 
             + 'from missing_phrases m, languages l, users u, categories c, difficulty_levels dl '
-            + 'where m.languages_id=l.id and m.users_id=u.id and m.category=c.id and m.difficulty_level=dl.id ' 
+            + 'where m.language_id=l.id and m.user_id=u.id and m.category_id=c.id and m.difficulty_level_id=dl.id ' 
             + 'ORDER BY m.id ASC;');
         res.json(result.rows);
     }catch(err){
@@ -276,15 +276,15 @@ app.get('/api/missingPhrasesDetailed', async(req, res)=>{
 })
 
 app.post('/api/missingPhrases', async (req, res) =>{
-    const { phrase, definition, languages_id, users_id, difficulty_level, category, part_of_speech } = req.body;
-    console.log("App ", phrase, users_id);
+    const { phrase, definition, language_id, user_id, difficulty_level_id, category_id, part_of_speech } = req.body;
+    console.log("App ", phrase, user_id);
     try{
         const phraseExists = await pool.query('SELECT * FROM missing_phrases WHERE phrase = $1', [phrase]);
         if(phraseExists.rows.length > 0){
             return res.status(400).json({ error: "Phrase already reported" });
         }
         await pool.query(
-            'INSERT INTO missing_phrases(phrase, definition, languages_id, users_id, difficulty_level, category, part_of_speech) VALUES ($1, $2, $3, $4, $5, $6, $7)', [phrase, definition, languages_id, users_id, difficulty_level, category, part_of_speech]
+            'INSERT INTO missing_phrases(phrase, definition, language_id, user_id, difficulty_level_id, category_id, part_of_speech) VALUES ($1, $2, $3, $4, $5, $6, $7)', [phrase, definition, language_id, user_id, difficulty_level_id, category_id, part_of_speech]
         );
         res.status(200).json({ message: "Phrase reported successfully" });
     }catch(err){

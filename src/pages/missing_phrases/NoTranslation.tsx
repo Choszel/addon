@@ -40,10 +40,10 @@ const NoTranslation = () => {
     const formData = new URLSearchParams();
     formData.append("phrase", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");
-    formData.append("languages_id", refs[2]?.value ?? "");
-    formData.append("users_id", GetUserId().toString());
-    formData.append("difficulty_level", refs[3]?.value ?? "");
-    formData.append("category", refs[4]?.value ?? "");
+    formData.append("language_id", refs[2]?.value ?? "");
+    formData.append("user_id", GetUserId().toString());
+    formData.append("difficulty_level_id", refs[3]?.value ?? "");
+    formData.append("category_id", refs[4]?.value ?? "");
     formData.append("part_of_speech", refs[5]?.value ?? "");
     postData(formData);
     return navigate("/dictionary");

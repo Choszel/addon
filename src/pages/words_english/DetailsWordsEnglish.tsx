@@ -7,7 +7,7 @@ import ReadTemplate, {
   TableData,
 } from "../../components/crud_templates/ReadTemplate";
 import AddTranslationButton from "../../components/dictionary/AddTranslationButton";
-import { Button, HStack, Spinner, Text } from "@chakra-ui/react";
+import { Button, Spinner, Stack, Text } from "@chakra-ui/react";
 import actionData from "../../hooks/actionData";
 import { useState } from "react";
 import { Translation } from "../words_polish/CWordsPolish";
@@ -51,7 +51,7 @@ const DetailsWordsEnglish = () => {
       <>
         <GoBack
           goBack={() => {
-            navigate("/wordsPolish");
+            navigate("/wordsEnglish");
           }}
         ></GoBack>
         <Text color="var(--error)">{error}</Text>
@@ -67,7 +67,13 @@ const DetailsWordsEnglish = () => {
     others: (
       <>
         <AddTranslationButton setTranslationsData={setTranslationsData} />
-        <Button onClick={handleSave}>Zapisz</Button>
+        <Button
+          colorScheme="blue"
+          onClick={handleSave}
+          marginY={{ base: "5%", md: "0%" }}
+        >
+          Zapisz zmiany
+        </Button>
       </>
     ),
     isLoading: tranIsLoading,
@@ -78,11 +84,16 @@ const DetailsWordsEnglish = () => {
     <>
       <GoBack
         goBack={() => {
-          navigate("/wordsPolish");
+          navigate("/wordsEnglish");
         }}
       ></GoBack>
       {data.map((e) => (
-        <HStack spacing="15%" marginX="2%" marginTop="1%">
+        <Stack
+          spacing="15%"
+          marginX="2%"
+          direction={{ base: "column", md: "row" }}
+          marginY={{ base: "5%", md: "0%" }}
+        >
           <div
             key={e.id}
             style={{ textAlign: "left", justifyContent: "space-between" }}
@@ -106,7 +117,7 @@ const DetailsWordsEnglish = () => {
               <strong>Część mowy:</strong> {e.part_of_speech}
             </p>
           </div>
-        </HStack>
+        </Stack>
       ))}
       <br></br>
       <ReadTemplate {...tableData}></ReadTemplate>

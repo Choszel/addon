@@ -7,7 +7,7 @@ import ReadTemplate, {
   TableData,
 } from "../../components/crud_templates/ReadTemplate";
 import getCroppedImageUrl from "../../services/image-url";
-import { Button, HStack, Image, Spinner, Text } from "@chakra-ui/react";
+import { Button, Image, Spinner, Stack, Text } from "@chakra-ui/react";
 import AddTranslationButton from "../../components/dictionary/AddTranslationButton";
 import { useState } from "react";
 import { Translation } from "./CWordsPolish";
@@ -71,7 +71,11 @@ const DetailsWordsPolish = () => {
           langugeOption
           setTranslationsData={setTranslationsData}
         />
-        <Button colorScheme="blue" onClick={handleSave}>
+        <Button
+          colorScheme="blue"
+          onClick={handleSave}
+          marginY={{ base: "5%", md: "0%" }}
+        >
           Zapisz zmiany
         </Button>
       </>
@@ -88,7 +92,12 @@ const DetailsWordsPolish = () => {
         }}
       ></GoBack>
       {data.map((e) => (
-        <HStack spacing="15%" marginX="2%">
+        <Stack
+          spacing="15%"
+          marginX="2%"
+          direction={{ base: "column", md: "row" }}
+          marginY={{ base: "5%", md: "0%" }}
+        >
           <div key={e.id} style={{ textAlign: "left" }}>
             <p>
               <strong>ID:</strong> {e.id}
@@ -104,11 +113,11 @@ const DetailsWordsPolish = () => {
             </p>
           </div>
           <Image
-            boxSize="20%"
+            boxSize={{ base: "60%", md: "20%" }}
             src={getCroppedImageUrl(e.photo)}
             borderRadius="20px"
           ></Image>
-        </HStack>
+        </Stack>
       ))}
       <br></br>
       <ReadTemplate {...tableData}></ReadTemplate>

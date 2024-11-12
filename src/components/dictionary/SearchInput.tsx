@@ -113,7 +113,7 @@ const SearchInput = ({ onSearch, language }: Props) => {
             borderRadius="20px"
           >
             <Input
-              width={{ base: "unset", md: "500px" }}
+              width={{ base: "100%", md: "500px" }}
               borderRadius={20}
               border="0px"
               placeholder="Wpisz szukaną frazę tutaj..."
