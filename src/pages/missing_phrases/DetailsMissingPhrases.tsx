@@ -47,8 +47,8 @@ const DetailsMissingPhrases = () => {
     const formData = new URLSearchParams();
     formData.append("word", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");
-    formData.append("difficultylevel_id", refs[3]?.value ?? "");
-    formData.append("categories_id", refs[4]?.value ?? "");
+    formData.append("difficulty_level_id", refs[3]?.value ?? "");
+    formData.append("category_id", refs[4]?.value ?? "");
     formData.append("part_of_speech", refs[5]?.value ?? "");
     console.log(formData);
 
@@ -58,8 +58,8 @@ const DetailsMissingPhrases = () => {
 
       translationsData?.forEach((element) => {
         const translation = new URLSearchParams();
-        translation.append("words_polish_id", element.id?.toString() ?? "");
-        translation.append("words_english_id", (response.id ?? -1).toString());
+        translation.append("word_polish_id", element.id?.toString() ?? "");
+        translation.append("word_english_id", (response.id ?? -1).toString());
         postTranslations(translation);
         console.log("Po dodaniu tłumaczenia");
       });

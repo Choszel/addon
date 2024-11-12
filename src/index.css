@@ -127,12 +127,13 @@ h1{
 }
 
 .question{
-    background-color: white;
+    background-color: var(--foreground);
     border-radius: 15px;
-    border-color: gainsboro;
+    border-color: var(--border);
+    color: var(--secondary);
     border-width: 1px;
     padding: 2% 3%;
-    width: 10%;
+    min-width: 20%;
     box-shadow: 0 4px 6px -6px #222;
 }
 

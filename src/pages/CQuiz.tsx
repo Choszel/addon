@@ -3,7 +3,7 @@ import FormTemplate, {
   FormData,
 } from "../components/crud_templates/CreateTemplate";
 import useLanguages from "../hooks/useLanguages";
-import { Box, Button, HStack, Text, useToast } from "@chakra-ui/react";
+import { Box, HStack, Text, useToast } from "@chakra-ui/react";
 import usePhrasesStorage from "../hooks/usePhrasesStorage";
 import useTranslationPL_ENG from "../hooks/useTranslationPL_ENG";
 import actionData from "../hooks/actionData";
@@ -64,8 +64,8 @@ const CQuiz = () => {
     }
     const formData = new URLSearchParams();
     formData.append("title", refs[0]?.value ?? "");
-    formData.append("users_id", GetUserId().toString());
-    formData.append("languages_id", refs[1]?.value ?? "");
+    formData.append("user_id", GetUserId().toString());
+    formData.append("language_id", refs[1]?.value ?? "");
     const dateNow = new Date().toJSON().substring(0, 10);
     formData.append("execution_date", dateNow.toString());
 
@@ -97,32 +97,22 @@ const CQuiz = () => {
   }, [isLoading]);
 
   useEffect(() => {
-    setCategoriesQuizz([...new Set(savedPhrases?.map((q) => q.category))]);
-    setLevelsQuizz([...new Set(savedPhrases.map((q) => q.level ?? ""))]);
-    savedPhrases.forEach((e) => (e.type = "pln_phrase"));
-  }, [savedPhrases]);
+    const uniqueCategories = new Set<string | undefined>();
+    const uniqueLevels = new Set<string | undefined>();
 
-  useEffect(() => {
-    let questionsCategories = [
-      ...new Set(savedPhrases?.map((q) => q.category)),
-    ];
-    let questionsLevels = [...new Set(savedPhrases?.map((q) => q.level ?? ""))];
-    setCategoriesQuizz(() => [
-      ...questionsCategories,
-      ...(phrasesData
-        ?.map((q) => q.category)
-        .filter(
-          (category) => !questionsCategories.includes(category ?? "")
-        ) ?? [""]),
-    ]);
+    savedPhrases.forEach((phrase) => {
+      uniqueCategories.add(phrase.category);
+      uniqueLevels.add(phrase.level ?? "");
+    });
 
-    setLevelsQuizz(() => [
-      ...questionsLevels,
-      ...(phrasesData
-        ?.map((q) => q.level)
-        .filter((level) => !questionsLevels.includes(level ?? "")) ?? [""]),
-    ]);
-  }, [phrasesData]);
+    phrasesData?.forEach((phrase) => {
+      uniqueCategories.add(phrase.category);
+      uniqueLevels.add(phrase.level);
+    });
+
+    setCategoriesQuizz(Array.from(uniqueCategories).filter(Boolean));
+    setLevelsQuizz(Array.from(uniqueLevels).filter(Boolean));
+  }, [savedPhrases, phrasesData]);
 
   const formData: FormData = {
     title: "Tworzenie Quizu",
@@ -164,7 +154,7 @@ const CQuiz = () => {
           />
         ) : (
           <HStack marginBottom="1%">
-            <Text className="p2">Frazy:</Text>{" "}
+            <Text className="p2">Frazy:</Text>
           </HStack>
         )}
         {savedPhrases.map((phrase) => (
@@ -180,9 +170,6 @@ const CQuiz = () => {
             <Box className="question">
               <p>{phrase.word}</p>
             </Box>
-            <Button onClick={() => console.log("savedPhrases", savedPhrases)}>
-              Kliknij mnie
-            </Button>
           </HStack>
         ))}
       </div>

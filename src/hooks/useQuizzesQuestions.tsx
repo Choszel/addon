@@ -3,7 +3,7 @@ import { Quiz } from "./useQuizzes";
 
 export interface QuizQuestion {
   id: number | null;
-  quizzes_id: number | null;
+  quiz_id: number | null;
   question_id: number | null;
   word_second: string | null;
   ws_definition: string | null;

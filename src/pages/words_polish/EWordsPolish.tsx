@@ -30,7 +30,7 @@ const EWordsPolish = () => {
     formData.append("id", id || "");
     formData.append("word", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");
-    formData.append("categories_id", refs[2]?.value ?? "");
+    formData.append("category_id", refs[2]?.value ?? "");
     formData.append("photo", refs[3]?.value ?? "");
     putData(formData);
     return navigate(routeName);

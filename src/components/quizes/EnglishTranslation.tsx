@@ -1,4 +1,3 @@
-import { Select } from "@chakra-ui/react";
 import useTranslationPL_ENG from "../../hooks/useTranslationPL_ENG";
 import { useEffect } from "react";
 
@@ -27,8 +26,8 @@ const EnglishTranslation = ({ word, rowId, setTranslationId }: Props) => {
   }, [englishTranslations]);
 
   return (
-    <Select
-      width="20%"
+    <select
+      className="select-primary"
       onChange={(e) => {
         const selectedPhrase = englishTranslations.find(
           (et) => et.id == parseInt(e.target.value)
@@ -44,7 +43,7 @@ const EnglishTranslation = ({ word, rowId, setTranslationId }: Props) => {
       {englishTranslations.map((et) => (
         <option value={et.id}>{et.word}</option>
       ))}
-    </Select>
+    </select>
   );
 };
 

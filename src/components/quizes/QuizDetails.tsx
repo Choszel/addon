@@ -52,8 +52,8 @@ const QuizDetails = ({
 
   const addToUserQuizzes = async () => {
     const formData = new URLSearchParams();
-    formData.append("users_id", (userId ?? 0).toString());
-    formData.append("quizzes_id", (quiz.id ?? 0).toString());
+    formData.append("user_id", (userId ?? 0).toString());
+    formData.append("quiz_id", (quiz.id ?? 0).toString());
     const response = await postData(formData);
     console.log(response.message);
     if (response.message == "Rozpoczęto nowy quiz") {
@@ -65,8 +65,8 @@ const QuizDetails = ({
 
   const deleteProgress = () => {
     const formData = new URLSearchParams();
-    formData.append("users_id", (userId ?? 0).toString());
-    formData.append("quizzes_id", (quiz.id ?? 0).toString());
+    formData.append("user_id", (userId ?? 0).toString());
+    formData.append("quiz_id", (quiz.id ?? 0).toString());
     deleteData(formData);
     window.location.reload();
   };

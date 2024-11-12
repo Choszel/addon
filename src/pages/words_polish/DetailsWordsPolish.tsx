@@ -35,8 +35,8 @@ const DetailsWordsPolish = () => {
       const translation = new URLSearchParams();
       switch (element.language) {
         default:
-          translation.append("words_polish_id", data[0].id.toString());
-          translation.append("words_english_id", element.id?.toString() ?? "");
+          translation.append("word_polish_id", data[0].id.toString());
+          translation.append("word_english_id", element.id?.toString() ?? "");
           postTranslations(translation);
           break;
       }

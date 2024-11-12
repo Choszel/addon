@@ -78,12 +78,13 @@ const AddPhraseButton = ({ language, setPhrasesData, savedPhrases }: Props) => {
     <>
       <HStack marginY="2%">
         <p className="p2">Frazy</p>
-        <Button
-          isDisabled={dataRow.length + savedPhrases.length > 24 ? true : false}
+        <button
           onClick={handleAddTranslation}
+          disabled={dataRow.length + savedPhrases.length > 24 ? true : false}
+          className="button_secondary"
         >
           Dodaj
-        </Button>
+        </button>
       </HStack>
       {dataRow.map((row) => (
         <HStack key={row.id} marginY="1%">
@@ -102,9 +103,11 @@ const AddPhraseButton = ({ language, setPhrasesData, savedPhrases }: Props) => {
               onSearch={(id, word) => onSearch(row.id, word)}
             />
           )}
-          <Button onClick={() => handleDeleteTranslation(row.id)}>Usuń</Button>
-          <Button onClick={() => console.log("dataRow", dataRow)}>
-            kliknij mnie
+          <Button
+            onClick={() => handleDeleteTranslation(row.id)}
+            colorScheme="red"
+          >
+            Usuń
           </Button>
         </HStack>
       ))}

@@ -35,7 +35,7 @@ const CWordsPolish = () => {
     const formData = new URLSearchParams();
     formData.append("word", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");
-    formData.append("categories_id", refs[2]?.value ?? "");
+    formData.append("category_id", refs[2]?.value ?? "");
     formData.append("photo", refs[3]?.value ?? "");
     console.log(formData);
 
@@ -48,13 +48,10 @@ const CWordsPolish = () => {
         switch (element.language) {
           default:
             translation.append(
-              "words_polish_id",
+              "word_polish_id",
               (response.id ?? -1).toString()
             );
-            translation.append(
-              "words_english_id",
-              element.id?.toString() ?? ""
-            );
+            translation.append("word_english_id", element.id?.toString() ?? "");
             postTranslations(translation);
             break;
         }
