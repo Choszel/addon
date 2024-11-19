@@ -88,7 +88,7 @@ const AlphabeticalSearch = () => {
             phrase={word}
             index={index + 1}
             link={true}
-            handleAddToQuiz={undefined}
+            language={"en-US"}
           ></TranslationTab>
         ))
       )}

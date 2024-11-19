@@ -103,6 +103,7 @@ const DictionaryHome = () => {
               onClick={() => redirectButton(word)}
               cursor="pointer"
               marginY="0.7%"
+              key={id}
             >
               <p>{id + 1}.</p>
               <p>{word.word}</p>

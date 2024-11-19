@@ -175,7 +175,10 @@ const DictionarySearchResult = () => {
       </Stack>
       <HStack justifyContent="space-around">
         <div>
-          <HStack marginBottom="3%">
+          <HStack
+            marginBottom="3%"
+            justifyContent={{ base: "center", md: "unset" }}
+          >
             <h1>{searchPhrase?.word}</h1>
             <HiSpeakerWave
               size={40}
@@ -193,6 +196,7 @@ const DictionarySearchResult = () => {
               src={getCroppedImageUrl(
                 searchPhrase?.photo ?? translations[0]?.photo ?? ""
               )}
+              justifySelf={{ base: "center", md: "unset" }}
             />
           </Show>
           {error ? (
@@ -208,6 +212,7 @@ const DictionarySearchResult = () => {
                   index={index + 1}
                   link={true}
                   handleAddToQuiz={handleAddToQuiz}
+                  language={phrase.level ? "en-US" : "pl-PL"}
                 ></TranslationTab>
               ))}
             </ul>

@@ -3,6 +3,7 @@ import {
   Button,
   HStack,
   Input,
+  InputGroup,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -104,15 +105,17 @@ const FormTemplate = ({
                 </select>
               )
             ) : (
-              <Input
-                className="basic_style"
-                ref={(el) => {
-                  localRefs.current[index] = el;
-                }}
-                onChange={(e) => handleInputChange(e.target.value, index)}
-                _focus={{ border: "2px solid var(--secondary-dark)" }}
-                maxLength={250}
-              />
+              <InputGroup className="basic_style">
+                <Input
+                  ref={(el) => {
+                    localRefs.current[index] = el;
+                  }}
+                  onChange={(e) => handleInputChange(e.target.value, index)}
+                  _focus={{ border: "2px solid var(--secondary-dark)" }}
+                  maxLength={250}
+                  style={{ backgroundColor: "var(--foreground)" }}
+                />
+              </InputGroup>
             )}
           </HStack>
           {input.isRequired && errors[index] && (

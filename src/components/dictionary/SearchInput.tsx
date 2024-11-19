@@ -6,7 +6,7 @@ import {
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { useDebounce } from "use-debounce";
 import SearchResultList from "../SearchResultList";
@@ -26,7 +26,6 @@ const SearchInput = ({ onSearch, language }: Props) => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [debounceSearchInput] = useDebounce(searchValue.toLowerCase(), 1000);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [noResponse, setNoResponse] = useState<boolean>(false);
 
   useEffect(() => {
     const getWords = async () => {
@@ -82,7 +81,8 @@ const SearchInput = ({ onSearch, language }: Props) => {
     getWords();
   }, [debounceSearchInput, language]);
 
-  const handleKeyPress = (event: { key: string }) => {
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    event.preventDefault();
     if (event.key === "Enter") {
       if (words) onSearch(words[0].id, words[0].word);
     }
@@ -93,12 +93,6 @@ const SearchInput = ({ onSearch, language }: Props) => {
     onSearch(id, word);
   };
 
-  useEffect(() => {
-    if (words?.length == 0 && debounceSearchInput.trim() !== "")
-      setNoResponse(true);
-    else setNoResponse(false);
-  }, [words]);
-
   return (
     <Flex
       display="flex"
@@ -108,10 +102,7 @@ const SearchInput = ({ onSearch, language }: Props) => {
     >
       <form>
         <HStack>
-          <InputGroup
-            boxShadow="0 4px 8px var(--background)"
-            borderRadius="20px"
-          >
+          <InputGroup className="search_input">
             <Input
               width={{ base: "100%", md: "500px" }}
               borderRadius={20}
@@ -121,12 +112,14 @@ const SearchInput = ({ onSearch, language }: Props) => {
               focusBorderColor="var(--primary)"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              onKeyUp={handleKeyPress}
+              onKeyUp={(e) => handleKeyPress(e)}
               ref={inputRef}
             />
             <InputRightElement
               children={<BsSearch />}
-              onClick={() => handleKeyPress({ key: "Enter" })}
+              onClick={() => {
+                if (words) onSearch(words[0].id, words[0].word);
+              }}
               cursor="pointer"
             />
           </InputGroup>
@@ -137,7 +130,7 @@ const SearchInput = ({ onSearch, language }: Props) => {
             listElementClicked={handleResultClick}
           />
         )}
-        {noResponse && (
+        {words?.length == 0 && debounceSearchInput.trim() !== "" && (
           <Text marginTop="1%" style={{ color: "var(--error)" }}>
             Nieznana fraza.
           </Text>

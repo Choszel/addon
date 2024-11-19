@@ -79,12 +79,7 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
         height={{ base: "200px", md: "250px" }}
         width={{ base: "90%", md: "40%" }}
       >
-        <CardBody
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          className="custom_card"
-        >
+        <CardBody className="custom_card">
           {type === "speaker" ? (
             <HiSpeakerWave
               size={60}

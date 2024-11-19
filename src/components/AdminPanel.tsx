@@ -14,6 +14,17 @@ import { AuthContext } from "../others/AuthContext";
 const AdminPanel = () => {
   const { CheckUserType } = useTokenData();
   const authContext = useContext(AuthContext);
+  const menuItems = [
+    { path: "/category", phrase: "Kategorie" },
+    { path: "/difficultyLevel", phrase: "Poziomy Trudności" },
+    { path: "/missingPhrases", phrase: "Brakujące frazy" },
+    { path: "/wordsPolish", phrase: "Polskie słowa" },
+    { path: "/wordsEnglish", phrase: "Angielskie słowa" },
+  ];
+  const menuAdminItems = [
+    { path: "/language", phrase: "Języki" },
+    { path: "/user", phrase: "Użytkownicy" },
+  ];
 
   return (
     <>
@@ -27,72 +38,30 @@ const AdminPanel = () => {
           borderWidth="2px"
         ></MenuButton>
         <MenuList bg="var(--foreground)" borderColor="var(--border)">
-          <Link to="/category">
-            <MenuItem
-              bg="var(--foreground)"
-              color="var(--copy)"
-              _hover={{ color: "var(--secondary)" }}
-            >
-              Kategorie
-            </MenuItem>
-          </Link>
-          <Link to="/difficultyLevel">
-            <MenuItem
-              bg="var(--foreground)"
-              color="var(--copy)"
-              _hover={{ color: "var(--secondary)" }}
-            >
-              Poziomy Trudności
-            </MenuItem>
-          </Link>
-
-          <Link to="/missingPhrases">
-            <MenuItem
-              bg="var(--foreground)"
-              color="var(--copy)"
-              _hover={{ color: "var(--secondary)" }}
-            >
-              Brakujące frazy
-            </MenuItem>
-          </Link>
-          <Link to="/wordsPolish">
-            <MenuItem
-              bg="var(--foreground)"
-              color="var(--copy)"
-              _hover={{ color: "var(--secondary)" }}
-            >
-              Polskie słowa
-            </MenuItem>
-          </Link>
-          <Link to="/wordsEnglish">
-            <MenuItem
-              bg="var(--foreground)"
-              color="var(--copy)"
-              _hover={{ color: "var(--secondary)" }}
-            >
-              Angielskie słowa
-            </MenuItem>
-          </Link>
+          {menuItems.map((item) => (
+            <Link to={item.path} key={item.path}>
+              <MenuItem
+                bg="var(--foreground)"
+                color="var(--copy)"
+                _hover={{ color: "var(--secondary)" }}
+              >
+                {item.phrase}
+              </MenuItem>
+            </Link>
+          ))}
           {CheckUserType() == "admin" ? (
             <>
-              <Link to="/language">
-                <MenuItem
-                  bg="var(--foreground)"
-                  color="var(--copy)"
-                  _hover={{ color: "var(--secondary)" }}
-                >
-                  Języki
-                </MenuItem>
-              </Link>
-              <Link to="/user">
-                <MenuItem
-                  bg="var(--foreground)"
-                  color="var(--copy)"
-                  _hover={{ color: "var(--secondary)" }}
-                >
-                  Użytkownicy
-                </MenuItem>
-              </Link>
+              {menuAdminItems.map((item) => (
+                <Link to={item.path} key={item.path}>
+                  <MenuItem
+                    bg="var(--foreground)"
+                    color="var(--copy)"
+                    _hover={{ color: "var(--secondary)" }}
+                  >
+                    {item.phrase}
+                  </MenuItem>
+                </Link>
+              ))}
               {authContext && authContext.isLoggedIn && (
                 <button
                   className="button_primary"

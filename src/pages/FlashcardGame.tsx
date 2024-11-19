@@ -113,12 +113,7 @@ const FlashcardGame = () => {
             transition="transform 0.5s ease-in-out"
             style={{ backfaceVisibility: "hidden" }}
           >
-            <CardBody
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              className="custom_card"
-            >
+            <CardBody className="custom_card">
               {currentIndex === questions.length ? (
                 <p>Koniec quizu! Powrót</p>
               ) : (

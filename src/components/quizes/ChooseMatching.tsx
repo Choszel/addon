@@ -111,12 +111,7 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
         padding="0%"
         backgroundColor="var(--primary-dark)"
       >
-        <CardBody
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          className="custom_card"
-        >
+        <CardBody className="custom_card">
           {type === "photo" ? (
             <Box
               display="flex"

@@ -45,10 +45,7 @@ const SearchInput = ({ setSearchValue }: Props) => {
             label="Wpisz @użytkownik, aby wyszukać po użytkowniku"
             placement="top"
           >
-            <InputGroup
-              boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
-              borderRadius="20px"
-            >
+            <InputGroup className="search_input">
               <Input
                 width={{ base: "unset", md: "500px" }}
                 borderRadius={20}
