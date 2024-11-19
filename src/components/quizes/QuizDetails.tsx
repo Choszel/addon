@@ -82,35 +82,43 @@ const QuizDetails = ({
         Twórca: {quiz.user ?? "No user"}
       </p>
       <p>Język: {quiz.language ?? "No language"}</p>
-      <HStack>
+      <HStack marginY="2%">
         <p>Kategria: </p>
         {categories.length > 3 ? (
           <HStack>
-            <button className="tag_category">
+            <button className="tag_category" disabled>
               {categories[0] ?? "No category"}
             </button>
-            <button className="tag_category">
+            <button className="tag_category" disabled>
               {categories[1] ?? "No category"}
             </button>
             <FaCirclePlus color="var(--primary)" size="35px" />
           </HStack>
         ) : categories.length == 0 ? (
-          <button className="tag_error">X</button>
+          <button className="tag_error" disabled>
+            X
+          </button>
         ) : (
           categories.map((cat) => (
-            <button className="tag_category">{cat ?? "No category"}</button>
+            <button className="tag_category" disabled>
+              {cat ?? "No category"}
+            </button>
           ))
         )}
       </HStack>
-      <HStack>
+      <HStack marginBottom="2%">
         <p>Poziom: </p>
         {difficultyLevels.length > 4 ? (
           <FaCirclePlus color="var(--primary)" size="30px" />
         ) : difficultyLevels.length == 0 ? (
-          <button className="tag_error">X</button>
+          <button className="tag_error" disabled>
+            X
+          </button>
         ) : (
           difficultyLevels.map((dl) => (
-            <button className="tag_category">{dl ?? "No level"}</button>
+            <button className="tag_category" disabled>
+              {dl ?? "No level"}
+            </button>
           ))
         )}
       </HStack>

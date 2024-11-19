@@ -30,6 +30,7 @@ const AdminPanel = () => {
           <Link to="/category">
             <MenuItem
               bg="var(--foreground)"
+              color="var(--copy)"
               _hover={{ color: "var(--secondary)" }}
             >
               Kategorie
@@ -38,6 +39,7 @@ const AdminPanel = () => {
           <Link to="/difficultyLevel">
             <MenuItem
               bg="var(--foreground)"
+              color="var(--copy)"
               _hover={{ color: "var(--secondary)" }}
             >
               Poziomy Trudności
@@ -47,6 +49,7 @@ const AdminPanel = () => {
           <Link to="/missingPhrases">
             <MenuItem
               bg="var(--foreground)"
+              color="var(--copy)"
               _hover={{ color: "var(--secondary)" }}
             >
               Brakujące frazy
@@ -55,6 +58,7 @@ const AdminPanel = () => {
           <Link to="/wordsPolish">
             <MenuItem
               bg="var(--foreground)"
+              color="var(--copy)"
               _hover={{ color: "var(--secondary)" }}
             >
               Polskie słowa
@@ -63,6 +67,7 @@ const AdminPanel = () => {
           <Link to="/wordsEnglish">
             <MenuItem
               bg="var(--foreground)"
+              color="var(--copy)"
               _hover={{ color: "var(--secondary)" }}
             >
               Angielskie słowa
@@ -73,6 +78,7 @@ const AdminPanel = () => {
               <Link to="/language">
                 <MenuItem
                   bg="var(--foreground)"
+                  color="var(--copy)"
                   _hover={{ color: "var(--secondary)" }}
                 >
                   Języki
@@ -81,6 +87,7 @@ const AdminPanel = () => {
               <Link to="/user">
                 <MenuItem
                   bg="var(--foreground)"
+                  color="var(--copy)"
                   _hover={{ color: "var(--secondary)" }}
                 >
                   Użytkownicy

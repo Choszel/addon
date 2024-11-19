@@ -4,18 +4,15 @@ import SearchInput from "../components/quizes/SearchInput";
 import Flame from "../assets/Fire-Blaze-PNG-Image-Background.png";
 import { HStack, Show, Stack, Text } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import useCategories from "../hooks/useCategories";
-import useDifficultyLevels from "../hooks/useDifficultyLevels";
+import useLanguages from "../hooks/useLanguages";
 
 const FlashcardsHome = () => {
   const { id } = useParams();
   const [quizQuery, setQuizQuery] = useState<QuizQuery>({} as QuizQuery);
   const [searchValue, setSearchValue] = useState<string>("");
-  const { data: categories } = useCategories();
-  const { data: levels } = useDifficultyLevels();
+  const { data: languages } = useLanguages();
   const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] = useState<number>(0);
-  const [selectedLevel, setSelectedLevel] = useState<number>(0);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
   useEffect(() => {
     const values = searchValue.split(" ");
@@ -30,11 +27,10 @@ const FlashcardsHome = () => {
     setQuizQuery({ ...quizQuery, title, user });
   }, [searchValue]);
 
-  useEffect(() => {}, [selectedCategory]);
-
   useEffect(() => {
-    console.log(selectedLevel);
-  }, [selectedLevel]);
+    let language = selectedLanguage;
+    setQuizQuery({ ...quizQuery, language });
+  }, [selectedLanguage]);
 
   return (
     <>
@@ -66,32 +62,22 @@ const FlashcardsHome = () => {
         <select
           className="select-primary"
           defaultValue={0}
-          onChange={(e) => setSelectedCategory(parseInt(e.target.value))}
+          onChange={(e) => setSelectedLanguage(e.target.value)}
         >
-          <option key={"category0"} value={0} className="select-primary-option">
-            Wybierz kategorię
+          <option
+            key={"language0"}
+            value={""}
+            className="select-primary-option"
+          >
+            Wybierz język
           </option>
-          {categories.map((category) => (
+          {languages.map((language) => (
             <option
-              key={"category" + category.id}
-              value={category.id}
+              key={"language" + language.id}
+              value={language.code}
               className="select-primary-option"
             >
-              {category.name}
-            </option>
-          ))}
-        </select>
-        <select
-          className="select-primary"
-          defaultValue={0}
-          onChange={(e) => setSelectedLevel(parseInt(e.target.value))}
-        >
-          <option key={"level0"} value={0}>
-            Wybierz poziom trudności
-          </option>
-          {levels.map((level) => (
-            <option key={"category" + level.id} value={level.id}>
-              {level.level}
+              {language.code}
             </option>
           ))}
         </select>
@@ -106,12 +92,7 @@ const FlashcardsHome = () => {
           <img src={Flame} width="50px"></img>
         </Show>
       </HStack>
-      <QuizGrid
-        quizQuery={quizQuery}
-        quiz_id={id}
-        selectedCategory={selectedCategory}
-        selectedLevel={selectedLevel}
-      ></QuizGrid>
+      <QuizGrid quizQuery={quizQuery} quiz_id={id}></QuizGrid>
     </>
   );
 };

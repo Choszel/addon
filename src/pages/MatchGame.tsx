@@ -107,7 +107,6 @@ const MatchGame = () => {
         ) : (
           <p>Ładowanie pytań...</p>
         )}
-        <button onClick={() => console.log(drawNumbers)}>Kliknij mnie</button>
       </Box>
       <EndOfTheQuizModal
         isOpen={isModalOpen}

@@ -20,6 +20,7 @@ const Layout = () => {
         <GridItem
           area="nav"
           backgroundColor="var(--primary)"
+          color="var(--primary-content)"
           borderRadius="30px"
           paddingX={10}
           alignContent="center"

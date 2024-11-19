@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useToast } from "@chakra-ui/react";
-import { Phrase } from "../pages/DictionarySearchResult";
+
+interface localStoragePhrase{
+  translation_id: number;
+}
 
 const usePhrasesStorage = (languageCode: string) => {
-  const [savedPhrases, setSavedPhrases] = useState<Phrase[]>(() => getPhrasesFromLocalStorage(languageCode));
+  const [savedPhrases, setSavedPhrases] = useState<localStoragePhrase[]>(() => getPhrasesFromLocalStorage(languageCode));
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
   const toast = useToast();
@@ -17,7 +20,7 @@ const usePhrasesStorage = (languageCode: string) => {
   }, []);
 
 
-  const addToSavedPhrases = (phrase: Phrase) => {
+  const addToSavedPhrases = (phrase: localStoragePhrase) => {
     // const selectedTranslation = product.translations.find(
     //   (translation) =>
     //     translation.language.languageCode ===
@@ -26,7 +29,7 @@ const usePhrasesStorage = (languageCode: string) => {
 
     let updatedSavedPhrases = getPhrasesFromLocalStorage(languageCode);
     const existingPhraseIndex = updatedSavedPhrases.findIndex(
-      (p: Phrase) => p.id === phrase.id
+      (p: localStoragePhrase) => p.translation_id === phrase.translation_id
     );
 
     if (existingPhraseIndex !== -1) {
@@ -56,7 +59,7 @@ const usePhrasesStorage = (languageCode: string) => {
 
   const removeFromSavedPhrases = (phraseId: number) => {
     let updatedSavedPhrases = getPhrasesFromLocalStorage(languageCode);
-    updatedSavedPhrases = updatedSavedPhrases.filter((p: Phrase) => p.id !== phraseId);
+    updatedSavedPhrases = updatedSavedPhrases.filter((p: localStoragePhrase) => p.translation_id !== phraseId);
 
     savePhrasesToLocalStorage(languageCode, updatedSavedPhrases);
     setSavedPhrases(updatedSavedPhrases);
@@ -73,7 +76,7 @@ const usePhrasesStorage = (languageCode: string) => {
   return { savedPhrases, error, isLoading, addToSavedPhrases, removeFromSavedPhrases, setError, clearLocalStorage };
 };
 
-const getPhrasesFromLocalStorage = (languageCode: string): Phrase[] => {
+const getPhrasesFromLocalStorage = (languageCode: string): localStoragePhrase[] => {
   switch(languageCode){
     default:
       const savedPhrases = localStorage.getItem("translations_pln_eng");
@@ -81,7 +84,7 @@ const getPhrasesFromLocalStorage = (languageCode: string): Phrase[] => {
   }
 };
 
-const savePhrasesToLocalStorage = (languageCode: string, savedPhrases: Phrase[]) => {
+const savePhrasesToLocalStorage = (languageCode: string, savedPhrases: localStoragePhrase[]) => {
   switch(languageCode){
     default:
       localStorage.setItem("translations_pln_eng", JSON.stringify(savedPhrases));

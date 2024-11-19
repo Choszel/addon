@@ -28,8 +28,6 @@ interface Props {
   isScore?: boolean;
   userId?: number;
   open?: boolean;
-  selectedCategory: number;
-  selectedLevel: number;
 }
 
 const StoryCard = ({ quiz, isScore, userId, open }: Props) => {

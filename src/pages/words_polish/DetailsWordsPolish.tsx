@@ -96,7 +96,7 @@ const DetailsWordsPolish = () => {
           spacing="15%"
           marginX="2%"
           direction={{ base: "column", md: "row" }}
-          marginY={{ base: "5%", md: "0%" }}
+          marginY={{ base: "5%", md: "2%" }}
         >
           <div key={e.id} style={{ textAlign: "left" }}>
             <p>

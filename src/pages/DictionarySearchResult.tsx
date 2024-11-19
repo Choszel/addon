@@ -105,7 +105,10 @@ const DictionarySearchResult = () => {
     console.log(translations[id]);
     // localStorage.removeItem("translations_pln_eng");
 
-    if (CheckUserType() != "none") addToSavedPhrases(translations[id]);
+    if (CheckUserType() != "none")
+      addToSavedPhrases({
+        translation_id: translations[id]?.translation_id ?? 0,
+      });
     else
       toast({
         title: "Treść tylko dla zalogowanych użytkowników",

@@ -34,8 +34,6 @@ interface Props {
   open?: boolean;
   categories: Category[];
   difficultyLevels: DifficultyLevel[];
-  selectedCategory: number;
-  selectedLevel: number;
 }
 
 const QuizCard = ({
@@ -45,8 +43,6 @@ const QuizCard = ({
   open,
   categories,
   difficultyLevels,
-  selectedCategory,
-  selectedLevel,
 }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -162,7 +158,7 @@ const QuizCard = ({
             <p>Twórca: {quiz.user ?? "No user"}</p>
             <p>Język: {quiz.language ?? "No language"}</p>
             <>
-              <HStack>
+              <HStack marginBottom="2%">
                 <p>Kategorie: </p>
                 <Show above="md">
                   {categoriesQuizzes.length > 3 ? (

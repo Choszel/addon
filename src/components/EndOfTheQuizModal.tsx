@@ -22,7 +22,7 @@ const EndOfTheQuizModal = ({ isOpen, goBackTo, saveProgress }: Props) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader className="basic_style">Koniec quizu</ModalHeader>

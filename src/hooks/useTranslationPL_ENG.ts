@@ -6,6 +6,8 @@ export interface TranslationPL_ENG{
     id: number;
     word_polish: string;
     word_english: string;
+    category_id?: number | null;
+    difficulty_level_id?: number | null; 
 }
 
 const useTranslationPL_ENG = () =>{

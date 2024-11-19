@@ -1,10 +1,11 @@
-import { Avatar, HStack, Show, Spacer } from "@chakra-ui/react";
+import { HStack, Show, Spacer } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../others/AuthContext";
 import AdminPanel from "./AdminPanel";
 import useTokenData from "../others/useTokenData";
 import "./../index.css";
+import { MdAccountCircle } from "react-icons/md";
 
 const Navbar = () => {
   const authContext = useContext(AuthContext);
@@ -31,7 +32,7 @@ const Navbar = () => {
             marginX="2%"
             cursor="pointer"
           >
-            <Avatar boxSize={6} />
+            <MdAccountCircle size={30} />
             <Show above="sm">
               <p>{GetUserLogin()}</p>
             </Show>

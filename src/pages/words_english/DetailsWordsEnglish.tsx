@@ -70,7 +70,7 @@ const DetailsWordsEnglish = () => {
         <Button
           colorScheme="blue"
           onClick={handleSave}
-          marginY={{ base: "5%", md: "0%" }}
+          marginY={{ base: "5%", md: "2%" }}
         >
           Zapisz zmiany
         </Button>

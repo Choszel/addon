@@ -504,10 +504,10 @@ app.post('/api/wordsEnglish', async (req, res) => {
 app.get('/api/translationPLNENGDetailed', async(req, res)=>{
     const { id } = req.query;
     try{
-        const condition = 'SELECT tr.id, wp.word as word_polish, we.word as word_english '
+        const condition = 'SELECT tr.id, wp.word as word_polish, we.word as word_english, we.category_id, we.difficulty_level_id '
             + 'FROM translations_pl_eng tr, words_polish wp, words_english we '
             + 'WHERE tr.word_polish_id=wp.id and tr.word_english_id=we.id AND tr.id = ' + id + ';';
-        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word as word_polish, we.word as word_english '
+        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word as word_polish, we.word as word_english, we.category_id, we.difficulty_level_id '
             + 'FROM translations_pl_eng tr, words_polish wp, words_english we '
             + 'WHERE tr.word_polish_id=wp.id and tr.word_english_id=we.id ORDER BY id ASC;');
         res.json(result.rows);
@@ -606,15 +606,15 @@ app.delete('/api/translationPLNENG', async (req, res) =>{
 })
 
 app.post('/api/translationPLNENG', async (req, res) =>{
-    const { words_polish_id, words_english_id } = req.body;
-    console.log("App ", words_polish_id, words_english_id);
+    const { word_polish_id, word_english_id } = req.body;
+    console.log("App ", word_polish_id, word_english_id);
     try{
-        const phraseExists = await pool.query('SELECT * FROM translations_pl_eng WHERE word_polish_id = $1 AND word_english_id = $2', [words_polish_id, words_english_id]);
+        const phraseExists = await pool.query('SELECT * FROM translations_pl_eng WHERE word_polish_id = $1 AND word_english_id = $2', [word_polish_id, word_english_id]);
         if(phraseExists.rows.length > 0){
             return res.status(400).json({ error: "Translation already exists" });
         }
         await pool.query(
-            'INSERT INTO translations_pl_eng(word_polish_id, word_english_id) VALUES ($1, $2)', [words_polish_id, words_english_id]
+            'INSERT INTO translations_pl_eng(word_polish_id, word_english_id) VALUES ($1, $2)', [word_polish_id, word_english_id]
         );
         res.status(200).json({ message: "Translation added successfully" });
     }catch(err){

@@ -3,25 +3,29 @@ import FormTemplate, {
   FormData,
 } from "../components/crud_templates/CreateTemplate";
 import useLanguages from "../hooks/useLanguages";
-import { Box, HStack, Text, useToast } from "@chakra-ui/react";
+import { HStack, Text, useToast } from "@chakra-ui/react";
 import usePhrasesStorage from "../hooks/usePhrasesStorage";
 import useTranslationPL_ENG from "../hooks/useTranslationPL_ENG";
 import actionData from "../hooks/actionData";
 import { useNavigate } from "react-router-dom";
 import useTokenData from "../others/useTokenData";
 import AddPhraseButton from "../components/quizes/AddPhraseButton";
+import useCategories from "../hooks/useCategories";
+import useDifficultyLevels from "../hooks/useDifficultyLevels";
 
 export interface QuizzQuestion {
-  translation_id: number | undefined;
-  category: string | undefined;
-  level: string | undefined;
+  id: number;
+  translation_id?: number;
+  word_pln?: string;
+  category?: string;
+  level?: string;
 }
 
 const CQuiz = () => {
   const [refs, setRefs] = useState<
     (HTMLInputElement | HTMLSelectElement | null)[]
   >([]);
-  const [phrasesData, setPhrasesData] = useState<QuizzQuestion[]>();
+  const [phrasesData, setPhrasesData] = useState<QuizzQuestion[]>([]);
   const { data: languages } = useLanguages();
   const { fetchAll } = useTranslationPL_ENG();
   const { data: translations } = fetchAll();
@@ -35,13 +39,17 @@ const CQuiz = () => {
     (string | undefined)[]
   >([""]);
   const [levelsQuizz, setLevelsQuizz] = useState<(string | undefined)[]>([""]);
+  const { data: categories } = useCategories();
+  const { data: difficultyLevels } = useDifficultyLevels();
 
   const handleSave = async () => {
-    if (
-      savedPhrases.some((sp) =>
-        phrasesData?.some((pd) => pd.translation_id === sp.translation_id)
-      )
-    ) {
+    const uniqueTranslations = new Set<number | undefined>();
+
+    phrasesData.forEach((phrase) => {
+      uniqueTranslations.add(phrase.translation_id);
+    });
+
+    if (uniqueTranslations.size != phrasesData.length) {
       toast({
         title: "Na liście znajdują się duplikaty. Proszę je usunąć.",
         status: "error",
@@ -52,7 +60,7 @@ const CQuiz = () => {
       return;
     }
 
-    if (savedPhrases.length + (phrasesData?.length ?? 0) < 15) {
+    if (phrasesData?.length ?? 0 < 15) {
       toast({
         title: "Minimalna wymagana ilość fraz wynosi 15.",
         status: "error",
@@ -74,10 +82,7 @@ const CQuiz = () => {
 
     const questionData = new URLSearchParams();
     questionData.append("quiz_id", (response.id ?? 0).toString());
-    questionData.append(
-      "data",
-      JSON.stringify([...savedPhrases, ...(phrasesData ?? [])])
-    );
+    questionData.append("data", JSON.stringify([...phrasesData]));
     postQuizQuestions(questionData);
     return navigate("/flashcards");
   };
@@ -97,22 +102,53 @@ const CQuiz = () => {
   }, [isLoading]);
 
   useEffect(() => {
+    if (
+      savedPhrases.length < 1 ||
+      categories.length < 1 ||
+      difficultyLevels.length < 0
+    )
+      return;
+    let tempArray: QuizzQuestion[] = [];
+    savedPhrases.forEach((sp, id) => {
+      const foundPhrase = translations.find(
+        (tr) => tr.id == sp?.translation_id
+      );
+      tempArray.push({
+        category:
+          categories.find((cat) => cat.id === foundPhrase?.category_id)?.name ??
+          "",
+        level:
+          difficultyLevels.find(
+            (dif) => dif.id === foundPhrase?.difficulty_level_id
+          )?.level ?? "",
+        translation_id: foundPhrase?.id,
+        word_pln: foundPhrase?.word_polish,
+        id: id,
+      });
+    });
+    console.log("CQuiz, tempArray: ", tempArray);
+    setPhrasesData(tempArray);
+  }, [savedPhrases, categories, difficultyLevels]);
+
+  useEffect(() => {
     const uniqueCategories = new Set<string | undefined>();
     const uniqueLevels = new Set<string | undefined>();
 
-    savedPhrases.forEach((phrase) => {
-      uniqueCategories.add(phrase.category);
-      uniqueLevels.add(phrase.level ?? "");
-    });
-
-    phrasesData?.forEach((phrase) => {
+    phrasesData.forEach((phrase) => {
       uniqueCategories.add(phrase.category);
       uniqueLevels.add(phrase.level);
     });
 
     setCategoriesQuizz(Array.from(uniqueCategories).filter(Boolean));
     setLevelsQuizz(Array.from(uniqueLevels).filter(Boolean));
-  }, [savedPhrases, phrasesData]);
+
+    console.log("phrasesData", phrasesData);
+  }, [phrasesData]);
+
+  useEffect(() => {
+    console.log("CategoriesQuizz:", categoriesQuizz);
+    console.log("LevelsQuizz:", levelsQuizz);
+  }, [categoriesQuizz, levelsQuizz]);
 
   const formData: FormData = {
     title: "Tworzenie Quizu",
@@ -134,44 +170,25 @@ const CQuiz = () => {
         <HStack marginBottom="2%">
           <Text>Kategorie:</Text>
           {categoriesQuizz.map((cq) => (
-            <button className="tag_category">{cq}</button>
+            <button className="tag_category" key={cq}>
+              {cq}
+            </button>
           ))}
         </HStack>
         <HStack marginBottom="2%">
           <Text>Poziomy trudności:</Text>
           {levelsQuizz.map((lq) => (
-            <button className="tag_category">{lq}</button>
+            <button className="tag_category" key={lq}>
+              {lq}
+            </button>
           ))}
         </HStack>
-        {savedPhrases.length < 25 ? (
-          <AddPhraseButton
-            setPhrasesData={setPhrasesData}
-            language={
-              languages.find((l) => l.id == parseInt(refs[1]?.value ?? "1"))
-                ?.code ?? "ENG"
-            }
-            savedPhrases={savedPhrases}
-          />
-        ) : (
-          <HStack marginBottom="1%">
-            <Text className="p2">Frazy:</Text>
-          </HStack>
-        )}
-        {savedPhrases.map((phrase) => (
-          <HStack>
-            <Box className="question">
-              <p>
-                {
-                  translations.find((tr) => tr.id == phrase?.translation_id)
-                    ?.word_polish
-                }
-              </p>
-            </Box>
-            <Box className="question">
-              <p>{phrase.word}</p>
-            </Box>
-          </HStack>
-        ))}
+
+        <AddPhraseButton
+          setPhrasesData={setPhrasesData}
+          language={"PLN"}
+          phraseData={phrasesData}
+        />
       </div>
     ),
   };

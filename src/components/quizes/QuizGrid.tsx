@@ -20,16 +20,9 @@ export interface QuizQuery {
 interface Props {
   quizQuery: QuizQuery;
   quiz_id?: string;
-  selectedCategory: number;
-  selectedLevel: number;
 }
 
-const QuizGrid = ({
-  quizQuery,
-  quiz_id,
-  selectedCategory,
-  selectedLevel,
-}: Props) => {
+const QuizGrid = ({ quizQuery, quiz_id }: Props) => {
   const { data, error, isLoading } = useQuizzes(quizQuery);
   const skeletons = [1, 2, 3, 4, 5, 6];
   const { GetUserId } = useTokenData();
@@ -62,8 +55,6 @@ const QuizGrid = ({
                 open={quiz.id == parseInt(quiz_id ?? "0") ? true : false}
                 categories={categories}
                 difficultyLevels={difficultyLevels}
-                selectedCategory={selectedCategory}
-                selectedLevel={selectedLevel}
               ></QuizCard>
             ) : (
               <StoryCard
@@ -71,8 +62,6 @@ const QuizGrid = ({
                 isScore={true}
                 userId={GetUserId()}
                 open={quiz.id == parseInt(quiz_id ?? "0") ? true : false}
-                selectedCategory={selectedCategory}
-                selectedLevel={selectedLevel}
               ></StoryCard>
             )}
           </QuizCardContainer>

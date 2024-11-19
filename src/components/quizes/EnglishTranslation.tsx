@@ -1,3 +1,4 @@
+import { Box } from "@chakra-ui/react";
 import useTranslationPL_ENG from "../../hooks/useTranslationPL_ENG";
 import { useEffect } from "react";
 
@@ -26,24 +27,29 @@ const EnglishTranslation = ({ word, rowId, setTranslationId }: Props) => {
   }, [englishTranslations]);
 
   return (
-    <select
-      className="select-primary"
-      onChange={(e) => {
-        const selectedPhrase = englishTranslations.find(
-          (et) => et.id == parseInt(e.target.value)
-        );
-        setTranslationId({
-          row_id: rowId,
-          translation_id: selectedPhrase?.translation_id ?? 0,
-          category: selectedPhrase?.category ?? "",
-          level: selectedPhrase?.level ?? "",
-        });
-      }}
-    >
-      {englishTranslations.map((et) => (
-        <option value={et.id}>{et.word}</option>
-      ))}
-    </select>
+    <Box className="question">
+      <select
+        className="select-primary"
+        onChange={(e) => {
+          const selectedPhrase = englishTranslations.find(
+            (et) => et.id == parseInt(e.target.value)
+          );
+          setTranslationId({
+            row_id: rowId,
+            translation_id: selectedPhrase?.translation_id ?? 0,
+            category: selectedPhrase?.category ?? "",
+            level: selectedPhrase?.level ?? "",
+          });
+        }}
+        key={rowId}
+      >
+        {englishTranslations.map((et) => (
+          <option value={et.id} key={et.id}>
+            {et.word}
+          </option>
+        ))}
+      </select>
+    </Box>
   );
 };
 

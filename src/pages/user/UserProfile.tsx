@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import useUsers from "../../hooks/useUsers";
-import { Avatar, HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
+import { HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
 import useTokenData from "../../others/useTokenData";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import QuizGrid, { QuizQuery } from "../../components/quizes/QuizGrid";
@@ -51,10 +51,9 @@ const UserProfile = () => {
       {userData.map((user) => (
         <>
           <HStack>
-            <Avatar boxSize={150}></Avatar>
             <div style={{ marginInline: "3%" }}>
               <p>{user.login}</p>
-              <p>{CheckUserType(user.user_type)}</p>
+              <p>Rola: {CheckUserType(user.user_type)}</p>
             </div>
             {user.user_type != 2 && CheckUserType() == "admin" ? (
               <button className="button_secondary" onClick={upgradeUser}>

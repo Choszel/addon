@@ -18,6 +18,6 @@
 }
 
 .search-result:hover{
-    background-color: #5fae21;
-    color: #010200;
+    background-color: var(--primary);
+    color: var(--foreground);
 }
