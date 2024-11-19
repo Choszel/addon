@@ -40,9 +40,8 @@ const StoryWithQuestions = () => {
   const { postData: postUserQuestions } = actionData("/usersQuizzesQuestions");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  function getSelectionText(e: React.MouseEvent) {
+  function getSelectionText() {
     console.log("getSelectionText");
-    const y = Math.floor(e.nativeEvent.offsetY);
     let text = "";
     let position = { x: 0, y: 0 };
 
@@ -53,13 +52,15 @@ const StoryWithQuestions = () => {
       if (selection?.rangeCount) {
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
-        console.log(rect.top);
-        console.log(y);
+        console.log("rect.top", rect.top);
+        console.log("window.scrollY", window.scrollY);
+        console.log("popupRef.current", popupRef.current?.textContent);
 
-        position = {
-          x: rect.left + window.scrollX,
-          y: y + 190,
-        };
+        if (popupRef.current)
+          position = {
+            x: rect.left + window.scrollX,
+            y: rect.top + window.scrollY,
+          };
       }
     }
 
@@ -104,11 +105,7 @@ const StoryWithQuestions = () => {
           navigate("/flashcards");
         }}
       ></GoBack>
-      <Text
-        whiteSpace="pre-line"
-        onMouseUp={(e) => getSelectionText(e)}
-        marginTop="2%"
-      >
+      <Text whiteSpace="pre-line" onMouseUp={getSelectionText} marginTop="2%">
         {story[0]?.text}
       </Text>
       <TextTranslator text={marked} popupRef={popupRef}></TextTranslator>

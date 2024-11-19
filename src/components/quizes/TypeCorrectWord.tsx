@@ -83,10 +83,7 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          backgroundColor="var(--primary-dark)"
-          color="var(--copy)"
-          borderRadius="7px"
-          borderColor="var(--border)"
+          className="custom_card"
         >
           {type === "speaker" ? (
             <HiSpeakerWave

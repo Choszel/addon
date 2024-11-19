@@ -38,9 +38,12 @@ const TextTranslator = ({ text, popupRef }: Props) => {
   };
 
   useEffect(() => {
-    // if (text.length > 1) {
-    //   responseGenerate(text);
-    // }
+    if (text.length > 400) {
+      setTranslation("Podano zbyt długi tekst do przetłumaczenia.");
+    } else if (text.length > 1) {
+      setTranslation("Tłumaczenie...");
+      responseGenerate(text);
+    }
   }, [text]);
 
   useEffect(() => {

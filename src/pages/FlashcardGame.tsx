@@ -112,7 +112,6 @@ const FlashcardGame = () => {
             transform={isFlipped ? "rotateY(180deg)" : "rotateY(0)"}
             transition="transform 0.5s ease-in-out"
             style={{ backfaceVisibility: "hidden" }}
-            className="custom_card"
           >
             <CardBody
               display="flex"
