@@ -2,7 +2,7 @@ import { HStack, Show } from "@chakra-ui/react";
 import { Quiz } from "../../hooks/useQuizzes";
 import QuizDetails from "./QuizDetails";
 import { useEffect, useState } from "react";
-import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
+import useQuizzesQuestions from "../../hooks/useQuizzes";
 import { Category } from "../../hooks/useCategories";
 import { DifficultyLevel } from "../../hooks/useDifficultyLevels";
 import { FaCirclePlus } from "react-icons/fa6";

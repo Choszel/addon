@@ -1,18 +1,17 @@
 import { useNavigate, useParams } from "react-router-dom";
-import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
-import ChooseMatching from "../../components/quizes/ChooseMatching";
+import useQuizzes from "../../hooks/useQuizzes";
+import ChooseMatching from "../../components/quiz/ChooseMatching";
 import { useEffect, useState } from "react";
-import TypeCorrectWord from "../../components/quizes/TypeCorrectWord";
+import TypeCorrectWord from "../../components/quiz/TypeCorrectWord";
 import actionData from "../../hooks/actionData";
 import useTokenData from "../../others/useTokenData";
 import { Show } from "@chakra-ui/react";
-import GameLayout from "../../components/quizes/GameLayout";
+import GameLayout from "../../components/quiz/GameLayout";
 
 const TestGame = () => {
   const { id } = useParams();
   const { GetUserId } = useTokenData();
-  const { fetchENG, fetchUserScores, fetchUserQuestions } =
-    useQuizzesQuestions();
+  const { fetchENG, fetchUserScores, fetchUserQuestions } = useQuizzes();
   const { data: questions } = fetchENG(parseInt(id ?? "0"));
   const { data: userScores } = fetchUserScores(GetUserId());
   const [currentScore, setCurrentScore] = useState<number>(0);

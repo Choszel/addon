@@ -1,6 +1,6 @@
 import { Card, CardBody, HStack } from "@chakra-ui/react";
 import { Quiz } from "../../hooks/useQuizzes";
-import { QuizQuestion } from "../../hooks/useQuizzesQuestions";
+import { QuizQuestion } from "../../hooks/useQuizzes";
 import ItemDetails from "./ItemDetails";
 import { VscError } from "react-icons/vsc";
 

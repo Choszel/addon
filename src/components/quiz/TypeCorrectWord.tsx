@@ -1,5 +1,5 @@
 import { Box, Card, CardBody, Input, Stack, Text } from "@chakra-ui/react";
-import { QuizQuestion } from "../../hooks/useQuizzesQuestions";
+import { QuizQuestion } from "../../hooks/useQuizzes";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { useEffect, useRef, useState } from "react";
 

@@ -1,5 +1,5 @@
 import useData from "./useData";
-import { AmountOfQuestions } from "./useQuizzesQuestions";
+import { AmountOfQuestions } from "./useQuizzes";
 
 export interface Story {
   id: number | null;

@@ -9,7 +9,7 @@ import useTranslationPL_ENG from "../../hooks/useTranslationPL_ENG";
 import actionData from "../../hooks/actionData";
 import { useNavigate } from "react-router-dom";
 import useTokenData from "../../others/useTokenData";
-import AddPhraseButton from "../../components/quizes/AddPhraseButton";
+import AddPhraseButton from "../../components/quiz/AddPhraseButton";
 import useCategories from "../../hooks/useCategories";
 import useDifficultyLevels from "../../hooks/useDifficultyLevels";
 

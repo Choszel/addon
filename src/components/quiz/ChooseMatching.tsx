@@ -1,5 +1,5 @@
 import { Box, Card, CardBody, Img, Stack } from "@chakra-ui/react";
-import { QuizQuestion } from "../../hooks/useQuizzesQuestions";
+import { QuizQuestion } from "../../hooks/useQuizzes";
 import getCroppedImageUrl from "../../services/image-url";
 import { useEffect, useRef, useState } from "react";
 

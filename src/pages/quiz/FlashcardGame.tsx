@@ -1,15 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom";
-import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
+import useQuizzes from "../../hooks/useQuizzes";
 import { useEffect, useState } from "react";
 import { Box, Card, CardBody, HStack } from "@chakra-ui/react";
 import { PiArrowsCounterClockwise } from "react-icons/pi";
 import { FaArrowLeft } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa6";
-import GameLayout from "../../components/quizes/GameLayout";
+import GameLayout from "../../components/quiz/GameLayout";
 
 const FlashcardGame = () => {
   const { id } = useParams();
-  const { fetchENG } = useQuizzesQuestions();
+  const { fetchENG } = useQuizzes();
   const { data: questions } = fetchENG(parseInt(id ?? "0"));
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isPolishVisible, setIsPolishVisible] = useState(true);

@@ -3,13 +3,10 @@ import useUsers from "../../hooks/useUsers";
 import { HStack, Spinner, Text } from "@chakra-ui/react";
 import useTokenData from "../../others/useTokenData";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
-import QuizGrid, { QuizQuery } from "../../components/quizes/QuizGrid";
+import QuizGrid, { QuizQuery } from "../../components/quiz/QuizGrid";
 import { useEffect, useState } from "react";
-
-import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
-import actionData from "../../hooks/actionData";
-
 import useQuizzes from "../../hooks/useQuizzes";
+import actionData from "../../hooks/actionData";
 
 const UserProfile = () => {
   const { login } = useParams();
@@ -20,12 +17,12 @@ const UserProfile = () => {
   } = useUsers(login);
   const { CheckUserType, GetUserId } = useTokenData();
   const [quizQuery, setQuizQuery] = useState<QuizQuery>({} as QuizQuery);
+  const { fetchQuizzes, fetchUserScores } = useQuizzes();
   const {
     data: quizzes,
     error: quizError,
     isLoading: quizLoading,
-  } = useQuizzes(quizQuery);
-  const { fetchUserScores } = useQuizzesQuestions();
+  } = fetchQuizzes(quizQuery);
   const { data, error, isLoading } = fetchUserScores(userData[0]?.id);
   const { putData } = actionData("/users");
 

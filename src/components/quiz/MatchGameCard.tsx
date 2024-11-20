@@ -1,5 +1,5 @@
 import { Box, Card, HStack } from "@chakra-ui/react";
-import { QuizQuestion } from "../../hooks/useQuizzesQuestions";
+import { QuizQuestion } from "../../hooks/useQuizzes";
 import { FaStar } from "react-icons/fa";
 import { Dispatch, SetStateAction, useState } from "react";
 

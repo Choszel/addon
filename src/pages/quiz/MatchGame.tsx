@@ -1,15 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
-import useQuizzesQuestions, {
-  QuizQuestion,
-} from "../../hooks/useQuizzesQuestions";
+import useQuizzes, { QuizQuestion } from "../../hooks/useQuizzes";
 import { Box, SimpleGrid } from "@chakra-ui/react";
-import MatchGameCard from "../../components/quizes/MatchGameCard";
+import MatchGameCard from "../../components/quiz/MatchGameCard";
 import { useEffect, useState } from "react";
-import GameLayout from "../../components/quizes/GameLayout";
+import GameLayout from "../../components/quiz/GameLayout";
 
 const MatchGame = () => {
   const { id } = useParams();
-  const { fetchENG } = useQuizzesQuestions();
+  const { fetchENG } = useQuizzes();
   const { data: questions } = fetchENG(parseInt(id ?? "0"));
   const [drawNumbers, setDrawNumbers] = useState<number[]>([]);
   const [currentWord, setCurrentWord] = useState<QuizQuestion | undefined>();

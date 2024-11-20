@@ -21,10 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { IoTrashOutline } from "react-icons/io5";
 import GoBack from "../GoBack";
 import { StoryQuestion } from "../../hooks/useStories";
-import {
-  AmountOfQuestions,
-  QuizQuestion,
-} from "../../hooks/useQuizzesQuestions";
+import { AmountOfQuestions, QuizQuestion } from "../../hooks/useQuizzes";
 
 interface Props {
   quiz: Quiz;

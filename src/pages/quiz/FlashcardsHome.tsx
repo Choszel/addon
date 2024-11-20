@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
-import QuizGrid, { QuizQuery } from "../../components/quizes/QuizGrid";
-import SearchInput from "../../components/quizes/SearchInput";
+import QuizGrid, { QuizQuery } from "../../components/quiz/QuizGrid";
+import SearchInput from "../../components/quiz/SearchInput";
 import Flame from "../../assets/Fire-Blaze-PNG-Image-Background.png";
 import { HStack, Show, Stack, Text } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import useLanguages from "../../hooks/useLanguages";
-import useQuizzes from "../../hooks/useQuizzes";
 import useTokenData from "../../others/useTokenData";
+import useQuizzes from "../../hooks/useQuizzes";
 
 const FlashcardsHome = () => {
   const { id } = useParams();
   const [quizQuery, setQuizQuery] = useState<QuizQuery>({} as QuizQuery);
-  const { data, error, isLoading } = useQuizzes(quizQuery);
+  const { fetchQuizzes } = useQuizzes();
+  const { data, error, isLoading } = fetchQuizzes(quizQuery);
   const { GetUserId } = useTokenData();
   const [searchValue, setSearchValue] = useState<string>("");
   const { data: languages } = useLanguages();

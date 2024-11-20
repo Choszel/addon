@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useStories from "../../hooks/useStories";
-import StoryAnswers from "../../components/quizes/StoryAnswers";
+import StoryAnswers from "../../components/quiz/StoryAnswers";
 import {
   Box,
   Text,
@@ -12,11 +12,11 @@ import {
   useDisclosure,
   Button,
 } from "@chakra-ui/react";
-import TextTranslator from "../../components/quizes/TextTranslator";
+import TextTranslator from "../../components/quiz/TextTranslator";
 import { useState, useRef, useEffect } from "react";
 import GoBack from "../../components/GoBack";
 import actionData from "../../hooks/actionData";
-import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
+import useQuizzes from "../../hooks/useQuizzes";
 import useTokenData from "../../others/useTokenData";
 
 const StoryWithQuestions = () => {
@@ -34,7 +34,7 @@ const StoryWithQuestions = () => {
   const [correctCaptured, setCorrectCaptured] = useState<boolean>(false);
   const { GetUserId } = useTokenData();
   const [currentScore, setCurrentScore] = useState<number>(0);
-  const { fetchUserQuestions, fetchUserScores } = useQuizzesQuestions();
+  const { fetchUserQuestions, fetchUserScores } = useQuizzes();
   const { data: userScores } = fetchUserScores(GetUserId());
   const { data: userQuestions } = fetchUserQuestions(currentScore);
   const { postData: postUserQuestions } = actionData("/usersQuizzesQuestions");
