@@ -8,6 +8,7 @@ import useCategories from "../../hooks/useCategories";
 import AddTranslationButton from "../../components/dictionary/AddTranslationButton";
 import { Translation } from "../words_polish/CWordsPolish";
 import useDifficultyLevels from "../../hooks/useDifficultyLevels";
+import usePartOfSpeech from "../../hooks/usePartOfSpeech";
 
 const CWordsEnglish = () => {
   const [refs, setRefs] = useState<
@@ -98,18 +99,7 @@ const CWordsEnglish = () => {
         inputName: "Part of speech",
         inputType: "select",
         isRequired: false,
-        data: [
-          { id: "noun", value: "noun" },
-          { id: "verb", value: "verb" },
-          { id: "adjective", value: "adjective" },
-          { id: "adverb", value: "adverb" },
-          { id: "pronoun", value: "pronoun" },
-          { id: "article", value: "article" },
-          { id: "preposition", value: "preposition" },
-          { id: "conjunction", value: "conjunction" },
-          { id: "numeral", value: "numeral" },
-          { id: "other", value: "other" },
-        ],
+        data: usePartOfSpeech(),
       },
     ],
     setRefs: function (): void {},

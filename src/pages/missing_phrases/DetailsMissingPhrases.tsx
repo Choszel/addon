@@ -11,6 +11,7 @@ import AddTranslationButton from "../../components/dictionary/AddTranslationButt
 import { Translation } from "../words_polish/CWordsPolish";
 import actionData from "../../hooks/actionData";
 import { Spinner, Text } from "@chakra-ui/react";
+import usePartOfSpeech from "../../hooks/usePartOfSpeech";
 
 const DetailsMissingPhrases = () => {
   const { id } = useParams<{ id: string }>();
@@ -134,18 +135,7 @@ const DetailsMissingPhrases = () => {
         inputName: "Part of speech",
         inputType: "select",
         isRequired: false,
-        data: [
-          { id: "noun", value: "noun" },
-          { id: "verb", value: "verb" },
-          { id: "adjective", value: "adjective" },
-          { id: "adverb", value: "adverb" },
-          { id: "pronoun", value: "pronoun" },
-          { id: "article", value: "article" },
-          { id: "preposition", value: "preposition" },
-          { id: "conjunction", value: "conjunction" },
-          { id: "numeral", value: "numeral" },
-          { id: "other", value: "other" },
-        ],
+        data: usePartOfSpeech(),
       },
     ],
     setRefs: function (): void {},
