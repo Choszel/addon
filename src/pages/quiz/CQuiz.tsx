@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import FormTemplate, {
   FormData,
-} from "../components/crud_templates/CreateTemplate";
-import useLanguages from "../hooks/useLanguages";
+} from "../../components/crud_templates/CreateTemplate";
+import useLanguages from "../../hooks/useLanguages";
 import { HStack, Text, useToast } from "@chakra-ui/react";
-import usePhrasesStorage from "../hooks/usePhrasesStorage";
-import useTranslationPL_ENG from "../hooks/useTranslationPL_ENG";
-import actionData from "../hooks/actionData";
+import usePhrasesStorage from "../../hooks/usePhrasesStorage";
+import useTranslationPL_ENG from "../../hooks/useTranslationPL_ENG";
+import actionData from "../../hooks/actionData";
 import { useNavigate } from "react-router-dom";
-import useTokenData from "../others/useTokenData";
-import AddPhraseButton from "../components/quizes/AddPhraseButton";
-import useCategories from "../hooks/useCategories";
-import useDifficultyLevels from "../hooks/useDifficultyLevels";
+import useTokenData from "../../others/useTokenData";
+import AddPhraseButton from "../../components/quizes/AddPhraseButton";
+import useCategories from "../../hooks/useCategories";
+import useDifficultyLevels from "../../hooks/useDifficultyLevels";
 
 export interface QuizzQuestion {
   id: number;

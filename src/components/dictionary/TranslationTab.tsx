@@ -1,5 +1,5 @@
 import { HStack, Stack, Text, VStack } from "@chakra-ui/react";
-import { Phrase } from "../../pages/DictionarySearchResult";
+import { Phrase } from "../../pages/dictionary/DictionarySearchResult";
 import { useNavigate } from "react-router-dom";
 import { HiSpeakerWave } from "react-icons/hi2";
 

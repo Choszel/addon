@@ -1,16 +1,16 @@
 import { HStack, Img, useToast, Text, Stack, Show } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import SelectLanguage from "../components/SelectLanguage";
-import SearchInput from "../components/dictionary/SearchInput";
-import TranslationTab from "../components/dictionary/TranslationTab";
-import { PolishWord } from "../hooks/useWordsPolish";
-import getCroppedImageUrl from "../services/image-url";
-import actionData from "../hooks/actionData";
-import usePhrasesStorage from "../hooks/usePhrasesStorage";
+import SelectLanguage from "../../components/SelectLanguage";
+import SearchInput from "../../components/dictionary/SearchInput";
+import TranslationTab from "../../components/dictionary/TranslationTab";
+import { PolishWord } from "../../hooks/useWordsPolish";
+import getCroppedImageUrl from "../../services/image-url";
+import actionData from "../../hooks/actionData";
+import usePhrasesStorage from "../../hooks/usePhrasesStorage";
 import { HiSpeakerWave } from "react-icons/hi2";
-import useTokenData from "../others/useTokenData";
-import RandomPhrase from "../components/dictionary/RandomPhrase";
+import useTokenData from "../../others/useTokenData";
+import RandomPhrase from "../../components/dictionary/RandomPhrase";
 
 export interface Phrase {
   id: number;

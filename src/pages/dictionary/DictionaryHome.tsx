@@ -1,10 +1,10 @@
 import { Box, HStack, Spacer, Spinner, Stack } from "@chakra-ui/react";
-import SearchInput from "../components/dictionary/SearchInput";
+import SearchInput from "../../components/dictionary/SearchInput";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import SelectLanguage from "../components/SelectLanguage";
-import useWordsEnglish, { EnglishWord } from "../hooks/useWordsEnglish";
-import RandomPhrase from "../components/dictionary/RandomPhrase";
+import SelectLanguage from "../../components/SelectLanguage";
+import useWordsEnglish, { EnglishWord } from "../../hooks/useWordsEnglish";
+import RandomPhrase from "../../components/dictionary/RandomPhrase";
 
 const DictionaryHome = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>("ENG_PLN");

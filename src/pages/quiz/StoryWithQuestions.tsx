@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
-import useStories from "../hooks/useStories";
-import StoryAnswers from "../components/quizes/StoryAnswers";
+import useStories from "../../hooks/useStories";
+import StoryAnswers from "../../components/quizes/StoryAnswers";
 import {
   Box,
   Text,
@@ -12,12 +12,12 @@ import {
   useDisclosure,
   Button,
 } from "@chakra-ui/react";
-import TextTranslator from "../components/TextTranslator";
+import TextTranslator from "../../components/TextTranslator";
 import { useState, useRef, useEffect } from "react";
-import GoBack from "../components/GoBack";
-import actionData from "../hooks/actionData";
-import useQuizzesQuestions from "../hooks/useQuizzesQuestions";
-import useTokenData from "../others/useTokenData";
+import GoBack from "../../components/GoBack";
+import actionData from "../../hooks/actionData";
+import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
+import useTokenData from "../../others/useTokenData";
 
 const StoryWithQuestions = () => {
   const { id } = useParams();

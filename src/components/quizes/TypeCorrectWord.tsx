@@ -111,7 +111,9 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
           Zatwierdź
         </button>
       </Stack>
-      <Text
+      <Box
+        marginTop="1%"
+        className="question"
         visibility={
           refInput.current
             ? refInput.current.style.backgroundColor == "var(--error)"
@@ -119,9 +121,10 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
               : "hidden"
             : "hidden"
         }
+        color="var(--success)"
       >
-        {question?.word_second}
-      </Text>
+        <Text>{question?.word_second}</Text>
+      </Box>
     </Box>
   );
 };

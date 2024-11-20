@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useQuizzesQuestions, {
   QuizQuestion,
-} from "../hooks/useQuizzesQuestions";
+} from "../../hooks/useQuizzesQuestions";
 import { Box, SimpleGrid } from "@chakra-ui/react";
-import MatchGameCard from "../components/quizes/MatchGameCard";
+import MatchGameCard from "../../components/quizes/MatchGameCard";
 import { useEffect, useState } from "react";
-import GameLayout from "../components/quizes/GameLayout";
+import GameLayout from "../../components/quizes/GameLayout";
 
 const MatchGame = () => {
   const { id } = useParams();

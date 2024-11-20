@@ -23,8 +23,6 @@ const actionData = (endpoint: string) => {
 
   const sendData = async (formData: URLSearchParams, method: string): Promise<{ id?: number | undefined}> => {
     try {
-      console.log(formData);
-      console.log(formData.toString());
       const response = await fetch("http://localhost:3001/api" + endpoint, {
         method: method,
         headers: {

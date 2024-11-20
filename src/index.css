@@ -140,10 +140,9 @@ h1{
 
 .question{
     background-color: var(--foreground);
+    border: 1px solid var(--border);
     border-radius: 15px;
-    border-color: var(--border);
     color: var(--secondary);
-    border-width: 1px;
     padding: 2% 3%;
     min-width: 20%;
     box-shadow: 0 4px 6px -6px #222;

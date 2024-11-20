@@ -1,7 +1,7 @@
 import { Box, Button, HStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import SearchInput from "../dictionary/SearchInput";
-import { QuizzQuestion } from "../../pages/CQuiz";
+import { QuizzQuestion } from "../../pages/quiz/CQuiz";
 import EnglishTranslation from "./EnglishTranslation";
 
 interface Props {

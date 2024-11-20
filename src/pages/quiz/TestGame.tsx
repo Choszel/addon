@@ -1,12 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
-import useQuizzesQuestions from "../hooks/useQuizzesQuestions";
-import ChooseMatching from "../components/quizes/ChooseMatching";
+import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
+import ChooseMatching from "../../components/quizes/ChooseMatching";
 import { useEffect, useState } from "react";
-import TypeCorrectWord from "../components/quizes/TypeCorrectWord";
-import actionData from "../hooks/actionData";
-import useTokenData from "../others/useTokenData";
+import TypeCorrectWord from "../../components/quizes/TypeCorrectWord";
+import actionData from "../../hooks/actionData";
+import useTokenData from "../../others/useTokenData";
 import { Show } from "@chakra-ui/react";
-import GameLayout from "../components/quizes/GameLayout";
+import GameLayout from "../../components/quizes/GameLayout";
 
 const TestGame = () => {
   const { id } = useParams();
@@ -82,16 +82,6 @@ const TestGame = () => {
     setTimeout(() => {
       getRandomNumbers();
     }, 2000);
-    if (
-      questionType > 1 &&
-      questions.find(
-        (question) =>
-          question.word_second == word &&
-          question.word_polish ==
-            questions[drawNumbers[drawNumbers.length - 1]].word_polish
-      )
-    )
-      console.log("true");
     if (
       (questionType < 2 &&
         word === questions[drawNumbers[drawNumbers.length - 1]]?.word_polish) ||

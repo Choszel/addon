@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import QuizGrid, { QuizQuery } from "../components/quizes/QuizGrid";
-import SearchInput from "../components/quizes/SearchInput";
-import Flame from "../assets/Fire-Blaze-PNG-Image-Background.png";
+import QuizGrid, { QuizQuery } from "../../components/quizes/QuizGrid";
+import SearchInput from "../../components/quizes/SearchInput";
+import Flame from "../../assets/Fire-Blaze-PNG-Image-Background.png";
 import { HStack, Show, Stack, Text } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import useLanguages from "../hooks/useLanguages";
-import useQuizzes from "../hooks/useQuizzes";
-import useTokenData from "../others/useTokenData";
+import useLanguages from "../../hooks/useLanguages";
+import useQuizzes from "../../hooks/useQuizzes";
+import useTokenData from "../../others/useTokenData";
 
 const FlashcardsHome = () => {
   const { id } = useParams();

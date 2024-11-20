@@ -1,10 +1,10 @@
 import { HStack, Show, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import SelectLanguage from "../components/SelectLanguage";
-import SearchInput from "../components/dictionary/SearchInput";
+import SelectLanguage from "../../components/SelectLanguage";
+import SearchInput from "../../components/dictionary/SearchInput";
 import { useNavigate, useParams } from "react-router-dom";
 import { Phrase } from "./DictionarySearchResult";
-import TranslationTab from "../components/dictionary/TranslationTab";
+import TranslationTab from "../../components/dictionary/TranslationTab";
 
 const AlphabeticalSearch = () => {
   const { language, letter } = useParams<{

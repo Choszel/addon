@@ -49,7 +49,6 @@ const ItemDetails = ({
     formData.append("user_id", (userId ?? 0).toString());
     formData.append("quiz_id", (quiz.id ?? 0).toString());
     const response = await postData(formData);
-    console.log(response.message);
     if (response.message == "Rozpoczęto nowy quiz") {
       const formPutData = new URLSearchParams();
       formPutData.append("id", (quiz.id ?? 0).toString());
