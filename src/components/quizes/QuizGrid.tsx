@@ -2,8 +2,7 @@ import { SimpleGrid, Text } from "@chakra-ui/react";
 import QuizCardContainer from "./QuizCardContainer";
 import QuizCard from "./QuizCard";
 import QuizCardSkeleton from "./QuizCardSkeleton";
-import useQuizzes from "../../hooks/useQuizzes";
-import useTokenData from "../../others/useTokenData";
+import { Quiz } from "../../hooks/useQuizzes";
 import useCategories from "../../hooks/useCategories";
 import useDifficultyLevels from "../../hooks/useDifficultyLevels";
 import StoryCard from "./StoryCard";
@@ -18,14 +17,15 @@ export interface QuizQuery {
 }
 
 interface Props {
-  quizQuery: QuizQuery;
   quiz_id?: string;
+  data: Quiz[];
+  error: string;
+  isLoading: boolean;
+  userId: number;
 }
 
-const QuizGrid = ({ quizQuery, quiz_id }: Props) => {
-  const { data, error, isLoading } = useQuizzes(quizQuery);
+const QuizGrid = ({ quiz_id, data, error, isLoading, userId }: Props) => {
   const skeletons = [1, 2, 3, 4, 5, 6];
-  const { GetUserId } = useTokenData();
   const { data: categories } = useCategories();
   const { data: difficultyLevels } = useDifficultyLevels();
 
@@ -51,7 +51,7 @@ const QuizGrid = ({ quizQuery, quiz_id }: Props) => {
               <QuizCard
                 quiz={quiz}
                 isScore={true}
-                userId={GetUserId()}
+                userId={userId}
                 open={quiz.id == parseInt(quiz_id ?? "0") ? true : false}
                 categories={categories}
                 difficultyLevels={difficultyLevels}
@@ -60,7 +60,7 @@ const QuizGrid = ({ quizQuery, quiz_id }: Props) => {
               <StoryCard
                 quiz={quiz}
                 isScore={true}
-                userId={GetUserId()}
+                userId={userId}
                 open={quiz.id == parseInt(quiz_id ?? "0") ? true : false}
               ></StoryCard>
             )}

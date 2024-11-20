@@ -25,7 +25,6 @@ const EWordsPolish = () => {
   const { data, isLoading, error } = fetchWords(parseInt(id ?? "0"));
 
   const handleSave = () => {
-    console.log("Refs:", refs);
     const formData = new URLSearchParams();
     formData.append("id", id || "");
     formData.append("word", refs[0]?.value ?? "");

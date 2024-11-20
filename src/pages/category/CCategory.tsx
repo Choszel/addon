@@ -14,8 +14,6 @@ const CCategory = () => {
   const { postData } = actionData(routeName);
 
   const handleSave = () => {
-    console.log("Refs:", refs);
-    console.log(refs[0]?.value);
     const formData = new URLSearchParams();
     formData.append("name", refs[0]?.value ?? "");
     postData(formData);

@@ -109,6 +109,7 @@ const QuizCard = ({
         alignItems="center"
         key={quiz.id}
         bg="var(--foreground)"
+        height="100%"
       >
         <CardBody
           w="100%"
@@ -140,7 +141,7 @@ const QuizCard = ({
               <IoTrashOutline
                 cursor="pointer"
                 color="var(--error)"
-                size={35}
+                size={30}
                 onClick={deleteOnOpen}
                 z={20}
               />
@@ -175,7 +176,7 @@ const QuizCard = ({
                     <button className="tag_error">X</button>
                   ) : (
                     categoriesQuizzes.map((cq) => (
-                      <button className="tag_category">
+                      <button className="tag_category" key={cq}>
                         {cq ?? "No category"}
                       </button>
                     ))
@@ -193,7 +194,7 @@ const QuizCard = ({
                     <button className="tag_error">X</button>
                   ) : (
                     categoriesQuizzes.map((cq) => (
-                      <button className="tag_category">
+                      <button className="tag_category" key={cq}>
                         {cq ?? "No category"}
                       </button>
                     ))
@@ -208,7 +209,9 @@ const QuizCard = ({
                   <button className="tag_error">X</button>
                 ) : (
                   levelsQuizzes.map((lq) => (
-                    <button className="tag_category">{lq ?? "No level"}</button>
+                    <button className="tag_category" key={lq}>
+                      {lq ?? "No level"}
+                    </button>
                   ))
                 )}
               </HStack>

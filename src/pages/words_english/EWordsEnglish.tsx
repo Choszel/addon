@@ -33,7 +33,6 @@ const EWordsEnglish = () => {
   const { data, isLoading, error } = fetchAllDetailed();
 
   const handleSave = () => {
-    console.log("Refs:", refs);
     const formData = new URLSearchParams();
     formData.append("id", id || "");
     formData.append("word", refs[0]?.value ?? "");

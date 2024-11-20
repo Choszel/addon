@@ -29,8 +29,6 @@ const DetailsWordsPolish = () => {
   const navigate = useNavigate();
 
   const handleSave = async () => {
-    console.log("translationData:", translationsData);
-
     translationsData?.forEach((element) => {
       const translation = new URLSearchParams();
       switch (element.language) {
@@ -40,7 +38,6 @@ const DetailsWordsPolish = () => {
           postTranslations(translation);
           break;
       }
-      console.log("Po dodaniu tłumaczenia");
     });
 
     return window.location.reload();
@@ -97,6 +94,7 @@ const DetailsWordsPolish = () => {
           marginX="2%"
           direction={{ base: "column", md: "row" }}
           marginY={{ base: "5%", md: "2%" }}
+          key={"stack" + e.id}
         >
           <div key={e.id} style={{ textAlign: "left" }}>
             <p>

@@ -87,19 +87,17 @@ const ReadTemplate = <T extends object>({
             <Tr>
               {headers.map((element, index) => (
                 <>
-                  <Show above="md">
+                  <Show above="md" key={"above" + index}>
                     <Th
-                      key={index}
                       color="var(--primary-light)"
                       borderBottom="2px solid var(--copy)"
                     >
                       {element}
                     </Th>
                   </Show>
-                  <Show below="md">
+                  <Show below="md" key={"below" + index}>
                     {index < 2 ? (
                       <Th
-                        key={index}
                         color="var(--primary-light)"
                         borderBottom="2px solid var(--copy)"
                       >
@@ -116,16 +114,16 @@ const ReadTemplate = <T extends object>({
               <Tr key={rowIndex}>
                 {headers.map((header, cellIndex) => (
                   <>
-                    <Show above="md">
-                      <Td key={cellIndex}>
+                    <Show above="md" key={"above2" + cellIndex}>
+                      <Td>
                         {(row as any)[header]?.length > 20
                           ? (row as any)[header].substring(0, 20) + "..."
                           : (row as any)[header]}
                       </Td>
                     </Show>
-                    <Show below="md">
+                    <Show below="md" key={"below2" + cellIndex}>
                       {cellIndex < 2 ? (
-                        <Td key={cellIndex}>
+                        <Td>
                           {(row as any)[header]?.length > 20
                             ? (row as any)[header].substring(0, 20) + "..."
                             : (row as any)[header]}

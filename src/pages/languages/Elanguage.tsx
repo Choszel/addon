@@ -19,7 +19,6 @@ const Elanguage = () => {
   const { data, isLoading, error } = useLanguages(parseInt(id ?? "0"));
 
   const handleSave = () => {
-    console.log("Refs:", refs);
     const formData = new URLSearchParams();
     formData.append("id", id || "");
     formData.append("code", refs[0]?.value ?? "");

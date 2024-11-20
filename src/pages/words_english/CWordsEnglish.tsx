@@ -31,21 +31,15 @@ const CWordsEnglish = () => {
   } = useDifficultyLevels();
 
   const handleSave = async () => {
-    console.log("Refs:", refs);
-    console.log("translationData:", translationsData);
-
     const formData = new URLSearchParams();
     formData.append("word", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");
     formData.append("difficulty_level_id", refs[2]?.value ?? "");
     formData.append("category_id", refs[3]?.value ?? "");
     formData.append("part_of_speech", refs[4]?.value ?? "");
-    console.log(formData);
 
     const response = await postData(formData);
     if (response?.id) {
-      console.log("Po dodaniu słowa", response.id);
-
       translationsData?.forEach((element) => {
         const translation = new URLSearchParams();
         switch (element.language) {
@@ -58,7 +52,6 @@ const CWordsEnglish = () => {
             postTranslations(translation);
             break;
         }
-        console.log("Po dodaniu tłumaczenia");
       });
 
       return navigate(routeName);

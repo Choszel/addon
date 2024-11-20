@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
 
-// Tworzenie AuthContext
 export const AuthContext = createContext<{
   isLoggedIn: boolean;
   login: () => void;

@@ -36,8 +36,6 @@ const NoTranslation = () => {
   const { GetUserId } = useTokenData();
 
   const handleSave = () => {
-    console.log("Refs:", refs);
-    console.log(refs[0]?.value);
     const formData = new URLSearchParams();
     formData.append("phrase", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");

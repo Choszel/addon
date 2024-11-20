@@ -1,18 +1,15 @@
 import { useParams } from "react-router-dom";
 import useUsers from "../../hooks/useUsers";
-import { HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
+import { HStack, Spinner, Text } from "@chakra-ui/react";
 import useTokenData from "../../others/useTokenData";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import QuizGrid, { QuizQuery } from "../../components/quizes/QuizGrid";
 import { useEffect, useState } from "react";
-import QuizCardContainer from "../../components/quizes/QuizCardContainer";
-import QuizCardSkeleton from "../../components/quizes/QuizCardSkeleton";
-import QuizCard from "../../components/quizes/QuizCard";
+
 import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
 import actionData from "../../hooks/actionData";
-import useCategories from "../../hooks/useCategories";
-import useDifficultyLevels from "../../hooks/useDifficultyLevels";
-import StoryCard from "../../components/quizes/StoryCard";
+
+import useQuizzes from "../../hooks/useQuizzes";
 
 const UserProfile = () => {
   const { login } = useParams();
@@ -21,14 +18,16 @@ const UserProfile = () => {
     isLoading: userIsLoading,
     error: userError,
   } = useUsers(login);
-  const { CheckUserType } = useTokenData();
+  const { CheckUserType, GetUserId } = useTokenData();
   const [quizQuery, setQuizQuery] = useState<QuizQuery>({} as QuizQuery);
+  const {
+    data: quizzes,
+    error: quizError,
+    isLoading: quizLoading,
+  } = useQuizzes(quizQuery);
   const { fetchUserScores } = useQuizzesQuestions();
   const { data, error, isLoading } = fetchUserScores(userData[0]?.id);
-  const skeletons = [1, 2, 3, 4, 5, 6];
   const { putData } = actionData("/users");
-  const { data: categories } = useCategories();
-  const { data: difficultyLevels } = useDifficultyLevels();
 
   useEffect(() => {
     setQuizQuery({ ...quizQuery, user: userData[0]?.login });
@@ -42,103 +41,62 @@ const UserProfile = () => {
     window.location.reload();
   };
 
-  if (userIsLoading || isLoading) return <Spinner size="xl" />;
-  if (userError || error)
-    return <Text color="var(--error)">{userError || error}</Text>;
+  if (userIsLoading) return <Spinner size="xl" />;
+  if (userError) return <Text color="var(--error)">{userError}</Text>;
 
   return (
     <>
-      {userData.map((user) => (
-        <>
-          <HStack>
-            <div style={{ marginInline: "3%" }}>
-              <p>{user.login}</p>
-              <p>Rola: {CheckUserType(user.user_type)}</p>
-            </div>
-            {user.user_type != 2 && CheckUserType() == "admin" ? (
-              <button className="button_secondary" onClick={upgradeUser}>
-                {user.user_type == 0
-                  ? "Przemianuj użytkownika"
-                  : "Zdegraduj użytkownika"}
-              </button>
-            ) : null}
-          </HStack>
-          <Tabs
-            isFitted
-            variant="enclosed"
-            marginTop={{ base: "10%", md: "3%" }}
+      <HStack>
+        <div style={{ marginInline: "3%" }}>
+          <p>{userData[0]?.login}</p>
+          <p>Rola: {CheckUserType(userData[0]?.user_type)}</p>
+        </div>
+        {userData[0]?.user_type != 2 && CheckUserType() == "admin" ? (
+          <button className="button_secondary" onClick={upgradeUser}>
+            {userData[0]?.user_type == 0
+              ? "Przemianuj użytkownika"
+              : "Zdegraduj użytkownika"}
+          </button>
+        ) : null}
+      </HStack>
+      <Tabs isFitted variant="enclosed" marginTop={{ base: "10%", md: "3%" }}>
+        <TabList mb="1em">
+          <Tab
+            _selected={{
+              background: "var(--primary-dark)",
+              color: "var(--primary-content)",
+            }}
           >
-            <TabList mb="1em">
-              <Tab
-                _selected={{
-                  background: "var(--primary-dark)",
-                  color: "var(--primary-content)",
-                }}
-              >
-                Rozpoczęte zestawy
-              </Tab>
-              <Tab
-                _selected={{
-                  background: "var(--primary-dark)",
-                  color: "var(--primary-content)",
-                }}
-              >
-                Utworzone zestawy
-              </Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel padding={{ base: "0", md: "4" }}>
-                {data.length == 0 ? (
-                  <Text>Brak zestawów.</Text>
-                ) : (
-                  <SimpleGrid
-                    columns={{ sm: 1, md: 2, lg: 2, xl: 3 }}
-                    paddingX={{ base: "0", md: "8" }}
-                    spacing={6}
-                  >
-                    {isLoading &&
-                      skeletons.map((skeleton) => (
-                        <QuizCardContainer key={skeleton}>
-                          <QuizCardSkeleton />
-                        </QuizCardContainer>
-                      ))}
-                    {data.map((quiz) =>
-                      quiz.type == "quiz" ? (
-                        <QuizCardContainer key={quiz.id}>
-                          <QuizCard
-                            quiz={quiz}
-                            isScore={true}
-                            userId={userData[0]?.id}
-                            categories={categories}
-                            difficultyLevels={difficultyLevels}
-                            selectedCategory={0}
-                            selectedLevel={0}
-                          ></QuizCard>
-                        </QuizCardContainer>
-                      ) : (
-                        <StoryCard
-                          quiz={quiz}
-                          isScore={true}
-                          userId={userData[0]?.id}
-                          selectedCategory={0}
-                          selectedLevel={0}
-                        ></StoryCard>
-                      )
-                    )}
-                  </SimpleGrid>
-                )}
-              </TabPanel>
-              <TabPanel>
-                <QuizGrid
-                  quizQuery={quizQuery}
-                  selectedCategory={0}
-                  selectedLevel={0}
-                ></QuizGrid>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </>
-      ))}
+            Rozpoczęte zestawy
+          </Tab>
+          <Tab
+            _selected={{
+              background: "var(--primary-dark)",
+              color: "var(--primary-content)",
+            }}
+          >
+            Utworzone zestawy
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel padding={{ base: "0", md: "4" }}>
+            <QuizGrid
+              data={data}
+              error={error}
+              isLoading={isLoading}
+              userId={GetUserId()}
+            ></QuizGrid>
+          </TabPanel>
+          <TabPanel>
+            <QuizGrid
+              data={quizzes}
+              error={quizError}
+              isLoading={quizLoading}
+              userId={GetUserId()}
+            ></QuizGrid>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </>
   );
 };
