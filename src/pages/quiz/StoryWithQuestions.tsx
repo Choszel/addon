@@ -12,7 +12,7 @@ import {
   useDisclosure,
   Button,
 } from "@chakra-ui/react";
-import TextTranslator from "../../components/TextTranslator";
+import TextTranslator from "../../components/quizes/TextTranslator";
 import { useState, useRef, useEffect } from "react";
 import GoBack from "../../components/GoBack";
 import actionData from "../../hooks/actionData";

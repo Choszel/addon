@@ -1,6 +1,6 @@
 import { Card, CardBody, Skeleton, SkeletonText } from "@chakra-ui/react";
 
-const QuizCardSkeleton = () => {
+const ItemCardSkeleton = () => {
   return (
     <Card>
       <Skeleton
@@ -16,4 +16,4 @@ const QuizCardSkeleton = () => {
   );
 };
 
-export default QuizCardSkeleton;
+export default ItemCardSkeleton;

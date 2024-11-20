@@ -1,7 +1,7 @@
 import { SimpleGrid, Text } from "@chakra-ui/react";
-import QuizCardContainer from "./QuizCardContainer";
+import ItemCardContainer from "./ItemCardContainer";
 import QuizCard from "./QuizCard";
-import QuizCardSkeleton from "./QuizCardSkeleton";
+import ItemCardSkeleton from "./ItemCardSkeleton";
 import { Quiz } from "../../hooks/useQuizzes";
 import useCategories from "../../hooks/useCategories";
 import useDifficultyLevels from "../../hooks/useDifficultyLevels";
@@ -41,12 +41,12 @@ const QuizGrid = ({ quiz_id, data, error, isLoading, userId }: Props) => {
       >
         {isLoading &&
           skeletons.map((skeleton) => (
-            <QuizCardContainer key={skeleton}>
-              <QuizCardSkeleton />
-            </QuizCardContainer>
+            <ItemCardContainer key={skeleton}>
+              <ItemCardSkeleton />
+            </ItemCardContainer>
           ))}
         {data.map((quiz) => (
-          <QuizCardContainer key={quiz.id}>
+          <ItemCardContainer key={quiz.id}>
             {quiz.type == "quiz" ? (
               <QuizCard
                 quiz={quiz}
@@ -64,7 +64,7 @@ const QuizGrid = ({ quiz_id, data, error, isLoading, userId }: Props) => {
                 open={quiz.id == parseInt(quiz_id ?? "0") ? true : false}
               ></StoryCard>
             )}
-          </QuizCardContainer>
+          </ItemCardContainer>
         ))}
       </SimpleGrid>
     </div>

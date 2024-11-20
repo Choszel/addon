@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import usePhrasesStorage from "../hooks/usePhrasesStorage";
-import "../index.css";
+import usePhrasesStorage from "../../hooks/usePhrasesStorage";
+import "../../index.css";
 import useTranslationPL_ENG, {
   TranslationPL_ENG,
-} from "../hooks/useTranslationPL_ENG";
+} from "../../hooks/useTranslationPL_ENG";
 interface Props {
   text: string;
   popupRef: React.RefObject<HTMLSpanElement>;

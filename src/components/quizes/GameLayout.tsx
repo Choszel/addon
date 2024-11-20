@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import GoBack from "../GoBack";
 import Confetti from "react-confetti";
-import EndOfTheQuizModal from "../EndOfTheQuizModal";
+import EndOfTheQuizModal from "./EndOfTheQuizModal";
 
 interface Props {
   children: ReactNode;
