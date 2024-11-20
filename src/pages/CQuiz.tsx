@@ -31,7 +31,8 @@ const CQuiz = () => {
   const { data: translations } = fetchAll();
   const { postData: postQuiz } = actionData("/quizzes");
   const { postData: postQuizQuestions } = actionData("/quizzesQuestions/ENG");
-  const { savedPhrases, isLoading } = usePhrasesStorage("ENG");
+  const { savedPhrases, isLoading, clearPhraseLocalStorage } =
+    usePhrasesStorage("ENG");
   const navigate = useNavigate();
   const toast = useToast();
   const { GetUserId } = useTokenData();
@@ -78,12 +79,12 @@ const CQuiz = () => {
     formData.append("execution_date", dateNow.toString());
 
     const response = await postQuiz(formData);
-    console.log(response.id);
 
     const questionData = new URLSearchParams();
     questionData.append("quiz_id", (response.id ?? 0).toString());
     questionData.append("data", JSON.stringify([...phrasesData]));
     postQuizQuestions(questionData);
+    clearPhraseLocalStorage();
     return navigate("/flashcards");
   };
 
@@ -126,7 +127,6 @@ const CQuiz = () => {
         id: id,
       });
     });
-    console.log("CQuiz, tempArray: ", tempArray);
     setPhrasesData(tempArray);
   }, [savedPhrases, categories, difficultyLevels]);
 
@@ -141,14 +141,7 @@ const CQuiz = () => {
 
     setCategoriesQuizz(Array.from(uniqueCategories).filter(Boolean));
     setLevelsQuizz(Array.from(uniqueLevels).filter(Boolean));
-
-    console.log("phrasesData", phrasesData);
   }, [phrasesData]);
-
-  useEffect(() => {
-    console.log("CategoriesQuizz:", categoriesQuizz);
-    console.log("LevelsQuizz:", levelsQuizz);
-  }, [categoriesQuizz, levelsQuizz]);
 
   const formData: FormData = {
     title: "Tworzenie Quizu",

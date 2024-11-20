@@ -26,8 +26,7 @@ const FlashcardsHome = () => {
       if (!value.startsWith("@")) title += value;
       else user = value.substring(1);
     });
-    console.log("title", title);
-    console.log("user", user);
+
     setQuizQuery({ ...quizQuery, title, user });
   }, [searchValue]);
 

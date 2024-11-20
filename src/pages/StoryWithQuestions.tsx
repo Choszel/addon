@@ -41,7 +41,6 @@ const StoryWithQuestions = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   function getSelectionText() {
-    console.log("getSelectionText");
     let text = "";
     let position = { x: 0, y: 0 };
 
@@ -52,9 +51,6 @@ const StoryWithQuestions = () => {
       if (selection?.rangeCount) {
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
-        console.log("rect.top", rect.top);
-        console.log("window.scrollY", window.scrollY);
-        console.log("popupRef.current", popupRef.current?.textContent);
 
         if (popupRef.current)
           position = {
@@ -88,7 +84,6 @@ const StoryWithQuestions = () => {
     formData.append("quiz_score_id", currentScore.toString());
     formData.append("data", JSON.stringify([...correctAnswers]));
     postUserQuestions(formData);
-    console.log("correctAnswers", correctAnswers);
   }, [correctCaptured]);
 
   useEffect(() => {

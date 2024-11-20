@@ -1,31 +1,12 @@
-import {
-  Box,
-  Card,
-  CardBody,
-  HStack,
-  Heading,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
-  useDisclosure,
-  ModalCloseButton,
-  Button,
-  Show,
-} from "@chakra-ui/react";
+import { HStack, Show } from "@chakra-ui/react";
 import { Quiz } from "../../hooks/useQuizzes";
 import QuizDetails from "./QuizDetails";
 import { useEffect, useState } from "react";
 import useQuizzesQuestions from "../../hooks/useQuizzesQuestions";
 import { Category } from "../../hooks/useCategories";
 import { DifficultyLevel } from "../../hooks/useDifficultyLevels";
-import useTokenData from "../../others/useTokenData";
-import actionData from "../../hooks/actionData";
-import GoBack from "../GoBack";
-import { useNavigate } from "react-router-dom";
-import { IoTrashOutline } from "react-icons/io5";
 import { FaCirclePlus } from "react-icons/fa6";
+import ItemCard from "./ItemCard";
 
 interface Props {
   quiz: Quiz;
@@ -44,13 +25,6 @@ const QuizCard = ({
   categories,
   difficultyLevels,
 }: Props) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: deleteIsOpen,
-    onOpen: deleteOnOpen,
-    onClose: deleteOnClose,
-  } = useDisclosure();
-  const [score, setScore] = useState<number>(0.0);
   const { fetchUserQuestionsDetailed, fetchAmountOfQuestions } =
     useQuizzesQuestions();
   const {
@@ -62,17 +36,7 @@ const QuizCard = ({
   const [categoriesQuizzes, setCategoriesQuizzes] = useState<string[]>([""]);
   const [levelsQuizzes, setLevelsQuizzes] = useState<string[]>([""]);
 
-  const { GetUserLogin } = useTokenData();
-  const { deleteData } = actionData("/quizzes");
-  const navigate = useNavigate();
-
   useEffect(() => {
-    const answeredQuestions = questions.filter(
-      (question) => question.done == true
-    );
-    const tempScore =
-      answeredQuestions.length / amountOfQuestions[0]?.amount_of_questions;
-    setScore(tempScore > 0 ? tempScore : 0);
     let questionsCategories = [
       ...new Set(
         questions.map(
@@ -90,217 +54,88 @@ const QuizCard = ({
     ];
     setCategoriesQuizzes(questionsCategories);
     setLevelsQuizzes(questionsLevels);
-    console.log("questionsCategories", questionsCategories);
-    console.log("questionsLevels", questionsLevels);
-  }, [amountOfQuestions, categories, difficultyLevels]);
-
-  useEffect(() => {
-    if (open) onOpen();
-  }, []);
+  }, [questions]);
 
   return (
-    <>
-      <Card
-        border="solid var(--border) 1px"
-        borderRadius={10}
-        overflow="hidden"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        key={quiz.id}
-        bg="var(--foreground)"
-        height="100%"
-      >
-        <CardBody
-          w="100%"
-          className={
-            score === 0
-              ? "no_score"
-              : score <= 0.25
-              ? "low_score"
-              : score <= 0.5
-              ? "medium_score"
-              : score <= 0.75
-              ? "high_score"
-              : score < 1
-              ? "very_high_score"
-              : "max_score"
-          }
-        >
-          <HStack justifyContent="space-between">
-            <Heading
-              fontSize="xl"
-              onClick={() => {
-                navigate("/flashcards/" + quiz.id);
-                onOpen();
-              }}
-            >
-              {quiz?.title}
-            </Heading>
-            {GetUserLogin() == quiz.user ? (
-              <IoTrashOutline
-                cursor="pointer"
-                color="var(--error)"
-                size={30}
-                onClick={deleteOnOpen}
-                z={20}
-              />
-            ) : null}
+    <ItemCard
+      quiz={quiz}
+      isScore={isScore}
+      userId={userId}
+      open={open}
+      questions={questions}
+      amountOfQuestions={amountOfQuestions}
+      moreDetails={
+        <>
+          <HStack marginBottom="2%">
+            <p>Kategorie: </p>
+            <Show above="md">
+              {categoriesQuizzes.length > 3 ? (
+                <HStack>
+                  <button className="tag_category">
+                    {categoriesQuizzes[0] ?? "No category"}
+                  </button>
+                  <button className="tag_category">
+                    {categoriesQuizzes[1] ?? "No category"}
+                  </button>
+                  <FaCirclePlus color="var(--primary)" size="40px" />
+                </HStack>
+              ) : categoriesQuizzes.length == 0 ? (
+                <button className="tag_error">X</button>
+              ) : (
+                categoriesQuizzes.map((cq) => (
+                  <button className="tag_category" key={cq}>
+                    {cq ?? "No category"}
+                  </button>
+                ))
+              )}
+            </Show>
+            <Show below="md">
+              {categoriesQuizzes.length > 1 ? (
+                <HStack>
+                  <button className="tag_category">
+                    {categoriesQuizzes[0] ?? "No category"}
+                  </button>
+                  <FaCirclePlus color="var(--primary)" size="35px" />
+                </HStack>
+              ) : categoriesQuizzes.length == 0 ? (
+                <button className="tag_error">X</button>
+              ) : (
+                categoriesQuizzes.map((cq) => (
+                  <button className="tag_category" key={cq}>
+                    {cq ?? "No category"}
+                  </button>
+                ))
+              )}
+            </Show>
           </HStack>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="flex-start"
-            onClick={() => {
-              navigate("/flashcards/" + quiz.id);
-              onOpen();
-            }}
-          >
-            <p>Twórca: {quiz.user ?? "No user"}</p>
-            <p>Język: {quiz.language ?? "No language"}</p>
-            <>
-              <HStack marginBottom="2%">
-                <p>Kategorie: </p>
-                <Show above="md">
-                  {categoriesQuizzes.length > 3 ? (
-                    <HStack>
-                      <button className="tag_category">
-                        {categoriesQuizzes[0] ?? "No category"}
-                      </button>
-                      <button className="tag_category">
-                        {categoriesQuizzes[1] ?? "No category"}
-                      </button>
-                      <FaCirclePlus color="var(--primary)" size="40px" />
-                    </HStack>
-                  ) : categoriesQuizzes.length == 0 ? (
-                    <button className="tag_error">X</button>
-                  ) : (
-                    categoriesQuizzes.map((cq) => (
-                      <button className="tag_category" key={cq}>
-                        {cq ?? "No category"}
-                      </button>
-                    ))
-                  )}
-                </Show>
-                <Show below="md">
-                  {categoriesQuizzes.length > 1 ? (
-                    <HStack>
-                      <button className="tag_category">
-                        {categoriesQuizzes[0] ?? "No category"}
-                      </button>
-                      <FaCirclePlus color="var(--primary)" size="35px" />
-                    </HStack>
-                  ) : categoriesQuizzes.length == 0 ? (
-                    <button className="tag_error">X</button>
-                  ) : (
-                    categoriesQuizzes.map((cq) => (
-                      <button className="tag_category" key={cq}>
-                        {cq ?? "No category"}
-                      </button>
-                    ))
-                  )}
-                </Show>
-              </HStack>
-              <HStack>
-                <p>Poziom: </p>
-                {levelsQuizzes.length > 4 ? (
-                  <FaCirclePlus color="var(--primary)" size="30px" />
-                ) : levelsQuizzes.length == 0 ? (
-                  <button className="tag_error">X</button>
-                ) : (
-                  levelsQuizzes.map((lq) => (
-                    <button className="tag_category" key={lq}>
-                      {lq ?? "No level"}
-                    </button>
-                  ))
-                )}
-              </HStack>
-            </>
-          </Box>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
-            }}
-            onClick={() => {
-              navigate("/flashcards/" + quiz.id);
-              onOpen();
-            }}
-          >
-            {isScore ? <p>{(score * 100).toFixed(0) + "%"}</p> : <p>0%</p>}
-          </div>
-        </CardBody>
-      </Card>
-
-      <Modal
-        isOpen={isOpen}
-        onClose={() => {
-          onClose();
-          navigate("/flashcards");
-        }}
-      >
-        <ModalOverlay />
-        <ModalContent
-          maxW="100%"
-          width={{ base: "90%", md: "50%" }}
-          bg="var(--foreground)"
-        >
-          <ModalBody>
-            <GoBack
-              goBack={() => {
-                onClose();
-                navigate("/flashcards");
-              }}
-              margin="5%"
-              width="75%"
-            />
-            <QuizDetails
-              quiz={quiz}
-              userId={userId}
-              questions={questions}
-              categories={categoriesQuizzes}
-              difficultyLevels={levelsQuizzes}
-              isLoading={quesIsLoading}
-              error={quesError}
-            ></QuizDetails>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-
-      <Modal isOpen={deleteIsOpen} onClose={deleteOnClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <ModalBody className="basic_style">
-            <p>Czy na pewno chcesz usunąć dany quiz?</p>
-            <p style={{ fontWeight: "bold" }}>
-              UWAGA! Spowoduje to usunięcie wszytskich danych powiązanych z tym
-              quizem!
-            </p>
-          </ModalBody>
-          <ModalFooter className="basic_style">
-            <Button
-              colorScheme="red"
-              mr={3}
-              onClick={() => {
-                console.log(quiz.title);
-                console.log(quiz.id?.toString());
-                const formData = new URLSearchParams();
-                formData.append("id", quiz.id?.toString() ?? "");
-                deleteData(formData);
-                window.location.reload(); // nie widać po tym toast
-              }}
-            >
-              Usuń
-            </Button>
-            <Button colorScheme="blue" mr={3} onClick={deleteOnClose}>
-              Anuluj
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+          <HStack>
+            <p>Poziom: </p>
+            {levelsQuizzes.length > 4 ? (
+              <FaCirclePlus color="var(--primary)" size="30px" />
+            ) : levelsQuizzes.length == 0 ? (
+              <button className="tag_error">X</button>
+            ) : (
+              levelsQuizzes.map((lq) => (
+                <button className="tag_category" key={lq}>
+                  {lq ?? "No level"}
+                </button>
+              ))
+            )}
+          </HStack>
+        </>
+      }
+      modalDetails={
+        <QuizDetails
+          quiz={quiz}
+          userId={userId}
+          questions={questions}
+          categories={categoriesQuizzes}
+          difficultyLevels={levelsQuizzes}
+          isLoading={quesIsLoading}
+          error={quesError}
+        />
+      }
+    />
   );
 };
 

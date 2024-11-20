@@ -65,7 +65,7 @@ const usePhrasesStorage = (languageCode: string) => {
     setSavedPhrases(updatedSavedPhrases);
   };
 
-  const clearLocalStorage = () => {
+  const clearPhraseLocalStorage = () => {
     switch(languageCode){
       default:
         localStorage.removeItem("translations_pln_eng");
@@ -73,7 +73,7 @@ const usePhrasesStorage = (languageCode: string) => {
     }   
   }
 
-  return { savedPhrases, error, isLoading, addToSavedPhrases, removeFromSavedPhrases, setError, clearLocalStorage };
+  return { savedPhrases, error, isLoading, addToSavedPhrases, removeFromSavedPhrases, setError, clearPhraseLocalStorage };
 };
 
 const getPhrasesFromLocalStorage = (languageCode: string): localStoragePhrase[] => {

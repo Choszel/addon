@@ -29,18 +29,14 @@ const TestGame = () => {
   const { postData: postUserQuestions } = actionData("/usersQuizzesQuestions");
 
   const getRandomNumbers = () => {
-    console.log("drawNumbers przed: ", drawNumbers);
     if (!questions) return;
     if (drawNumbers.length === questions.length) {
-      console.log("done");
       setShowConfetti(true);
+
       setTimeout(() => {
         handleSave();
         setModalOpen(true);
       }, 250);
-      console.log(correctAnswers);
-      console.log(questions);
-
       return;
     }
 
@@ -48,12 +44,10 @@ const TestGame = () => {
     let randomIndex: number;
     let maxAttempts = 100;
     do {
-      console.log("while");
       randomIndex = Math.floor(Math.random() * questions.length);
       maxAttempts--;
     } while (drawNumbers.includes(randomIndex) && maxAttempts > 0);
     setDrawNumbers((prevDrawNumbers) => [...prevDrawNumbers, randomIndex]);
-    console.log("drawNumbers po: ", drawNumbers);
   };
 
   const handleSave = async () => {
@@ -85,17 +79,12 @@ const TestGame = () => {
     let tempArray: number[] = [];
 
     do {
-      console.log("while2");
       randomIndex = Math.floor(Math.random() * questions.length);
-      console.log("randomIndex", randomIndex);
-      console.log(randomIndex != drawNumbers[drawNumbers.length - 1]);
-      console.log(drawNumbersAnswers?.includes(randomIndex));
       if (randomIndex != drawNumbers[drawNumbers.length - 1])
         if (!tempArray.includes(randomIndex)) tempArray.push(randomIndex);
       maxAttempts2--;
     } while (tempArray.length < 3 && maxAttempts2 > 0);
     setDrawNumbersAnswers(tempArray);
-    console.log("drawNumbersAnswers", drawNumbersAnswers);
   };
 
   const checkIfCorrect = (word: string) => {
@@ -108,13 +97,11 @@ const TestGame = () => {
         ? questions[drawNumbers[drawNumbers.length - 1]]?.word_polish
         : questions[drawNumbers[drawNumbers.length - 1]]?.word_second)
     ) {
-      console.log("correct");
       const tempArray = correctAnswers;
       tempArray.push(questions[drawNumbers[drawNumbers.length - 1]]?.id ?? 0);
       setCorrectAnswers(tempArray);
       return true;
     } else {
-      console.log("false");
       return false;
     }
   };
