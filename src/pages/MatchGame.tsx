@@ -5,9 +5,7 @@ import useQuizzesQuestions, {
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import MatchGameCard from "../components/quizes/MatchGameCard";
 import { useEffect, useState } from "react";
-import Confetti from "react-confetti";
-import GoBack from "../components/GoBack";
-import EndOfTheQuizModal from "../components/EndOfTheQuizModal";
+import GameLayout from "../components/quizes/GameLayout";
 
 const MatchGame = () => {
   const { id } = useParams();
@@ -21,10 +19,8 @@ const MatchGame = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
   const getRandomInt = () => {
-    console.log("drawNumbers przed: ", drawNumbers);
     if (!questions) return;
     if (drawNumbers.length === questions.length) {
-      console.log("done");
       setShowConfetti(true);
       setTimeout(() => {
         setModalOpen(true);
@@ -35,14 +31,12 @@ const MatchGame = () => {
     let randomIndex;
     let maxAttempts = 100;
     do {
-      console.log("while");
       randomIndex = Math.floor(Math.random() * questions.length);
       maxAttempts--;
-    } while (drawNumbers.includes(randomIndex) || maxAttempts > 0);
+    } while (drawNumbers.includes(randomIndex) && maxAttempts > 0);
 
     setDrawNumbers((prevDrawNumbers) => [...prevDrawNumbers, randomIndex]);
     setCurrentWord(questions[randomIndex]);
-    console.log("drawNumbers po: ", drawNumbers);
   };
 
   useEffect(() => {
@@ -59,32 +53,27 @@ const MatchGame = () => {
         (q) => q.id === wronglyAnswered[wronglyAnswered.length - 1]
       ),
     ]);
-    console.log("wronglyAnswered", wronglyAnswered);
-    console.log("questions", questions);
   }, [wronglyAnswered]);
 
   const checkIfCorrect = (word: string) => {
     if (word === currentWord?.word_polish) {
       getRandomInt();
-      console.log("correct");
       return true;
     } else {
-      console.log("false");
       return false;
     }
   };
 
   return (
-    <>
-      <GoBack
-        goBack={() => {
-          navigate("/flashcards/" + id);
-        }}
-        margin="2%"
-      />
-      {showConfetti && (
-        <Confetti recycle={false} gravity={0.2} width={window.innerWidth} />
-      )}
+    <GameLayout
+      showConfetti={showConfetti}
+      goBack={() => {
+        navigate("/flashcards/" + id);
+      }}
+      isModalOpen={isModalOpen}
+      saveProgress={false}
+      quizId={id ?? ""}
+    >
       <Box>
         {currentWord ? (
           <>
@@ -108,11 +97,7 @@ const MatchGame = () => {
           <p>Ładowanie pytań...</p>
         )}
       </Box>
-      <EndOfTheQuizModal
-        isOpen={isModalOpen}
-        goBackTo={"/flashcards/" + id}
-      ></EndOfTheQuizModal>
-    </>
+    </GameLayout>
   );
 };
 

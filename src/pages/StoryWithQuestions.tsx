@@ -69,6 +69,13 @@ const StoryWithQuestions = () => {
     }
   }
 
+  const checkAnswers = () => {
+    setChecked(true);
+    setTimeout(() => {
+      onOpen();
+    }, 250);
+  };
+
   useEffect(() => {
     if (!correctCaptured) return;
     if (correctAnswers.length < 1) return;
@@ -127,13 +134,7 @@ const StoryWithQuestions = () => {
           </Box>
         ))}
       </Box>
-      <button
-        style={{ margin: "3%" }}
-        onClick={() => {
-          setChecked(true);
-          onOpen();
-        }}
-      >
+      <button style={{ margin: "3%" }} onClick={() => checkAnswers()}>
         Sprawdź odpowiedzi
       </button>
 

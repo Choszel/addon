@@ -5,9 +5,7 @@ import { Box, Card, CardBody, HStack } from "@chakra-ui/react";
 import { PiArrowsCounterClockwise } from "react-icons/pi";
 import { FaArrowLeft } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa6";
-import GoBack from "../components/GoBack";
-import Confetti from "react-confetti";
-import EndOfTheQuizModal from "../components/EndOfTheQuizModal";
+import GameLayout from "../components/quizes/GameLayout";
 
 const FlashcardGame = () => {
   const { id } = useParams();
@@ -56,7 +54,9 @@ const FlashcardGame = () => {
     }
   };
 
-  const goBack = () => {};
+  const goBack = () => {
+    navigate("/flashcards/" + id);
+  };
 
   const handleKeyPress = (event: KeyboardEvent) => {
     if (event.code === "ArrowLeft") {
@@ -83,16 +83,13 @@ const FlashcardGame = () => {
   }, [currentIndex, isPolishVisible]);
 
   return (
-    <>
-      {showConfetti && (
-        <Confetti recycle={false} gravity={0.2} width={window.innerWidth} />
-      )}
-      <GoBack
-        goBack={() => {
-          navigate("/flashcards/" + id);
-        }}
-        margin="2%"
-      />
+    <GameLayout
+      showConfetti={showConfetti}
+      goBack={goBack}
+      isModalOpen={isModalOpen}
+      saveProgress={false}
+      quizId={id ?? ""}
+    >
       <div
         style={{
           display: "flex",
@@ -107,7 +104,7 @@ const FlashcardGame = () => {
         >
           <Card
             height={{ base: "200px", md: "250px" }}
-            onClick={currentIndex == questions.length ? goBack : turnCard}
+            onClick={turnCard}
             cursor="pointer"
             transform={isFlipped ? "rotateY(180deg)" : "rotateY(0)"}
             transition="transform 0.5s ease-in-out"
@@ -155,11 +152,7 @@ const FlashcardGame = () => {
           </HStack>
         </Box>
       </div>
-      <EndOfTheQuizModal
-        isOpen={isModalOpen}
-        goBackTo={"/flashcards/" + id}
-      ></EndOfTheQuizModal>
-    </>
+    </GameLayout>
   );
 };
 

@@ -2,13 +2,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import useQuizzesQuestions from "../hooks/useQuizzesQuestions";
 import ChooseMatching from "../components/quizes/ChooseMatching";
 import { useEffect, useState } from "react";
-import Confetti from "react-confetti";
 import TypeCorrectWord from "../components/quizes/TypeCorrectWord";
-import GoBack from "../components/GoBack";
-import EndOfTheQuizModal from "../components/EndOfTheQuizModal";
 import actionData from "../hooks/actionData";
 import useTokenData from "../others/useTokenData";
 import { Show } from "@chakra-ui/react";
+import GameLayout from "../components/quizes/GameLayout";
 
 const TestGame = () => {
   const { id } = useParams();
@@ -66,15 +64,8 @@ const TestGame = () => {
     postUserQuestions(formData);
   };
 
-  useEffect(() => {
-    const currentScore = userScores.find(
-      (score) => score.id == parseInt(id ?? "0")
-    );
-    setCurrentScore(currentScore?.quiz_score_id ?? 0);
-  }, [userScores]);
-
   const getRandomNumbersForAnswers = () => {
-    let maxAttempts2 = 100;
+    let maxAttempts = 100;
     let randomIndex: number;
     let tempArray: number[] = [];
 
@@ -82,8 +73,8 @@ const TestGame = () => {
       randomIndex = Math.floor(Math.random() * questions.length);
       if (randomIndex != drawNumbers[drawNumbers.length - 1])
         if (!tempArray.includes(randomIndex)) tempArray.push(randomIndex);
-      maxAttempts2--;
-    } while (tempArray.length < 3 && maxAttempts2 > 0);
+      maxAttempts--;
+    } while (tempArray.length < 3 && maxAttempts > 0);
     setDrawNumbersAnswers(tempArray);
   };
 
@@ -92,10 +83,25 @@ const TestGame = () => {
       getRandomNumbers();
     }, 2000);
     if (
-      word ===
-      (questionType < 2
-        ? questions[drawNumbers[drawNumbers.length - 1]]?.word_polish
-        : questions[drawNumbers[drawNumbers.length - 1]]?.word_second)
+      questionType > 1 &&
+      questions.find(
+        (question) =>
+          question.word_second == word &&
+          question.word_polish ==
+            questions[drawNumbers[drawNumbers.length - 1]].word_polish
+      )
+    )
+      console.log("true");
+    if (
+      (questionType < 2 &&
+        word === questions[drawNumbers[drawNumbers.length - 1]]?.word_polish) ||
+      (questionType > 1 &&
+        questions.find(
+          (question) =>
+            question.word_second == word &&
+            question.word_polish ==
+              questions[drawNumbers[drawNumbers.length - 1]]?.word_polish
+        ))
     ) {
       const tempArray = correctAnswers;
       tempArray.push(questions[drawNumbers[drawNumbers.length - 1]]?.id ?? 0);
@@ -105,6 +111,13 @@ const TestGame = () => {
       return false;
     }
   };
+
+  useEffect(() => {
+    const currentScore = userScores.find(
+      (score) => score.id == parseInt(id ?? "0")
+    );
+    setCurrentScore(currentScore?.quiz_score_id ?? 0);
+  }, [userScores]);
 
   useEffect(() => {
     if (questions && questions.length > 0) {
@@ -119,16 +132,15 @@ const TestGame = () => {
   }, [drawNumbers]);
 
   return (
-    <div>
-      <GoBack
-        goBack={() => {
-          navigate("/flashcards/" + id);
-        }}
-        margin="2%"
-      />
-      {showConfetti && (
-        <Confetti recycle={false} gravity={0.2} width={window.innerWidth} />
-      )}
+    <GameLayout
+      showConfetti={showConfetti}
+      goBack={() => {
+        navigate("/flashcards/" + id);
+      }}
+      isModalOpen={isModalOpen}
+      saveProgress={true}
+      quizId={id ?? ""}
+    >
       <Show below="md">
         <br />
       </Show>
@@ -150,12 +162,7 @@ const TestGame = () => {
           checkIfCorrect={checkIfCorrect}
         ></TypeCorrectWord>
       )}
-      <EndOfTheQuizModal
-        isOpen={isModalOpen}
-        goBackTo={"/flashcards/" + id}
-        saveProgress={true}
-      ></EndOfTheQuizModal>
-    </div>
+    </GameLayout>
   );
 };
 

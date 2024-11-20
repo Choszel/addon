@@ -1,4 +1,4 @@
-import "./SearchResultList.css";
+import "../SearchResultList.css";
 
 interface Props {
   results:

@@ -323,9 +323,8 @@ h1{
 
 .basic_style{
     background-color: var(--foreground);
+    background: var(--foreground);
     color: var(--copy);
-    border: 1px solid var(--border);
-    border-radius: 0.375rem;
 }
 
 .primary_style{

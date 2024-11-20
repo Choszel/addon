@@ -39,7 +39,6 @@ const StoryAnswers = ({
 
   useEffect(() => {
     if (checked) {
-      console.log("Wybrana odpowiedź:", selectedValue);
       if (correctAnswear.current) {
         correctAnswear.current.style.backgroundColor = "var(--success)";
         correctAnswear.current.style.color = "var(--success-content)";

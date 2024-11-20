@@ -25,12 +25,13 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
     } else {
       if (refInput.current) {
         refInput.current.style.backgroundColor = "var(--error)";
-        refInput.current.style.backgroundColor = "var(--error-content)";
+        refInput.current.style.color = "var(--error-content)";
       }
     }
     setTimeout(() => {
       if (refInput.current) {
         refInput.current.style.backgroundColor = "var(--foreground)";
+        refInput.current.style.color = "var(--copy)";
         refInput.current.value = "";
       }
       setVerified(false);
@@ -38,7 +39,6 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
   };
 
   const handleSpeak = () => {
-    console.log("speak", question?.word_second);
     msg.lang = "en-US";
     msg.text = question?.word_second ?? "";
     window.speechSynthesis.cancel();

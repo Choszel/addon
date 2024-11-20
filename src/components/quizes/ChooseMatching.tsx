@@ -60,8 +60,10 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
       setVerified(true);
       if (result) {
         ref.style.backgroundColor = "var(--success)";
+        ref.style.color = "var(--success-content)";
       } else {
         ref.style.backgroundColor = "var(--error)";
+        ref.style.color = "var(--error-content)";
         switch (shuffledNumbers.findIndex((value) => value == 0)) {
           case 0:
             if (ref1.current) {

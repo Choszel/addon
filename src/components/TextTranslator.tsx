@@ -48,28 +48,25 @@ const TextTranslator = ({ text, popupRef }: Props) => {
 
   useEffect(() => {
     if (phrases) {
-      const sortedPhrases = [...phrases].sort((a, b) =>
-        a.word_english > b.word_english ? 1 : -1
+      const phraseMap = new Map(
+        phrases.map((phrase) => [phrase.word_english.toLowerCase(), phrase])
       );
 
-      const words = text.replace(/[^\w\s]/gi, "").split(/[ \n]/);
-      const matchedPhrases = new Set<TranslationPL_ENG>();
+      const words = text
+        .replace(/[^\w\s]/gi, "")
+        .toLowerCase()
+        .split(/\s+/);
 
+      const matchedPhrases = new Set<TranslationPL_ENG>();
       words.forEach((word) => {
-        sortedPhrases.forEach((phrase) => {
-          if (word.toLowerCase() === phrase.word_english.toLowerCase()) {
-            matchedPhrases.add(phrase);
-          }
-        });
+        if (phraseMap.has(word)) {
+          matchedPhrases.add(phraseMap.get(word)!);
+        }
       });
-      setFoundPhrases(Array.from(matchedPhrases).filter(Boolean));
-      console.log(words);
+
+      setFoundPhrases(Array.from(matchedPhrases));
     }
   }, [text, phrases]);
-
-  useEffect(() => {
-    console.log(foundPhrases);
-  }, [foundPhrases]);
 
   return (
     <span className="popuptext" id="tranlatorPopup" ref={popupRef}>
