@@ -26,13 +26,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/api/ai', async (req, res) => {
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const inputText = req.body.inputText;
-
+    const {inLanguage, outLanguage, inputText } = req.body;
     try {
         const completion = await openai.chat.completions.create({
             model: "gpt-4o-mini",
             messages: [
-                { role: "system", content: "Translate the given text into Polish." },
+                { role: "system", content: `Translate the given text in language which code is "${inLanguage}" into language which code is "${outLanguage}".` },
                 { role: "user", content: `Please, translate this into Polish: "${inputText}"` }
             ]
         });

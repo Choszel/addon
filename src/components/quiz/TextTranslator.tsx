@@ -6,10 +6,17 @@ import useTranslationPL_ENG, {
 } from "../../hooks/useTranslationPL_ENG";
 interface Props {
   text: string;
-  popupRef: React.RefObject<HTMLSpanElement>;
+  maxTextLength?: number;
+  inLanguage: string;
+  outLanguage: string;
 }
 
-const TextTranslator = ({ text, popupRef }: Props) => {
+const TextTranslator = ({
+  text,
+  maxTextLength,
+  inLanguage,
+  outLanguage,
+}: Props) => {
   const { addToSavedPhrases } = usePhrasesStorage("ENG");
   const { fetchAll } = useTranslationPL_ENG();
   const { data: phrases } = fetchAll();
@@ -18,6 +25,8 @@ const TextTranslator = ({ text, popupRef }: Props) => {
 
   const responseGenerate = async (inputText: string) => {
     const prompt = {
+      inLanguage: inLanguage,
+      outLanguage: outLanguage,
       inputText: inputText,
     };
 
@@ -38,7 +47,7 @@ const TextTranslator = ({ text, popupRef }: Props) => {
   };
 
   useEffect(() => {
-    if (text.length > 400) {
+    if (maxTextLength && text.length > maxTextLength) {
       setTranslation("Podano zbyt długi tekst do przetłumaczenia.");
     } else if (text.length > 1) {
       setTranslation("Tłumaczenie...");
@@ -69,7 +78,7 @@ const TextTranslator = ({ text, popupRef }: Props) => {
   }, [text, phrases]);
 
   return (
-    <span className="popuptext" id="tranlatorPopup" ref={popupRef}>
+    <>
       {translation}
       <div>
         {foundPhrases.map((phrase) => (
@@ -82,7 +91,7 @@ const TextTranslator = ({ text, popupRef }: Props) => {
           </button>
         ))}
       </div>
-    </span>
+    </>
   );
 };
 

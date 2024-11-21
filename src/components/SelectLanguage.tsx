@@ -13,7 +13,6 @@ const SelectLanguage = ({ setSelectedLanguage }: Props) => {
       style={{ padding: "0.5%" }}
       onChange={(event) => {
         setSelectedLanguage(event.target.value + "_PLN");
-        console.log(event.target.value);
       }}
     >
       {data.map((language) => (

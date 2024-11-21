@@ -42,6 +42,7 @@ import StoryWithQuestions from "./pages/quiz/StoryWithQuestions";
 import useTokenData from "./others/useTokenData";
 import { useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
+import TextDetector from "./pages/dictionary/TextDetector";
 
 function App() {
   const { CheckUserType } = useTokenData();
@@ -108,6 +109,7 @@ function App() {
           <Route index path="/" element={<Home />} />
           <Route path="*" element={<p>Not found: 404!</p>} />
           <Route path="/dictionary" element={<DictionaryHome />} />
+          <Route path="/dictionary/textDetection" element={<TextDetector />} />
           <Route
             path="/dictionary/alphabeticalSearch/:language/:letter"
             element={<AlphabeticalSearch />}

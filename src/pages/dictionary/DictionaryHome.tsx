@@ -83,6 +83,14 @@ const DictionaryHome = () => {
           onSearch={(id, searchText) => onSearch(id, searchText)}
           language={selectedLanguage ?? ""}
         ></RandomPhrase>
+        <button
+          className="button_secondary"
+          onClick={() => {
+            navigate("/dictionary/textDetection");
+          }}
+        >
+          Przetłumacz tekst
+        </button>
       </Stack>
       <Stack
         justify="center"

@@ -35,7 +35,7 @@ const actionData = (endpoint: string) => {
       const responseData = await response.json();      
       if (response.status === 200) {
         toast({
-          title: responseData.message || "Success",
+          title: responseData.message || "Sukces",
           status: "success",
           position: "bottom-right",
           duration: 5000,

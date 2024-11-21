@@ -110,7 +110,14 @@ const StoryWithQuestions = () => {
       <Text whiteSpace="pre-line" onMouseUp={getSelectionText} marginTop="2%">
         {story[0]?.text}
       </Text>
-      <TextTranslator text={marked} popupRef={popupRef}></TextTranslator>
+      <span className="popuptext" id="tranlatorPopup" ref={popupRef}>
+        <TextTranslator
+          text={marked}
+          inLanguage={"ENG"}
+          outLanguage={"PLN"}
+          maxTextLength={500}
+        ></TextTranslator>
+      </span>
       <br />
       <br />
       <Box
@@ -137,7 +144,6 @@ const StoryWithQuestions = () => {
       <button style={{ margin: "3%" }} onClick={() => checkAnswers()}>
         Sprawdź odpowiedzi
       </button>
-
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
