@@ -32,7 +32,8 @@ const DetailsMissingPhrases = () => {
     error: langError,
   } = useLanguages();
   const routeName = "/missingPhrases";
-  const { postData } = actionData("/wordsEnglish");
+  const [postRoute, setPostRoute] = useState<string>("/wordsEnglish");
+  const { postData } = actionData(postRoute);
   const { deleteData } = actionData(routeName);
   const { postData: postTranslations } = actionData("/translationPLNENG");
   const [refs, setRefs] = useState<
@@ -40,21 +41,38 @@ const DetailsMissingPhrases = () => {
   >([]);
   const [translationsData, setTranslationsData] = useState<Translation[]>();
   const navigate = useNavigate();
+  const [languageValue, setLanguageValue] = useState<string>();
 
   const handleSave = async () => {
     const formData = new URLSearchParams();
     formData.append("word", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");
-    formData.append("difficulty_level_id", refs[3]?.value ?? "");
-    formData.append("category_id", refs[4]?.value ?? "");
-    formData.append("part_of_speech", refs[5]?.value ?? "");
+    formData.append("photo", refs[3]?.value ?? "");
+    formData.append("difficulty_level_id", refs[4]?.value ?? "");
+    formData.append("category_id", refs[5]?.value ?? "");
+    formData.append("part_of_speech", refs[6]?.value ?? "");
 
     const response = await postData(formData);
+
     if (response?.id) {
       translationsData?.forEach((element) => {
         const translation = new URLSearchParams();
-        translation.append("word_polish_id", element.id?.toString() ?? "");
-        translation.append("word_english_id", (response.id ?? -1).toString());
+        switch (languageValue) {
+          case "PLN":
+            translation.append(
+              "word_polish_id",
+              (response.id ?? -1).toString()
+            );
+            translation.append("word_english_id", element.id?.toString() ?? "");
+            break;
+          default:
+            translation.append("word_polish_id", element.id?.toString() ?? "");
+            translation.append(
+              "word_english_id",
+              (response.id ?? -1).toString()
+            );
+            break;
+        }
         postTranslations(translation);
       });
 
@@ -68,6 +86,36 @@ const DetailsMissingPhrases = () => {
   };
 
   useEffect(() => {
+    if (languageValue) {
+      console.log("languageValue", languageValue);
+      disableUnused();
+    }
+  }, [languageValue]);
+
+  const disableUnused = () => {
+    switch (languageValue) {
+      case "PLN":
+        setPostRoute("/wordsPolish");
+        if (refs[3] && refs[4] && refs[6]) {
+          console.log("disable");
+          refs[3].disabled = false;
+          refs[4].disabled = true;
+          refs[6].disabled = true;
+        }
+        break;
+      default:
+        setPostRoute("/wordsEnglish");
+        if (refs[3] && refs[4] && refs[6]) {
+          console.log("enable");
+          refs[3].disabled = true;
+          refs[4].disabled = false;
+          refs[6].disabled = false;
+        }
+        break;
+    }
+  };
+
+  useEffect(() => {
     if (
       data &&
       refs[0] &&
@@ -75,23 +123,26 @@ const DetailsMissingPhrases = () => {
       refs[2] &&
       refs[3] &&
       refs[4] &&
-      refs[5]
+      refs[5] &&
+      refs[6]
     ) {
       refs[0].value = data[0]?.phrase;
       refs[1].value = data[0]?.definition;
       refs[2].value =
         (
-          languages.find((lan) => lan.code == data[0].code)?.id ?? 1
+          languages.find((lan) => lan.code == data[0].code)?.code ?? "ENG"
         ).toString() ?? "";
-      refs[3].value =
+      setLanguageValue(refs[2].value);
+      refs[3].value = data[0]?.photo ?? "";
+      refs[4].value =
         (
           difficultyLevels.find((dif) => dif.level == data[0].level)?.id ?? 1
         ).toString() ?? "";
-      refs[4].value =
+      refs[5].value =
         (
           categories.find((cat) => cat.name == data[0].category)?.id ?? 1
         ).toString() ?? "";
-      refs[5].value = data[0]?.part_of_speech.toString();
+      refs[6].value = data[0]?.part_of_speech?.toString() ?? "";
     }
   }, [data, refs]);
 
@@ -104,10 +155,12 @@ const DetailsMissingPhrases = () => {
         inputName: "Language",
         inputType: "select",
         isRequired: false,
-        data: languages?.map((lan) => ({ id: lan.id, value: lan.code })),
+        data: languages?.map((lan) => ({ id: lan.code, value: lan.code })),
         isLoading: langIsLoading,
         error: langError,
+        onChange: (e) => setLanguageValue(e.target.value),
       },
+      { inputName: "Photo", inputType: "text", isRequired: false },
       {
         inputName: "Level",
         inputType: "select",

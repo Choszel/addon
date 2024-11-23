@@ -6,9 +6,10 @@ export interface MissingPhrase{
     definition: string;
     user: number | string;
     code: number | string;
-    level: number | string;
+    photo?: string | null;
+    level?: number | string;
     category: number | string;
-    part_of_speech: number | string;
+    part_of_speech?: number | string;
 }
 
 const useMissingPhrases = (id?: number) => {

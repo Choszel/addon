@@ -152,7 +152,9 @@ const CQuiz = () => {
         inputType: "select",
         isRequired: false,
         data:
-          languages?.map((lang) => ({ id: lang.id, value: lang.code })) || [],
+          languages
+            ?.map((lang) => ({ id: lang.id, value: lang.code }))
+            .filter((lang) => lang.value != "PLN") || [],
       },
     ],
     setRefs: function (): void {},

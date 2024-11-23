@@ -27,6 +27,7 @@ export interface FormData {
     data?: Props[];
     isLoading?: boolean;
     error?: string;
+    onChange?: (e: any) => void;
   }[];
   setRefs: (refs: (HTMLInputElement | HTMLSelectElement | null)[]) => void;
   onSave: () => void;
@@ -96,6 +97,9 @@ const FormTemplate = ({
                   ref={(el) => {
                     localRefs.current[index] = el;
                   }}
+                  onChange={(e) =>
+                    input?.onChange ? input?.onChange(e) : null
+                  }
                 >
                   {input.data?.map((option) => (
                     <option value={option.id} key={option.id}>

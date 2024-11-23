@@ -1,10 +1,11 @@
 import useLanguages from "../hooks/useLanguages";
 
 interface Props {
+  selectedLanguage?: string;
   setSelectedLanguage: (code: string) => void;
 }
 
-const SelectLanguage = ({ setSelectedLanguage }: Props) => {
+const SelectLanguage = ({ selectedLanguage, setSelectedLanguage }: Props) => {
   const { data } = useLanguages();
 
   return (
@@ -12,8 +13,9 @@ const SelectLanguage = ({ setSelectedLanguage }: Props) => {
       className="select-primary"
       style={{ padding: "0.5%" }}
       onChange={(event) => {
-        setSelectedLanguage(event.target.value + "_PLN");
+        setSelectedLanguage(event.target.value);
       }}
+      value={selectedLanguage}
     >
       {data.map((language) => (
         <option key={language.id} className="select-primary-option">

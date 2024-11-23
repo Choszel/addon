@@ -22,6 +22,7 @@ export interface Phrase {
   level?: string | null;
   type?: string | null;
   part_of_speech?: string | null;
+  popularity?: number | null;
 }
 
 const DictionarySearchResult = () => {
@@ -30,11 +31,13 @@ const DictionarySearchResult = () => {
     word: string;
     code: string;
   }>();
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("ENG_PLN");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(
+    code ?? "ENG"
+  );
   const [searchPhrase, setSearchPhrase] = useState<Phrase | null>(null);
   const [translations, setTranslations] = useState<Phrase[]>([]);
   const navigate = useNavigate();
-  const { putData } = actionData("/wordsEnglish/raisePopularity");
+  const { putData } = actionData("/words/raisePopularity");
   const { addToSavedPhrases } = usePhrasesStorage("ENG");
   const { CheckUserType } = useTokenData();
   const toast = useToast();
@@ -42,8 +45,9 @@ const DictionarySearchResult = () => {
   const [error, setError] = useState<boolean>(false);
 
   const Load = async () => {
+    console.log("Load");
     switch (code) {
-      case "ENG_PLN":
+      case "ENG":
         try {
           const response = await fetch(
             "http://localhost:3001/api/wordsEnglishDetailed?id=" + id
@@ -51,31 +55,32 @@ const DictionarySearchResult = () => {
           const data: Phrase[] = await response.json();
           if (data[0].word == word) {
             const formData = new URLSearchParams();
+            formData.append("table", "words_english");
             formData.append("id", id || "");
             putData(formData);
             setSearchPhrase(data[0]);
-            console.log("wordsEnglishDetailed", searchPhrase);
             const response2 = await fetch(
               "http://localhost:3001/api/translationPLNENGDetailed/eng?id=" + id
             );
             const data2: PolishWord[] = await response2.json();
             setTranslations(data2);
-            console.log("translationPLNENGDetailed", data);
           } else {
             const response = await fetch(
               "http://localhost:3001/api/wordsPolishDetailed?id=" + id
             );
             const data: Phrase[] = await response.json();
+            const formData = new URLSearchParams();
+            formData.append("table", "words_polish");
+            formData.append("id", id || "");
+            putData(formData);
             if (data[0].word == word) {
               setSearchPhrase(data[0]);
-              console.log("wordsPolishDetailed", searchPhrase);
               const response2 = await fetch(
                 "http://localhost:3001/api/translationPLNENGDetailed/pln?id=" +
                   id
               );
               const data2: PolishWord[] = await response2.json();
               setTranslations(data2);
-              console.log("translationPLNENGDetailed", data);
             }
           }
         } catch (err) {
@@ -86,10 +91,21 @@ const DictionarySearchResult = () => {
       default:
         try {
           const response = await fetch(
-            "http://localhost:3001/api/translationPLNENGDetailed/eng?id=" + id
+            "http://localhost:3001/api/wordsPolishDetailed?id=" + id
           );
-          const data = await response.json();
-          setSearchPhrase(data);
+          const data: Phrase[] = await response.json();
+          const formData = new URLSearchParams();
+          formData.append("table", "words_polish");
+          formData.append("id", id || "");
+          putData(formData);
+          if (data[0].word == word) {
+            setSearchPhrase(data[0]);
+            const response2 = await fetch(
+              "http://localhost:3001/api/translationPLNENGDetailed/pln?id=" + id
+            );
+            const data2: PolishWord[] = await response2.json();
+            setTranslations(data2);
+          }
         } catch (err) {
           console.log(err);
         }
@@ -98,11 +114,13 @@ const DictionarySearchResult = () => {
   };
 
   useEffect(() => {
-    Load();
+    if (id && code && word) {
+      setSelectedLanguage(code);
+      Load();
+    }
   }, [id, code, word]);
 
   const handleAddToQuiz = (id: number) => {
-    console.log(translations[id]);
     // localStorage.removeItem("translations_pln_eng");
 
     if (CheckUserType() != "none")
@@ -132,21 +150,18 @@ const DictionarySearchResult = () => {
   };
 
   const handleSpeak = () => {
-    if (searchPhrase?.level) {
-      msg.lang = "en-US";
-
-      const voices = speechSynthesis
-        .getVoices()
-        .filter((voice) => voice.lang === "en-US");
-      msg.voice = voices[0];
-    } else {
-      msg.lang = "pl-PL";
-
-      const voices = speechSynthesis
-        .getVoices()
-        .filter((voice) => voice.lang === "pl-PL");
-      msg.voice = voices[1];
+    let speakLanguage = "pl-PL";
+    switch (code) {
+      case "ENG":
+        speakLanguage = "en-US";
+        break;
+      default:
+        break;
     }
+    const voices = speechSynthesis
+      .getVoices()
+      .filter((voice) => voice.lang === speakLanguage);
+    msg.voice = speakLanguage == "pl-PL" ? voices[1] : voices[0];
 
     msg.text = searchPhrase?.word ?? "";
     window.speechSynthesis.cancel();
@@ -162,7 +177,10 @@ const DictionarySearchResult = () => {
         marginBottom={{ base: "5%", md: "unset" }}
       >
         <p>Wybrany język:</p>
-        <SelectLanguage setSelectedLanguage={setSelectedLanguage} />
+        <SelectLanguage
+          selectedLanguage={selectedLanguage}
+          setSelectedLanguage={setSelectedLanguage}
+        />
         <div style={{ width: "5%" }}></div>
         <SearchInput
           onSearch={(id, searchText) => onSearch(id, searchText)}
@@ -212,7 +230,7 @@ const DictionarySearchResult = () => {
                   index={index + 1}
                   link={true}
                   handleAddToQuiz={handleAddToQuiz}
-                  language={phrase.level ? "en-US" : "pl-PL"}
+                  language={code == "PLN" ? "ENG" : "PLN"}
                 ></TranslationTab>
               ))}
             </ul>

@@ -21,12 +21,21 @@ const TranslationTab = ({
   const navigator = useNavigate();
   const msg = new SpeechSynthesisUtterance();
 
+  console.log(language);
   const handleSpeak = () => {
-    msg.lang = language;
+    let speakLanguage = "pl-PL";
+    switch (language) {
+      case "ENG":
+        speakLanguage = "en-US";
+        break;
+      default:
+        break;
+    }
+    msg.lang = speakLanguage;
 
     const voices = speechSynthesis
       .getVoices()
-      .filter((voice) => voice.lang === language);
+      .filter((voice) => voice.lang === speakLanguage);
     msg.voice = voices[1];
 
     msg.text = phrase.word;
@@ -37,7 +46,12 @@ const TranslationTab = ({
   const redirectButton = () => {
     if (link) {
       navigator(
-        "/dictionary/searchResult/" + phrase.id + "/" + phrase.word + "/ENG_PLN"
+        "/dictionary/searchResult/" +
+          phrase.id +
+          "/" +
+          phrase.word +
+          "/" +
+          language
       );
     }
   };

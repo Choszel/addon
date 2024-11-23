@@ -259,13 +259,19 @@ app.get('/api/missingPhrases', async(req, res)=>{
 app.get('/api/missingPhrasesDetailed', async(req, res)=>{
     const { id } = req.query;
     try{
-        const condition = 'select m.id, code, login as user, phrase, definition, c.name as category, level, part_of_speech ' 
-            + 'from missing_phrases m, languages l, users u, categories c, difficulty_levels dl '
-            + 'where m.language_id=l.id and m.user_id=u.id and m.category_id=c.id and m.difficulty_level_id=dl.id ' 
-            + 'AND m.id = ' + id + ';'
-        const result = await pool.query(id ? condition : 'select m.id, code, login as user, phrase, definition, c.name as category, level, part_of_speech ' 
-            + 'from missing_phrases m, languages l, users u, categories c, difficulty_levels dl '
-            + 'where m.language_id=l.id and m.user_id=u.id and m.category_id=c.id and m.difficulty_level_id=dl.id ' 
+        const condition = 'SELECT m.id, l.code, u.login AS user, m.phrase, m.definition, c.name AS category, dl.level, m.part_of_speech, photo '
+            + 'FROM missing_phrases m '
+            + 'JOIN languages l ON m.language_id = l.id '
+            + 'JOIN users u ON m.user_id = u.id '
+            + 'JOIN categories c ON m.category_id = c.id '
+            + 'LEFT OUTER JOIN difficulty_levels dl ON m.difficulty_level_id = dl.id '
+            + 'WHERE m.id = ' + id + ';'
+        const result = await pool.query(id ? condition : 'SELECT m.id, l.code, u.login AS user, m.phrase, m.definition, c.name AS category, dl.level, m.part_of_speech, photo '
+            + 'FROM missing_phrases m '
+            + 'JOIN languages l ON m.language_id = l.id '
+            + 'JOIN users u ON m.user_id = u.id '
+            + 'JOIN categories c ON m.category_id = c.id '
+            + 'LEFT OUTER JOIN difficulty_levels dl ON m.difficulty_level_id = dl.id '
             + 'ORDER BY m.id ASC;');
         res.json(result.rows);
     }catch(err){
@@ -275,7 +281,7 @@ app.get('/api/missingPhrasesDetailed', async(req, res)=>{
 })
 
 app.post('/api/missingPhrases', async (req, res) =>{
-    const { phrase, definition, language_id, user_id, difficulty_level_id, category_id, part_of_speech } = req.body;
+    const { phrase, definition, language_id, user_id, photo, difficulty_level_id, category_id, part_of_speech } = req.body;
     console.log("App ", phrase, user_id);
     try{
         const phraseExists = await pool.query('SELECT * FROM missing_phrases WHERE phrase = $1', [phrase]);
@@ -283,7 +289,7 @@ app.post('/api/missingPhrases', async (req, res) =>{
             return res.status(400).json({ error: "Phrase already reported" });
         }
         await pool.query(
-            'INSERT INTO missing_phrases(phrase, definition, language_id, user_id, difficulty_level_id, category_id, part_of_speech) VALUES ($1, $2, $3, $4, $5, $6, $7)', [phrase, definition, language_id, user_id, difficulty_level_id, category_id, part_of_speech]
+            'INSERT INTO missing_phrases(phrase, definition, language_id, user_id, photo, difficulty_level_id, category_id, part_of_speech) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [phrase, definition, language_id, user_id, photo, difficulty_level_id, category_id, part_of_speech]
         );
         res.status(200).json({ message: "Phrase reported successfully" });
     }catch(err){
@@ -415,11 +421,38 @@ app.get('/api/wordsEnglish', async (req, res) => {
     } 
 });
 
-app.put('/api/wordsEnglish/raisePopularity', async (req, res) =>{
-    const { id } = req.body;
+app.get('/api/words/limit', async (req, res) => {
+    const { table, limit } = req.query;
+
+    const allowedTables = ["words_polish", "words_english"];
+    if (!allowedTables.includes(table)) {
+        return res.status(400).send('Invalid table name');
+    }
+
+    try {
+        const result = await pool.query(
+            `SELECT * FROM ${table} ORDER BY popularity DESC LIMIT $1;`,
+            [limit]
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+
+app.put('/api/words/raisePopularity', async (req, res) =>{
+    const { table, id } = req.body;
+
+    const allowedTables = ["words_polish", "words_english"];
+    if (!allowedTables.includes(table)) {
+        return res.status(400).send('Invalid table name');
+    }
+
     console.log(id);
     try {       
-        const result = await pool.query('UPDATE words_english SET popularity = popularity+1 WHERE id = $1', [id]);
+        const result = await pool.query(`UPDATE ${table} SET popularity = popularity+1 WHERE id = $1`, [id]);
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server error");

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import actionData from "../../hooks/actionData";
 import FormTemplate, {
@@ -34,16 +34,25 @@ const NoTranslation = () => {
     error: catError,
   } = useCategories();
   const { GetUserId } = useTokenData();
+  const [languageValue, setLanguageValue] = useState<string>("ENG");
 
   const handleSave = () => {
     const formData = new URLSearchParams();
     formData.append("phrase", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");
-    formData.append("language_id", refs[2]?.value ?? "");
+    formData.append(
+      "language_id",
+      languages.find((lang) => lang.code === refs[2]?.value)?.id.toString() ??
+        ""
+    );
     formData.append("user_id", GetUserId().toString());
-    formData.append("difficulty_level_id", refs[3]?.value ?? "");
-    formData.append("category_id", refs[4]?.value ?? "");
-    formData.append("part_of_speech", refs[5]?.value ?? "");
+    formData.append("category_id", refs[5]?.value ?? "");
+    if (languageValue != "PLN") {
+      formData.append("part_of_speech", refs[6]?.value ?? "");
+      formData.append("difficulty_level_id", refs[4]?.value ?? "");
+    } else {
+      formData.append("photo", refs[3]?.value ?? "");
+    }
     postData(formData);
     return navigate("/dictionary");
   };
@@ -51,6 +60,48 @@ const NoTranslation = () => {
   const handleCancel = () => {
     return navigate("/dictionary");
   };
+
+  const disableUnused = () => {
+    switch (languageValue) {
+      case "PLN":
+        if (refs[3] && refs[4] && refs[6]) {
+          console.log("disable");
+          refs[3].disabled = false;
+          refs[4].disabled = true;
+          refs[6].disabled = true;
+        }
+        break;
+      default:
+        if (refs[3] && refs[4] && refs[6]) {
+          console.log("enable");
+          refs[3].disabled = true;
+          refs[4].disabled = false;
+          refs[6].disabled = false;
+        }
+        break;
+    }
+  };
+
+  useEffect(() => {
+    if (languageValue) {
+      console.log("languageValue", languageValue);
+      disableUnused();
+    }
+  }, [languageValue]);
+
+  useEffect(() => {
+    if (
+      refs[0] &&
+      refs[1] &&
+      refs[2] &&
+      refs[3] &&
+      refs[4] &&
+      refs[5] &&
+      refs[6]
+    ) {
+      disableUnused();
+    }
+  }, [refs]);
 
   const formData: FormData = {
     title: "Proszę wypełnić poniższy formularz",
@@ -66,8 +117,10 @@ const NoTranslation = () => {
         inputType: "select",
         isRequired: false,
         data:
-          languages?.map((lang) => ({ id: lang.id, value: lang.code })) || [],
+          languages?.map((lang) => ({ id: lang.code, value: lang.code })) || [],
+        onChange: (e) => setLanguageValue(e.target.value),
       },
+      { inputName: "Photo", inputType: "text", isRequired: false },
       {
         inputName: "Poziom trudności",
         inputType: "select",

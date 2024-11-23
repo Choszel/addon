@@ -1,37 +1,31 @@
-import { useEffect, useState } from "react";
-import { WordsLike } from "./SearchInput";
-
 interface Props {
   onSearch: (id: number, searchText: string) => void;
   language: string;
 }
 
 const RandomPhrase = ({ onSearch, language }: Props) => {
-  const [words, setWords] = useState<WordsLike[]>();
+  const findRandomPhrase = async () => {
+    let endpoint = "";
+    switch (language) {
+      case "ENG":
+        endpoint = "wordsEnglish";
+        break;
+      default:
+        endpoint = "wordsPolish";
+        break;
+    }
 
-  useEffect(() => {
-    const getWords = async () => {
-      switch (language) {
-        default:
-          try {
-            const response = await fetch(
-              "http://localhost:3001/api/wordsEnglish"
-            );
-            const data = await response.json();
-            setWords(data);
-          } catch (err) {
-            console.log(err);
-          }
-          break;
+    try {
+      const response = await fetch("http://localhost:3001/api/" + endpoint);
+      const data = await response.json();
+
+      const randomIndex = Math.floor(Math.random() * data.length);
+      if (data.length > 0) {
+        onSearch(data[randomIndex].id, data[randomIndex].word);
       }
-    };
-    getWords();
-  }, [language]);
-
-  const findRandomPhrase = () => {
-    const randomIndex = Math.floor(Math.random() * (words?.length ?? 0));
-    if (words && words.length > 0)
-      onSearch(words[randomIndex].id, words[randomIndex].word);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

@@ -17,11 +17,12 @@ const Home = () => {
         justifyContent="center"
         spacing={10}
         marginBottom="3%"
+        height={{ base: "300px", md: "350px" }}
       >
         <Link
           to="/dictionary"
           className="gradient_box"
-          style={{ width: "40%" }}
+          style={{ width: "40%", height: "100%" }}
         >
           <p className="p2">Słownik</p>
           <Image
@@ -35,7 +36,7 @@ const Home = () => {
         <Link
           to="/flashcards"
           className="gradient_box"
-          style={{ width: "40%" }}
+          style={{ width: "40%", height: "100%" }}
         >
           <p className="p2">Fiszki i gry</p>
           <Image

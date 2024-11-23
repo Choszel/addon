@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CanceledError } from "axios";
 import { useToast } from "@chakra-ui/react";
 
@@ -21,6 +21,9 @@ const actionData = (endpoint: string) => {
     return sendData(formData, method);
   };
 
+  useEffect(()=>{
+    
+  }, [endpoint])
   const sendData = async (formData: URLSearchParams, method: string): Promise<{ id?: number | undefined}> => {
     try {
       const response = await fetch("http://localhost:3001/api" + endpoint, {

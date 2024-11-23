@@ -1,49 +1,21 @@
 import { Box, HStack, Spacer, Spinner, Stack } from "@chakra-ui/react";
 import SearchInput from "../../components/dictionary/SearchInput";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SelectLanguage from "../../components/SelectLanguage";
-import useWordsEnglish, { EnglishWord } from "../../hooks/useWordsEnglish";
 import RandomPhrase from "../../components/dictionary/RandomPhrase";
+import useAlphabet from "../../hooks/useAlphabet";
+import usePopularWords, { PopularWord } from "../../hooks/usePopularWords";
 
 const DictionaryHome = () => {
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("ENG_PLN");
-  const { fetchAll } = useWordsEnglish();
-  const { data: popularEnglishWords, isLoading, error } = fetchAll();
-  const [slicedArray, setSlicedArray] = useState<EnglishWord[]>([]);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("ENG");
+  const {
+    data: popularWords,
+    isLoading,
+    error,
+  } = usePopularWords(selectedLanguage);
   const navigate = useNavigate();
-  const alphabet = [
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-    "Y",
-    "Z",
-  ];
-
-  useEffect(() => {
-    setSlicedArray(popularEnglishWords.slice(0, 5));
-  }, [popularEnglishWords]);
+  const alphabet = useAlphabet(selectedLanguage);
 
   const onSearch = (id: number, searchText: string) => {
     console.log("onSearch", id, searchText);
@@ -57,9 +29,14 @@ const DictionaryHome = () => {
     );
   };
 
-  const redirectButton = (phrase: EnglishWord) => {
+  const redirectButton = (phrase: PopularWord) => {
     navigate(
-      "/dictionary/searchResult/" + phrase.id + "/" + phrase.word + "/ENG_PLN"
+      "/dictionary/searchResult/" +
+        phrase.id +
+        "/" +
+        phrase.word +
+        "/" +
+        selectedLanguage
     );
   };
 
@@ -67,7 +44,10 @@ const DictionaryHome = () => {
     <>
       <HStack>
         <p>Wybrany język:</p>
-        <SelectLanguage setSelectedLanguage={setSelectedLanguage} />
+        <SelectLanguage
+          selectedLanguage={selectedLanguage}
+          setSelectedLanguage={setSelectedLanguage}
+        />
       </HStack>
       <Stack
         direction={{ base: "column", md: "row" }}
@@ -105,18 +85,18 @@ const DictionaryHome = () => {
           </p>
           {isLoading && <Spinner boxSize={100} marginY="9%" />}
           {error && <p>Przepraszamy, wystąpił błąd serwera.</p>}
-          {slicedArray.map((word, id) => (
+          {popularWords.map((phrase, id) => (
             <HStack
               width="90%"
-              onClick={() => redirectButton(word)}
+              onClick={() => redirectButton(phrase)}
               cursor="pointer"
               marginY="0.7%"
               key={id}
             >
               <p>{id + 1}.</p>
-              <p>{word.word}</p>
+              <p>{phrase.word}</p>
               <Spacer />
-              <p>{word.popularity}</p>
+              <p>{phrase.popularity}</p>
             </HStack>
           ))}
         </Box>

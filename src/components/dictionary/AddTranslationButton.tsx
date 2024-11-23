@@ -87,11 +87,13 @@ const AddTranslationButton = ({
               disabled={row.wordId != null}
               defaultValue={row.language}
             >
-              {languages.map((language) => (
-                <option value={language.code} key={language.id}>
-                  {language.code}
-                </option>
-              ))}
+              {languages.map((language) =>
+                language.code != "PLN" ? (
+                  <option value={language.code} key={language.id}>
+                    {language.code}
+                  </option>
+                ) : null
+              )}
             </select>
           )}
           <div style={{ marginInline: "1%" }}>
@@ -100,14 +102,14 @@ const AddTranslationButton = ({
             ) : (
               <SearchInput
                 language={
-                  localRefs.current[row.id]?.languageRef?.value ?? "PLN"
+                  localRefs.current[row.id]?.languageRef?.value ?? "ENG"
                 }
                 onSearch={(id, word) =>
                   onSearch(
                     row.id,
                     word,
                     id,
-                    localRefs.current[row.id]?.languageRef?.value ?? "PLN"
+                    localRefs.current[row.id]?.languageRef?.value ?? "ENG"
                   )
                 }
               />

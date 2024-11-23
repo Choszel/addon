@@ -93,8 +93,8 @@ const TextDetector = () => {
             <p className="p2">Przetłumaczony tekst:</p>
             <TextTranslator
               text={recognizedText}
-              inLanguage={textLanguage.slice(0, 3)}
-              outLanguage={translateLanguage.slice(0, 3)}
+              inLanguage={textLanguage}
+              outLanguage={translateLanguage}
             />
           </Stack>
         )}

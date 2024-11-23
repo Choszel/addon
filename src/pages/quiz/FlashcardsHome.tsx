@@ -75,15 +75,17 @@ const FlashcardsHome = () => {
           >
             Wybierz język
           </option>
-          {languages.map((language) => (
-            <option
-              key={"language" + language.id}
-              value={language.code}
-              className="select-primary-option"
-            >
-              {language.code}
-            </option>
-          ))}
+          {languages.map((language) =>
+            language.code != "PLN" ? (
+              <option
+                key={"language" + language.id}
+                value={language.code}
+                className="select-primary-option"
+              >
+                {language.code}
+              </option>
+            ) : null
+          )}
         </select>
       </Stack>
       <HStack marginY="2%" align="center">

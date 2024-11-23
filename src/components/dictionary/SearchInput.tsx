@@ -42,18 +42,6 @@ const SearchInput = ({ onSearch, language }: Props) => {
                 debounceSearchInput
             );
             const data = await response.json();
-            setWords(data);
-          } catch (err) {
-            console.log(err);
-          }
-          break;
-        case "ENG_PLN":
-          try {
-            const response = await fetch(
-              "http://localhost:3001/api/wordsEnglish/word?word=" +
-                debounceSearchInput
-            );
-            const data = await response.json();
             const response2 = await fetch(
               "http://localhost:3001/api/wordsPolish/word?word=" +
                 debounceSearchInput

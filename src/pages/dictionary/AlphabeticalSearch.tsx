@@ -12,46 +12,40 @@ const AlphabeticalSearch = () => {
     letter: string;
   }>();
   const [selectedLanguage, setSelectedLanguage] = useState<string>(
-    language ?? "ENG_PLN"
+    language ?? "ENG"
   );
   const [words, setWords] = useState<Phrase[]>();
   const navigate = useNavigate();
   const [error, setError] = useState<boolean>(false);
 
   const Load = async () => {
-    switch (language) {
-      case "ENG_PLN":
-        try {
-          const response = await fetch(
-            "http://localhost:3001/api/wordsEnglish/word?word=" +
-              letter?.toLowerCase()
-          );
-          const data: Phrase[] = await response.json();
-          setWords(data);
-        } catch (err) {
-          console.log(err);
-          setError(true);
-        }
+    let endpoint = "";
+    switch (selectedLanguage) {
+      case "ENG":
+        endpoint = "English";
         break;
       default:
-        try {
-          const response = await fetch(
-            "http://localhost:3001/api/wordsEnglish/word?word=" +
-              letter?.toLowerCase()
-          );
-          const data = await response.json();
-          setWords(data);
-        } catch (err) {
-          console.log(err);
-          setError(true);
-        }
+        endpoint = "Polish";
         break;
+    }
+    try {
+      const response = await fetch(
+        "http://localhost:3001/api/words" +
+          endpoint +
+          "/word?word=" +
+          letter?.toLowerCase()
+      );
+      const data: Phrase[] = await response.json();
+      setWords(data);
+    } catch (err) {
+      console.log(err);
+      setError(true);
     }
   };
 
   useEffect(() => {
     Load();
-  }, [language, letter]);
+  }, [selectedLanguage]);
 
   const onSearch = (id: number, searchText: string) => {
     console.log("onSearch", id, searchText);
@@ -69,7 +63,10 @@ const AlphabeticalSearch = () => {
     <>
       <HStack marginBottom={{ base: "5%", md: "unset" }}>
         <p>Wybrany język:</p>
-        <SelectLanguage setSelectedLanguage={setSelectedLanguage} />
+        <SelectLanguage
+          selectedLanguage={selectedLanguage}
+          setSelectedLanguage={setSelectedLanguage}
+        />
       </HStack>
       <SearchInput
         onSearch={(id, searchText) => onSearch(id, searchText)}
@@ -88,7 +85,8 @@ const AlphabeticalSearch = () => {
             phrase={word}
             index={index + 1}
             link={true}
-            language={"en-US"}
+            language={selectedLanguage}
+            key={index + 1}
           ></TranslationTab>
         ))
       )}
