@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import usePhrasesStorage from "../../hooks/usePhrasesStorage";
 import "../../index.css";
-import useTranslationPL_ENG, {
-  TranslationPL_ENG,
-} from "../../hooks/useTranslationPL_ENG";
+import useTranslationPL_, {
+  TranslationPL_,
+} from "../../hooks/useTranslationPL_";
 interface Props {
   text: string;
   maxTextLength?: number;
@@ -17,10 +17,10 @@ const TextTranslator = ({
   inLanguage,
   outLanguage,
 }: Props) => {
-  const { addToSavedPhrases } = usePhrasesStorage("ENG");
-  const { fetchAll } = useTranslationPL_ENG();
-  const { data: phrases } = fetchAll();
-  const [foundPhrases, setFoundPhrases] = useState<TranslationPL_ENG[]>([]);
+  const { addToSavedPhrases } = usePhrasesStorage(inLanguage);
+  const { fetchAll } = useTranslationPL_();
+  const { data: phrases } = fetchAll(inLanguage);
+  const [foundPhrases, setFoundPhrases] = useState<TranslationPL_[]>([]);
   const [translation, setTranslation] = useState<string>();
 
   const responseGenerate = async (inputText: string) => {
@@ -58,7 +58,7 @@ const TextTranslator = ({
   useEffect(() => {
     if (phrases) {
       const phraseMap = new Map(
-        phrases.map((phrase) => [phrase.word_english.toLowerCase(), phrase])
+        phrases.map((phrase) => [phrase.word_second.toLowerCase(), phrase])
       );
 
       const words = text
@@ -66,7 +66,7 @@ const TextTranslator = ({
         .toLowerCase()
         .split(/\s+/);
 
-      const matchedPhrases = new Set<TranslationPL_ENG>();
+      const matchedPhrases = new Set<TranslationPL_>();
       words.forEach((word) => {
         if (phraseMap.has(word)) {
           matchedPhrases.add(phraseMap.get(word)!);
@@ -87,7 +87,7 @@ const TextTranslator = ({
             onClick={() => addToSavedPhrases({ translation_id: phrase.id })}
             style={{ marginLeft: "8px", color: "var(--primary-light)" }}
           >
-            {phrase.word_english}
+            {phrase.word_second}
           </button>
         ))}
       </div>

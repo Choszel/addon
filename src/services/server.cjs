@@ -408,25 +408,12 @@ app.post('/api/wordsPolish', async (req, res) => {
     }
 });
 
-
-app.get('/api/wordsEnglish', async (req, res) => {
-    const { id } = req.query;
-    try{
-        const condition = "SELECT * FROM words_english WHERE id = " + id + ";";
-        const result = await pool.query(id ? condition : 'SELECT * FROM words_english ORDER BY popularity DESC;');
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Server error');
-    } 
-});
-
 app.get('/api/words/limit', async (req, res) => {
-    const { table, limit } = req.query;
+    const { language, limit } = req.query;
+    const { isAllowed = true, table }= allowedLanguage(language);
 
-    const allowedTables = ["words_polish", "words_english"];
-    if (!allowedTables.includes(table)) {
-        return res.status(400).send('Invalid table name');
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
     }
 
     try {
@@ -441,13 +428,12 @@ app.get('/api/words/limit', async (req, res) => {
     }
 });
 
-
 app.put('/api/words/raisePopularity', async (req, res) =>{
-    const { table, id } = req.body;
+    const { language, id } = req.body;
+    const { isAllowed = true, table }= allowedLanguage(language);
 
-    const allowedTables = ["words_polish", "words_english"];
-    if (!allowedTables.includes(table)) {
-        return res.status(400).send('Invalid table name');
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
     }
 
     console.log(id);
@@ -464,6 +450,18 @@ app.get('/api/wordsEnglish/word', async (req, res) => {
     try{
         if(!word)return;
         const result = await pool.query("SELECT id, word FROM words_english WHERE word like '" + word + "%' ORDER BY popularity;");
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.get('/api/wordsEnglish', async (req, res) => {
+    const { id } = req.query;
+    try{
+        const condition = "SELECT * FROM words_english WHERE id = " + id + ";";
+        const result = await pool.query(id ? condition : 'SELECT * FROM words_english ORDER BY popularity DESC;');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -533,92 +531,11 @@ app.post('/api/wordsEnglish', async (req, res) => {
     }
 });
 
-app.get('/api/translationPLNENGDetailed', async(req, res)=>{
-    const { id } = req.query;
-    try{
-        const condition = 'SELECT tr.id, wp.word as word_polish, we.word as word_english, we.category_id, we.difficulty_level_id '
-            + 'FROM translations_pl_eng tr, words_polish wp, words_english we '
-            + 'WHERE tr.word_polish_id=wp.id and tr.word_english_id=we.id AND tr.id = ' + id + ';';
-        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word as word_polish, we.word as word_english, we.category_id, we.difficulty_level_id '
-            + 'FROM translations_pl_eng tr, words_polish wp, words_english we '
-            + 'WHERE tr.word_polish_id=wp.id and tr.word_english_id=we.id ORDER BY id ASC;');
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Server error');
-    } 
-});
-
-app.get('/api/translationPLNENG/pln', async(req, res)=>{
-    const { id } = req.query;
-    try{
-        const condition = 'SELECT tr.id, we.word as word '
-            + 'FROM translations_pl_eng tr, words_english we '
-            + 'WHERE tr.word_english_id=we.id AND tr.word_polish_id = ' + id + ';';
-        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word, we.word '
-            + 'FROM translations_pl_eng tr, words_polish wp, words_english we '
-            + 'WHERE tr.word_polish_id=wp.id and tr.word_english_id=we.id ORDER BY id ASC;');
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Server error');
-    } 
-});
-
-app.get('/api/translationPLNENGDetailed/pln', async(req, res)=>{
-    const { id } = req.query;
-    try{
-        const condition = 'SELECT we.id, tr.id as translation_id, we.word as word, definition, dl.level as level, c. name as category, part_of_speech '
-            + 'FROM translations_pl_eng tr, words_english we, difficulty_levels dl, categories c '
-            + 'WHERE tr.word_english_id=we.id AND dl.id = we.difficulty_level_id AND c.id = we.category_id AND tr.word_polish_id = ' + id + ';';
-        const result = await pool.query(id ? condition : 'SELECT we.id, tr.id as translation_id, we.word as word, definition, dl.level as level, c. name as category, part_of_speech '
-            + 'FROM translations_pl_eng tr, words_english we, difficulty_levels dl, categories c '
-            + 'WHERE tr.word_english_id=we.id AND dl.id = we.difficulty_level_id AND c.id = we.category_id ORDER BY id ASC;');
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Server error');
-    } 
-});
-
-app.get('/api/translationPLNENG/eng', async(req, res)=>{
-    const { id } = req.query;
-    try{
-        const condition = 'SELECT tr.id, wp.word as word '
-            + 'FROM translations_pl_eng tr, words_polish wp '
-            + 'WHERE tr.word_polish_id=wp.id AND tr.word_english_id = ' + id + ';';
-        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word, we.word '
-            + 'FROM translations_pl_eng tr, words_polish wp, words_english we '
-            + 'WHERE tr.word_polish_id=wp.id and tr.word_english_id=we.id ORDER BY id ASC;');
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Server error');
-    } 
-});
-
-app.get('/api/translationPLNENGDetailed/eng', async(req, res)=>{
-    const { id } = req.query;
-    try{
-        const condition = 'SELECT wp.id, tr.id as translation_id, wp.word as word, definition, c. name as category, photo '
-            + 'FROM translations_pl_eng tr, words_polish wp, categories c '
-            + 'WHERE tr.word_polish_id=wp.id AND c.id = wp.category_id AND tr.word_english_id = ' + id + ';';
-        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word as word, definition, c. name as category, photo '
-            + 'FROM translations_pl_eng tr, words_polish wp, categories c '
-            + 'WHERE tr.word_polish_id=wp.id AND c.id = wp.category_id ORDER BY id ASC;');
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Server error');
-    } 
-});
-
-app.get('/api/translationPLNENGDetailed/pln/word', async(req, res)=>{
+app.get('/api/wordsSpanish/word', async (req, res) => {
     const { word } = req.query;
     try{
-        const result = await pool.query("SELECT we.id, tr.id as translation_id, we.word as word, we.definition, dl.level as level, c. name as category, part_of_speech "
-            + "FROM translations_pl_eng tr, words_english we, difficulty_levels dl, categories c, words_polish wp "
-            + "WHERE tr.word_english_id=we.id AND dl.id = we.difficulty_level_id AND c.id = we.category_id AND tr.word_polish_id = wp.id AND wp.word = '" + word + "';");
+        if(!word)return;
+        const result = await pool.query("SELECT id, word FROM words_spanish WHERE word like '" + word + "%' ORDER BY popularity;");
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -626,10 +543,40 @@ app.get('/api/translationPLNENGDetailed/pln/word', async(req, res)=>{
     } 
 });
 
-app.delete('/api/translationPLNENG', async (req, res) =>{
-    const { id } = req.body;
+app.get('/api/wordsSpanish', async (req, res) => {
+    const { id } = req.query;
     try{
-        const result = await pool.query('DELETE FROM translations_pl_eng WHERE id = $1', [id]);
+        const condition = "SELECT * FROM words_spanish WHERE id = " + id + ";";
+        const result = await pool.query(id ? condition : 'SELECT * FROM words_spanish ORDER BY popularity DESC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.get('/api/wordsSpanishDetailed', async(req, res)=>{
+    const { id } = req.query;
+    try{
+        const condition = `SELECT ws.id, word, definition, dl.level as level, c.name as category, part_of_speech `
+            + 'FROM words_spanish ws, categories c, difficulty_levels dl '
+            + 'WHERE ws.category_id=c.id and ws.difficulty_level_id=dl.id AND ws.id = ' + id + ';'
+        const result = await pool.query(id ? condition : 
+            `SELECT ws.id, word, definition, dl.level as level, c.name as category, part_of_speech as "part of speech"`
+            + 'FROM words_spanish ws, categories c, difficulty_levels dl '
+            + 'WHERE ws.category_id=c.id and ws.difficulty_level_id=dl.id ORDER BY ws.id ASC;');
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }  
+});
+
+app.delete('/api/wordsSpanish', async (req, res) =>{
+    const { id } = req.body;
+    console.log(id);
+    try{
+        const result = await pool.query('DELETE FROM words_english WHERE id = $1', [id]);
         res.status(200).json({message: "Deleted successfully"});
     }catch(err){
         console.log(err.message);
@@ -637,16 +584,201 @@ app.delete('/api/translationPLNENG', async (req, res) =>{
     }
 })
 
-app.post('/api/translationPLNENG', async (req, res) =>{
-    const { word_polish_id, word_english_id } = req.body;
-    console.log("App ", word_polish_id, word_english_id);
+app.put('/api/wordsSpanish', async (req, res) =>{
+    const { id, word, definition, difficulty_level_id, category_id, part_of_speech } = req.body;
+    console.log(id, " ", word);
     try{
-        const phraseExists = await pool.query('SELECT * FROM translations_pl_eng WHERE word_polish_id = $1 AND word_english_id = $2', [word_polish_id, word_english_id]);
+        const result = await pool.query('UPDATE words_english SET word = $2, definition = $3, difficulty_level_id = $4, category_id = $5, part_of_speech = $6 WHERE id = $1', [id, word, definition, difficulty_level_id, category_id, part_of_speech]);
+        res.status(200).json({message: "Updated successfully"})
+    }catch(err){
+        console.log(err.message)
+        res.status(500).send("Server error");
+    }
+})
+
+app.post('/api/wordsSpanish', async (req, res) => {
+    const { word, definition, difficulty_level_id, category_id, part_of_speech } = req.body;
+    console.log("App ", word, category_id);
+    
+    try {
+        const phraseExists = await pool.query('SELECT * FROM words_english WHERE word = $1 AND category_id = $2', [word, category_id]);
+        if (phraseExists.rows.length > 0) {
+            return res.status(400).json({ error: "Phrase already exists" });
+        }
+        const insertResult = await pool.query('INSERT INTO words_english(word, definition, difficulty_level_id, category_id, part_of_speech) VALUES ($1, $2, $3, $4, $5) RETURNING id', 
+            [word, definition, difficulty_level_id, category_id, part_of_speech]);
+        
+        const newWordId = insertResult.rows[0].id; 
+
+        res.json({ id: newWordId }); 
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+});
+
+app.get('/api/translationPLN_Detailed', async(req, res)=>{
+    const { language, id } = req.query;
+    const { isAllowed = true, table, fkName}= allowedLanguage(language);
+
+    console.log("translationPLN_Detailed", language, id);
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    }
+
+    try{
+        const condition = 'SELECT tr.id, wp.word as word_polish, ws.word as word_second, ws.category_id, ws.difficulty_level_id '
+            + `FROM translations_pl_${language.toLowerCase()} tr, words_polish wp, ${table} ws `
+            + `WHERE tr.word_polish_id=wp.id and tr.${fkName}=ws.id AND tr.id = ` + id + ';';
+        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word as word_polish, ws.word as word_second, ws.category_id, ws.difficulty_level_id '
+            + `FROM translations_pl_${language.toLowerCase()} tr, words_polish wp, ${table} ws `
+            + `WHERE tr.word_polish_id=wp.id and tr.${fkName}=ws.id ORDER BY id ASC;`);
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.get('/api/translationPLN_/pln', async(req, res)=>{
+    const { language, id } = req.query;
+    const { isAllowed = true, table, fkName}= allowedLanguage(language);
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    }
+
+    try{
+        const condition = 'SELECT tr.id, ws.word as word '
+            + `FROM translations_pl_${language.toLowerCase()} tr, ${table} ws `
+            + `WHERE tr.${fkName}=we.id AND tr.word_polish_id = ' + id + ';`;
+        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word, ws.word '
+            + `FROM translations_pl_${language.toLowerCase()} tr, words_polish wp, ${table} ws `
+            + `WHERE tr.word_polish_id=wp.id and tr.${fkName}=we.id ORDER BY id ASC;`);
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.get('/api/translationPLN_Detailed/pln', async(req, res)=>{
+    const { language, id } = req.query;
+    const { isAllowed = true, table, fkName}= allowedLanguage(language);
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    }
+
+    try{
+        const condition = 'SELECT ws.id, tr.id as translation_id, ws.word as word, definition, dl.level as level, c. name as category, part_of_speech '
+            + `FROM translations_pl_${language.toLowerCase()} tr, ${table} ws, difficulty_levels dl, categories c `
+            + `WHERE tr.${fkName}=ws.id AND dl.id = ws.difficulty_level_id AND c.id = ws.category_id AND tr.word_polish_id = ` + id + ';';
+        const result = await pool.query(id ? condition : 'SELECT ws.id, tr.id as translation_id, ws.word as word, definition, dl.level as level, c. name as category, part_of_speech '
+            + `FROM translations_pl_${language.toLowerCase()} tr, ${table} ws, difficulty_levels dl, categories c `
+            + `WHERE tr.${fkName}=ws.id AND dl.id = ws.difficulty_level_id AND c.id = ws.category_id ORDER BY id ASC;`);
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.get('/api/translationPLN_/_', async(req, res)=>{
+    const { language, id } = req.query;
+    const { isAllowed = true, table, fkName}= allowedLanguage(language);
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    }
+
+    try{
+        const condition = 'SELECT tr.id, wp.word as word '
+            + `FROM translations_pl_${language.toLowerCase()} tr, words_polish wp `
+            + `WHERE tr.word_polish_id=wp.id AND tr.${fkName} = ` + id + ';';
+        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word, ws.word '
+            + `FROM translations_pl_${language.toLowerCase()} tr, words_polish wp, ${table} ws `
+            + `WHERE tr.word_polish_id=wp.id and tr.${fkName}=ws.id ORDER BY id ASC;`);
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.get('/api/translationPLN_Detailed/_', async(req, res)=>{
+    const { language, id } = req.query;
+    const { isAllowed = true, fkName}= allowedLanguage(language);
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    }
+    console.log("translationPLN_Detailed/_",language, id)
+
+    try{
+        const condition = 'SELECT wp.id, tr.id as translation_id, wp.word as word, definition, c. name as category, photo '
+            + `FROM translations_pl_${language.toLowerCase()} tr, words_polish wp, categories c `
+            + `WHERE tr.word_polish_id=wp.id AND c.id = wp.category_id AND tr.${fkName} = ` + id + ';';
+        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word as word, definition, c. name as category, photo '
+            + `FROM translations_pl_${language.toLowerCase()} tr, words_polish wp, categories c `
+            + `WHERE tr.word_polish_id=wp.id AND c.id = wp.category_id ORDER BY id ASC;`);
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.get('/api/translationPLN_Detailed/pln/word', async(req, res)=>{
+    const { language, word } = req.query;
+    const { isAllowed = true, table, fkName}= allowedLanguage(language);
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    }
+
+    try{
+        const result = await pool.query("SELECT ws.id, tr.id as translation_id, ws.word as word, ws.definition, dl.level as level, c. name as category, part_of_speech "
+            + `FROM translations_pl_${language.toLowerCase()} tr, ${table} ws, difficulty_levels dl, categories c, words_polish wp `
+            + `WHERE tr.${fkName}=ws.id AND dl.id = ws.difficulty_level_id AND c.id = ws.category_id AND tr.word_polish_id = wp.id AND wp.word = '` + word + "';");
+        res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    } 
+});
+
+app.delete('/api/translationPLN_', async (req, res) =>{
+    const { id } = req.body;
+    const { language } = req.query;
+
+    try{
+        const result = await pool.query(`DELETE FROM translations_pl_${language.toLowerCase()} WHERE id = $1`, [id]);
+        res.status(200).json({message: "Deleted successfully"});
+    }catch(err){
+        console.log(err.message);
+        res.status(500).send("Server error");
+    }
+})
+
+app.post('/api/translationPLN_', async (req, res) =>{
+    const { word_polish_id, word_second_id } = req.body;
+    const { language } = req.query;
+    const { isAllowed = true, table, fkName}= allowedLanguage(language);
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    }  
+
+    console.log("App ", word_polish_id, word_second_id);
+    try{
+        const phraseExists = await pool.query(`SELECT * FROM translations_pl_${language.toLowerCase()} WHERE word_polish_id = $1 AND ${fkName} = $2`, [word_polish_id, word_second_id]);
         if(phraseExists.rows.length > 0){
             return res.status(400).json({ error: "Translation already exists" });
         }
         await pool.query(
-            'INSERT INTO translations_pl_eng(word_polish_id, word_english_id) VALUES ($1, $2)', [word_polish_id, word_english_id]
+            `INSERT INTO translations_pl_${language.toLowerCase()}(word_polish_id, ${fkName}) VALUES ($1, $2)`, [word_polish_id, word_second_id]
         );
         res.status(200).json({ message: "Translation added successfully" });
     }catch(err){
@@ -719,19 +851,25 @@ app.post('/api/quizzes', async (req, res) =>{
     }
 });
 
-app.get('/api/quizzesQuestions/ENG', async(req, res)=>{
-    const { id } = req.query;
+app.get('/api/quizzesQuestions', async(req, res)=>{
+    const { id, language } = req.query;
+    const { isAllowed = true, table, fkName}= allowedLanguage(language);
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    }
+
     try{
         const condition = 'SELECT qqe.id, qqe.quiz_id, qqe.question_id, we.word as word_second, we.definition as ws_definition, '
         + 'we.difficulty_level_id as ws_level_id, we.category_id as ws_category_id, '
         + 'wp.word as word_polish, wp.definition as wp_definition, wp.category_id as wp_category_id, wp.photo as wp_photo '
-        + 'FROM quizzes_questions_eng qqe, translations_pl_eng tpe, words_english we, words_polish wp '
-        + 'WHERE qqe.question_id = tpe.id AND tpe.word_polish_id = wp.id AND tpe.word_english_id = we.id AND qqe.quiz_id = ' + id + ' ORDER BY qqe.id ASC'
+        + `FROM quizzes_questions_${language.toLowerCase()} qqe, translations_pl_${language.toLowerCase()} tpe, ${table} we, words_polish wp `
+        + `WHERE qqe.question_id = tpe.id AND tpe.word_polish_id = wp.id AND tpe.${fkName} = we.id AND qqe.quiz_id = ` + id + ' ORDER BY qqe.id ASC'
         const result = await pool.query(id ? condition : 'SELECT qqe.id, qqe.quiz_id, qqe.question_id, we.word as word_second, we.definition as ws_definition, '
         + 'we.difficulty_level_id as ws_level_id, we.category_id as ws_category_id, '
         + 'wp.word as word_polish, wp.definition as wp_definition, wp.category_id as wp_category_id, wp.photo as wp_photo '
-        + 'FROM quizzes_questions_eng qqe, translations_pl_eng tpe, words_english we, words_polish wp '
-        + 'WHERE qqe.question_id = tpe.id AND tpe.word_polish_id = wp.id AND tpe.word_english_id = we.id ORDER BY qqe.id ASC');
+        + `FROM quizzes_questions_${language.toLowerCase()} qqe, translations_pl_${language.toLowerCase()} tpe, ${table} we, words_polish wp `
+        + `WHERE qqe.question_id = tpe.id AND tpe.word_polish_id = wp.id AND tpe.${fkName} = we.id ORDER BY qqe.id ASC`);
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -739,8 +877,13 @@ app.get('/api/quizzesQuestions/ENG', async(req, res)=>{
     }
 });
 
-app.post('/api/quizzesQuestions/ENG', async (req, res) => {
-    const { quiz_id, data } = req.body;
+app.post('/api/quizzesQuestions', async (req, res) => {
+    const { language, quiz_id, data } = req.query;
+    const { isAllowed = true }= allowedLanguage(language);
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    }
   
     console.log(quiz_id, data)
     try {
@@ -751,7 +894,7 @@ app.post('/api/quizzesQuestions/ENG', async (req, res) => {
       ]);
   
       const query =
-        'INSERT INTO quizzes_questions_eng (quiz_id, question_id) VALUES ($1, $2)';
+        `INSERT INTO quizzes_questions_${language.toLowerCase()} (quiz_id, question_id) VALUES ($1, $2)`;
       const results = await Promise.all(
         values.map((value) => {return pool.query(query, value)})
       );
@@ -764,9 +907,15 @@ app.post('/api/quizzesQuestions/ENG', async (req, res) => {
 });
 
 app.get('/api/quizzesQuestions/Count', async(req, res)=>{
+    const { language, id } = req.query;
+    const { isAllowed = true }= allowedLanguage(language);
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    }
+
     try{
-        const { id } = req.query;
-        const result = await pool.query('SELECT count(*) as amount_of_questions FROM quizzes_questions_eng WHERE quiz_id=$1;', [id]);
+        const result = await pool.query(`SELECT count(*) as amount_of_questions FROM quizzes_questions_${language.toLowerCase()} WHERE quiz_id=$1;`, [id]);
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -776,32 +925,68 @@ app.get('/api/quizzesQuestions/Count', async(req, res)=>{
 
 app.get('/api/usersQuizzesQuestions', async(req, res)=>{
     try{
-        const { id } = req.query;
-        const condition = 'SELECT * FROM users_quizzes_questions uqq '
+        const { language, id } = req.query;
+        const { isAllowed = true }= allowedLanguage(language);
+
+        if (!isAllowed) {
+            return res.status(400).send('Invalid language');
+        }
+
+        const condition = `SELECT * FROM users_quizzes_questions_${language.toLowerCase()} uqq `
         + 'WHERE user_quiz_score_id = ' + id + ' ' 
         + 'ORDER BY id ASC ;'
-        const result = await pool.query(id ? condition : 'SELECT * FROM users_quizzes_questions uqq ORDER BY id ASC ;');
+        const result = await pool.query(id ? condition : `SELECT * FROM users_quizzes_questions_${language.toLowerCase()} uqq ORDER BY id ASC ;`);
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
         res.status(500).send('Server error');
     }
 }); 
+
+function allowedLanguage(language){
+    const allowedLanguages = ["PLN", "ENG", "SPA"];
+
+    if (!allowedLanguages.includes(language)) {
+        return {isAllowed: false};
+    }
+
+    let table = "";
+    switch(language){
+        case "ENG":
+            table = "words_english";
+            break;
+        case "SPA":
+            table = "words_spanish";
+            break;
+        default:
+            table = "words_polish"    
+            break;
+    }
+    let fkName = table.substring(0, 4) + table.substring(5) + "_id"
+
+    return {isAllowed: true, table: table, fkName: fkName};
+}
    
 app.get('/api/usersQuizzesQuestionsDetailed', async(req, res)=>{
+    const { language, id, userId } = req.query;
+    const { isAllowed = true, table, fkName}= allowedLanguage(language);
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    }
+
     try{
-        const { id, userId } = req.query;
-        const condition = 'SELECT qqe.id, qqe.quiz_id, qqe.question_id, we.word as word_second, we.definition as ws_definition, '
-        + 'we.difficulty_level_id as ws_level_id, we.category_id as ws_category_id, '
+        const condition = 'SELECT qqe.id, qqe.quiz_id, qqe.question_id, ws.word as word_second, ws.definition as ws_definition, '
+        + 'ws.difficulty_level_id as ws_level_id, ws.category_id as ws_category_id, '
         + 'wp.word as word_polish, wp.definition as wp_definition, wp.category_id as wp_category_id, wp.photo as wp_photo, '
-        + 'EXISTS (SELECT 1 FROM users_quizzes_questions uqq, users_quizzes_scores uqs WHERE uqq.quiz_question_id = qqe.id AND uqs.user_id=' + userId + ' AND uqs.quiz_id=qqe.quiz_id AND uqq.user_quiz_score_id=uqs.id) AS done '
-        + 'FROM quizzes_questions_eng qqe, translations_pl_eng tpe, words_english we, words_polish wp '
-        + 'WHERE qqe.question_id = tpe.id AND tpe.word_polish_id = wp.id AND tpe.word_english_id = we.id AND qqe.quiz_id = ' + id + ' ORDER BY qqe.id ASC'
-        const result = await pool.query(userId ? condition : 'SELECT qqe.id, qqe.quiz_id, qqe.question_id, we.word as word_second, we.definition as ws_definition, '
-        + 'we.difficulty_level_id as ws_level_id, we.category_id as ws_category_id, '
+        + `EXISTS (SELECT 1 FROM users_quizzes_questions_${language.toLowerCase()} uqq, users_quizzes_scores uqs WHERE uqq.quiz_question_id = qqe.id AND uqs.user_id=` + userId + ' AND uqs.quiz_id=qqe.quiz_id AND uqq.user_quiz_score_id=uqs.id) AS done '
+        + `FROM quizzes_questions_${language.toLowerCase()} qqe, translations_pl_${language.toLowerCase()} tpe, ${table} ws, words_polish wp `
+        + `WHERE qqe.question_id = tpe.id AND tpe.word_polish_id = wp.id AND tpe.${fkName} = ws.id AND qqe.quiz_id = ` + id + ' ORDER BY qqe.id ASC'
+        const result = await pool.query(userId ? condition : 'SELECT qqe.id, qqe.quiz_id, qqe.question_id, ws.word as word_second, ws.definition as ws_definition, '
+        + 'ws.difficulty_level_id as ws_level_id, ws.category_id as ws_category_id, '
         + 'wp.word as word_polish, wp.definition as wp_definition, wp.category_id as wp_category_id, wp.photo as wp_photo '
-        + 'FROM quizzes_questions_eng qqe, translations_pl_eng tpe, words_english we, words_polish wp '
-        + 'WHERE qqe.question_id = tpe.id AND tpe.word_polish_id = wp.id AND tpe.word_english_id = we.id AND qqe.quiz_id = ' + id + ' ORDER BY qqe.id ASC');
+        + `FROM quizzes_questions_${language.toLowerCase()} qqe, translations_pl_${language.toLowerCase()} tpe, ${table} ws, words_polish wp `
+        + `WHERE qqe.question_id = tpe.id AND tpe.word_polish_id = wp.id AND tpe.${fkName} = ws.id AND qqe.quiz_id = ` + id + ' ORDER BY qqe.id ASC');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -810,9 +995,14 @@ app.get('/api/usersQuizzesQuestionsDetailed', async(req, res)=>{
 });  
 
 app.post('/api/usersQuizzesQuestions', async (req, res) => {
-    const { quiz_score_id, data } = req.body;
+    const { language, quiz_score_id, data } = req.body;
+    const { isAllowed = true }= allowedLanguage(language);
+    console.log("Post usersQuizzesQuestions", language, quiz_score_id, data)
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    }
   
-    console.log(quiz_score_id, data)
     try {
       const questions = JSON.parse(data);
       const values = questions.map((q) => [
@@ -821,7 +1011,7 @@ app.post('/api/usersQuizzesQuestions', async (req, res) => {
       ]);
   
       const query =
-        'INSERT INTO users_quizzes_questions(user_quiz_score_id, quiz_question_id) VALUES ($1, $2)';
+        `INSERT INTO users_quizzes_questions_${language.toLowerCase()}(user_quiz_score_id, quiz_question_id) VALUES ($1, $2)`;
       const results = await Promise.all(
         values.map((value) => {return pool.query(query, value)})
       );
@@ -867,7 +1057,7 @@ app.post('/api/usersQuizzesScores', async(req, res)=>{
 
 app.delete('/api/usersQuizzesScores', async (req, res) => {
     try{
-        const { user_id, quiz_id } = req.body;
+        const { user_id, quiz_id } = req.query;
         console.log("usersQuizzesScores delete", user_id, quiz_id);
         const result = await pool.query('DELETE FROM users_quizzes_scores WHERE user_id = $1 AND quiz_id = $2', [user_id, quiz_id]);
         res.status(200).json({message: result});
@@ -928,13 +1118,19 @@ app.get('/api/storiesQuestions/Count', async(req, res)=>{
 });
 
 app.get('/api/usersStoriesQuestions', async(req, res)=>{
+    const { language, id, userId } = req.query;
+    const { isAllowed = true }= allowedLanguage(language);
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    }
+
     try{
-        const { id, userId } = req.query;
         const condition = 'SELECT sq.id, sq.quiz_id, sq.question, '
-        + 'EXISTS (SELECT 1 FROM users_quizzes_questions uqq, users_quizzes_scores uqs WHERE uqq.quiz_question_id = sq.id AND uqs.quiz_id=sq.quiz_id AND uqs.user_id = ' + userId + ' AND uqq.user_quiz_score_id=uqs.id) AS done '
+        + `EXISTS (SELECT 1 FROM users_quizzes_questions_${language.toLowerCase()} uqq, users_quizzes_scores uqs WHERE uqq.quiz_question_id = sq.id AND uqs.quiz_id=sq.quiz_id AND uqs.user_id = ` + userId + ' AND uqq.user_quiz_score_id=uqs.id) AS done '
         + 'FROM stories_questions sq WHERE sq.quiz_id = ' + id + ' ORDER BY sq.quiz_id ASC'
         const result = await pool.query(userId ? condition : 'SELECT sq.id, sq.quiz_id, sq.question, '
-        + 'EXISTS (SELECT 1 FROM users_quizzes_questions uqq, users_quizzes_scores uqs WHERE uqq.quiz_question_id = sq.id AND uqs.quiz_id=sq.quiz_id AND uqq.user_quiz_score_id=uqs.id) AS done '
+        + `EXISTS (SELECT 1 FROM users_quizzes_questions_${language.toLowerCase()} uqq, users_quizzes_scores uqs WHERE uqq.quiz_question_id = sq.id AND uqs.quiz_id=sq.quiz_id AND uqq.user_quiz_score_id=uqs.id) AS done `
         + 'FROM stories_questions sq WHERE sq.quiz_id = ' + id + ' ORDER BY sq.quiz_id ASC');
         res.json(result.rows);
     }catch(err){

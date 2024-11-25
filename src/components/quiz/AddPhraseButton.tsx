@@ -1,8 +1,8 @@
-import { Box, Button, HStack } from "@chakra-ui/react";
+import { Box, Button, HStack, Stack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import SearchInput from "../dictionary/SearchInput";
 import { QuizzQuestion } from "../../pages/quiz/CQuiz";
-import EnglishTranslation from "./EnglishTranslation";
+import PhraseTranslation from "./PhraseTranslation";
 
 interface Props {
   language: string;
@@ -67,14 +67,22 @@ const AddPhraseButton = ({ language, phraseData, setPhrasesData }: Props) => {
         </button>
       </HStack>
       {phraseData.map((row) => (
-        <HStack key={row.id} marginY="1%">
+        <Stack
+          key={row.id}
+          marginY={{ base: "7%", md: "2%" }}
+          flexWrap="wrap"
+          align={{ base: "unset", md: "center" }}
+          direction={{ base: "column", md: "row" }}
+        >
           {row.word_pln ? (
             <>
               <Box className="question">{row.word_pln}</Box>
-              <EnglishTranslation
+              <PhraseTranslation
+                key={`${row.id}-${row.language}`}
                 word={row.word_pln}
                 setTranslationId={setTranslationId}
                 rowId={row.id}
+                language={row.language ?? ""}
               />
             </>
           ) : (
@@ -89,7 +97,7 @@ const AddPhraseButton = ({ language, phraseData, setPhrasesData }: Props) => {
           >
             Usuń
           </Button>
-        </HStack>
+        </Stack>
       ))}
     </>
   );

@@ -1,13 +1,15 @@
-import { HStack, Stack, Text, VStack } from "@chakra-ui/react";
+import { HStack, Stack, Text, useToast, VStack } from "@chakra-ui/react";
 import { Phrase } from "../../pages/dictionary/DictionarySearchResult";
 import { useNavigate } from "react-router-dom";
 import { HiSpeakerWave } from "react-icons/hi2";
+import usePhrasesStorage from "../../hooks/usePhrasesStorage";
+import useTokenData from "../../others/useTokenData";
 
 interface Props {
   phrase: Phrase;
   index: number;
   link?: boolean;
-  handleAddToQuiz?: (id: number) => void;
+  addToQuiz?: boolean;
   language: string;
 }
 
@@ -15,11 +17,14 @@ const TranslationTab = ({
   phrase,
   index,
   link,
-  handleAddToQuiz,
+  addToQuiz,
   language,
 }: Props) => {
   const navigator = useNavigate();
   const msg = new SpeechSynthesisUtterance();
+  const { addToSavedPhrases } = usePhrasesStorage(language);
+  const { CheckUserType } = useTokenData();
+  const toast = useToast();
 
   console.log(language);
   const handleSpeak = () => {
@@ -27,6 +32,9 @@ const TranslationTab = ({
     switch (language) {
       case "ENG":
         speakLanguage = "en-US";
+        break;
+      case "SPA":
+        speakLanguage = "es-ES";
         break;
       default:
         break;
@@ -43,6 +51,23 @@ const TranslationTab = ({
     window.speechSynthesis.speak(msg);
   };
 
+  const handleAddToQuiz = () => {
+    // localStorage.removeItem("translations_pln_eng");
+
+    if (CheckUserType() != "none")
+      addToSavedPhrases({
+        translation_id: phrase?.translation_id ?? 0,
+      });
+    else
+      toast({
+        title: "Treść tylko dla zalogowanych użytkowników",
+        status: "error",
+        position: "bottom-right",
+        duration: 5000,
+        isClosable: true,
+      });
+  };
+
   const redirectButton = () => {
     if (link) {
       navigator(
@@ -53,13 +78,14 @@ const TranslationTab = ({
           "/" +
           language
       );
+      window.location.reload();
     }
   };
 
   return (
     <VStack marginBottom={{ base: "10%", md: "4%" }}>
       <Stack
-        key={phrase.id}
+        key={phrase.word + phrase.id}
         marginBottom="1%"
         direction={{ base: "column", md: "row" }}
         justify="center"
@@ -99,7 +125,7 @@ const TranslationTab = ({
           <button
             className="button_secondary"
             onClick={() => {
-              if (handleAddToQuiz) handleAddToQuiz(index - 1);
+              if (addToQuiz) handleAddToQuiz();
             }}
           >
             Dodaj do quizu

@@ -1,15 +1,12 @@
-import { HStack, Img, useToast, Text, Stack, Show } from "@chakra-ui/react";
+import { HStack, Img, Text, Stack, Show } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SelectLanguage from "../../components/SelectLanguage";
 import SearchInput from "../../components/dictionary/SearchInput";
 import TranslationTab from "../../components/dictionary/TranslationTab";
-import { PolishWord } from "../../hooks/useWordsPolish";
 import getCroppedImageUrl from "../../services/image-url";
 import actionData from "../../hooks/actionData";
-import usePhrasesStorage from "../../hooks/usePhrasesStorage";
 import { HiSpeakerWave } from "react-icons/hi2";
-import useTokenData from "../../others/useTokenData";
 import RandomPhrase from "../../components/dictionary/RandomPhrase";
 
 export interface Phrase {
@@ -23,6 +20,7 @@ export interface Phrase {
   type?: string | null;
   part_of_speech?: string | null;
   popularity?: number | null;
+  language?: string | null;
 }
 
 const DictionarySearchResult = () => {
@@ -38,78 +36,104 @@ const DictionarySearchResult = () => {
   const [translations, setTranslations] = useState<Phrase[]>([]);
   const navigate = useNavigate();
   const { putData } = actionData("/words/raisePopularity");
-  const { addToSavedPhrases } = usePhrasesStorage("ENG");
-  const { CheckUserType } = useTokenData();
-  const toast = useToast();
   const msg = new SpeechSynthesisUtterance();
   const [error, setError] = useState<boolean>(false);
 
+  const fetchData = async (endpoint: string, params?: {}) => {
+    try {
+      const queryString = new URLSearchParams(params).toString();
+      const response = await fetch(
+        `http://localhost:3001/api/${endpoint}?${queryString}`
+      );
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  };
+
   const Load = async () => {
     console.log("Load");
-    switch (code) {
-      case "ENG":
-        try {
-          const response = await fetch(
-            "http://localhost:3001/api/wordsEnglishDetailed?id=" + id
-          );
-          const data: Phrase[] = await response.json();
-          if (data[0].word == word) {
-            const formData = new URLSearchParams();
-            formData.append("table", "words_english");
-            formData.append("id", id || "");
-            putData(formData);
-            setSearchPhrase(data[0]);
-            const response2 = await fetch(
-              "http://localhost:3001/api/translationPLNENGDetailed/eng?id=" + id
-            );
-            const data2: PolishWord[] = await response2.json();
-            setTranslations(data2);
-          } else {
-            const response = await fetch(
-              "http://localhost:3001/api/wordsPolishDetailed?id=" + id
-            );
-            const data: Phrase[] = await response.json();
-            const formData = new URLSearchParams();
-            formData.append("table", "words_polish");
-            formData.append("id", id || "");
-            putData(formData);
-            if (data[0].word == word) {
-              setSearchPhrase(data[0]);
-              const response2 = await fetch(
-                "http://localhost:3001/api/translationPLNENGDetailed/pln?id=" +
-                  id
-              );
-              const data2: PolishWord[] = await response2.json();
-              setTranslations(data2);
-            }
-          }
-        } catch (err) {
-          console.log(err);
-          setError(true);
-        }
-        break;
-      default:
-        try {
-          const response = await fetch(
-            "http://localhost:3001/api/wordsPolishDetailed?id=" + id
-          );
-          const data: Phrase[] = await response.json();
+
+    let data: Phrase[] = [];
+    if (code == "PLN") {
+      try {
+        const data = await fetchData("wordsPolishDetailed", { id: id || 0 });
+        if (data[0].word == word) {
           const formData = new URLSearchParams();
-          formData.append("table", "words_polish");
+          formData.append("language", code ?? "PLN");
+          formData.append("id", id || "");
+          putData(formData);
+          setSearchPhrase(data[0]);
+          let data2: Phrase[] = await fetchData("translationPLN_Detailed/pln", {
+            language: "ENG",
+            id: id || 0,
+          });
+          data2 = data2.map((element) => ({
+            ...element,
+            language: "ENG",
+          }));
+
+          let data3: Phrase[] = await fetchData("translationPLN_Detailed/pln", {
+            language: "SPA",
+            id: id || 0,
+          });
+          data3 = data3.map((element) => ({
+            ...element,
+            language: "SPA",
+          }));
+
+          setTranslations(data2.concat(data3));
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        switch (code) {
+          case "ENG":
+            data = await fetchData("wordsEnglishDetailed", { id: id || 0 });
+            break;
+          case "SPA":
+            data = await fetchData("wordsSpanishDetailed", { id: id || 0 });
+            break;
+          default:
+            break;
+        }
+        if (data[0].word == word) {
+          setSearchPhrase(data[0]);
+          const formData = new URLSearchParams();
+          formData.append("language", code ?? "");
+          formData.append("id", id || "");
+          putData(formData);
+          const data2: Phrase[] = await fetchData("translationPLN_Detailed/_", {
+            language: code,
+            id: id || 0,
+          });
+
+          setTranslations(data2);
+        } else {
+          data = await fetchData("wordsPolishDetailed", { id: id || 0 });
+          const formData = new URLSearchParams();
+          formData.append("language", "PLN");
           formData.append("id", id || "");
           putData(formData);
           if (data[0].word == word) {
             setSearchPhrase(data[0]);
-            const response2 = await fetch(
-              "http://localhost:3001/api/translationPLNENGDetailed/pln?id=" + id
+            const data2: Phrase[] = await fetchData(
+              "translationPLN_Detailed/pln",
+              {
+                language: code,
+                id: id || 0,
+              }
             );
-            const data2: PolishWord[] = await response2.json();
             setTranslations(data2);
           }
-        } catch (err) {
-          console.log(err);
         }
-        break;
+      } catch (err) {
+        console.log(err);
+        setError(true);
+      }
     }
   };
 
@@ -119,23 +143,6 @@ const DictionarySearchResult = () => {
       Load();
     }
   }, [id, code, word]);
-
-  const handleAddToQuiz = (id: number) => {
-    // localStorage.removeItem("translations_pln_eng");
-
-    if (CheckUserType() != "none")
-      addToSavedPhrases({
-        translation_id: translations[id]?.translation_id ?? 0,
-      });
-    else
-      toast({
-        title: "Treść tylko dla zalogowanych użytkowników",
-        status: "error",
-        position: "bottom-right",
-        duration: 5000,
-        isClosable: true,
-      });
-  };
 
   const onSearch = (id: number, searchText: string) => {
     navigate(
@@ -154,6 +161,9 @@ const DictionarySearchResult = () => {
     switch (code) {
       case "ENG":
         speakLanguage = "en-US";
+        break;
+      case "SPA":
+        speakLanguage = "es-ES";
         break;
       default:
         break;
@@ -225,12 +235,12 @@ const DictionarySearchResult = () => {
             <ul>
               {translations.map((phrase, index) => (
                 <TranslationTab
-                  key={phrase.id}
+                  key={phrase.word + phrase.id}
                   phrase={phrase}
                   index={index + 1}
                   link={true}
-                  handleAddToQuiz={handleAddToQuiz}
-                  language={code == "PLN" ? "ENG" : "PLN"}
+                  addToQuiz={true}
+                  language={code == "PLN" ? phrase.language ?? "ENG" : "PLN"}
                 ></TranslationTab>
               ))}
             </ul>

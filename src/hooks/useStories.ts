@@ -59,11 +59,11 @@ const useStories = (quiz_id?: number) =>{
     );
   }
 
-  const fetchUserQuestions = (id?: number, userId?: number) => {
+  const fetchUserQuestions = (language: string, id?: number, userId?: number) => {
     return useData<StoryQuestion>(
       "/usersStoriesQuestions",
       {
-        params: { id: id, userId: userId },
+        params: { language: language, id: id, userId: userId },
       },
       [id, userId]
     );

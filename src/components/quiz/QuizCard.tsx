@@ -31,8 +31,11 @@ const QuizCard = ({
     data: questions,
     isLoading: quesIsLoading,
     error: quesError,
-  } = fetchUserQuestionsDetailed(quiz.id ?? 0, userId);
-  const { data: amountOfQuestions } = fetchAmountOfQuestions(quiz.id ?? 0);
+  } = fetchUserQuestionsDetailed(quiz.language ?? "", quiz.id ?? 0, userId);
+  const { data: amountOfQuestions } = fetchAmountOfQuestions(
+    quiz.language ?? "",
+    quiz.id ?? 0
+  );
   const [categoriesQuizzes, setCategoriesQuizzes] = useState<string[]>([""]);
   const [levelsQuizzes, setLevelsQuizzes] = useState<string[]>([""]);
 
@@ -66,7 +69,7 @@ const QuizCard = ({
       amountOfQuestions={amountOfQuestions}
       moreDetails={
         <>
-          <HStack marginBottom="2%">
+          <HStack marginBottom="2%" flexWrap="wrap" gap="10px">
             <p>Kategorie: </p>
             <Show above="md">
               {categoriesQuizzes.length > 3 ? (

@@ -20,7 +20,7 @@ import useQuizzes from "../../hooks/useQuizzes";
 import useTokenData from "../../others/useTokenData";
 
 const StoryWithQuestions = () => {
-  const { id } = useParams();
+  const { code, id } = useParams();
   const { fetchStories, fetchStoriesQuestions } = useStories(
     parseInt(id ?? "")
   );
@@ -36,7 +36,7 @@ const StoryWithQuestions = () => {
   const [currentScore, setCurrentScore] = useState<number>(0);
   const { fetchUserQuestions, fetchUserScores } = useQuizzes();
   const { data: userScores } = fetchUserScores(GetUserId());
-  const { data: userQuestions } = fetchUserQuestions(currentScore);
+  const { data: userQuestions } = fetchUserQuestions(code ?? "", currentScore);
   const { postData: postUserQuestions } = actionData("/usersQuizzesQuestions");
   const { isOpen, onOpen, onClose } = useDisclosure();
 

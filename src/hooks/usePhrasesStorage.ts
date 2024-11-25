@@ -10,23 +10,16 @@ const usePhrasesStorage = (languageCode: string) => {
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
   const toast = useToast();
-  // const {cookies} = useUserSetCookie();
 
   useEffect(() => {
     setLoading(true)
     const storedPhrases = getPhrasesFromLocalStorage(languageCode);
     setSavedPhrases(storedPhrases);
     setLoading(false)
-  }, []);
+  }, [languageCode]);
 
 
   const addToSavedPhrases = (phrase: localStoragePhrase) => {
-    // const selectedTranslation = product.translations.find(
-    //   (translation) =>
-    //     translation.language.languageCode ===
-    //     cookies.userSet.language?.languageCode
-    // );
-
     let updatedSavedPhrases = getPhrasesFromLocalStorage(languageCode);
     const existingPhraseIndex = updatedSavedPhrases.findIndex(
       (p: localStoragePhrase) => p.translation_id === phrase.translation_id
@@ -66,30 +59,21 @@ const usePhrasesStorage = (languageCode: string) => {
   };
 
   const clearPhraseLocalStorage = () => {
-    switch(languageCode){
-      default:
-        localStorage.removeItem("translations_pln_eng");
-        return 
-    }   
+      localStorage.removeItem("translations_pln_" + languageCode.toLowerCase());
+      return;
   }
 
   return { savedPhrases, error, isLoading, addToSavedPhrases, removeFromSavedPhrases, setError, clearPhraseLocalStorage };
 };
 
 const getPhrasesFromLocalStorage = (languageCode: string): localStoragePhrase[] => {
-  switch(languageCode){
-    default:
-      const savedPhrases = localStorage.getItem("translations_pln_eng");
-      return savedPhrases ? JSON.parse(savedPhrases) : [];
-  }
+    const savedPhrases = localStorage.getItem("translations_pln_" + languageCode.toLowerCase());
+    return savedPhrases ? JSON.parse(savedPhrases) : [];  
 };
 
-const savePhrasesToLocalStorage = (languageCode: string, savedPhrases: localStoragePhrase[]) => {
-  switch(languageCode){
-    default:
-      localStorage.setItem("translations_pln_eng", JSON.stringify(savedPhrases));
-      return;
-  }
+const savePhrasesToLocalStorage = (languageCode: string, savedPhrases: localStoragePhrase[]) => { 
+    localStorage.setItem("translations_pln_" + languageCode.toLowerCase(), JSON.stringify(savedPhrases));
+    return;
 };
 
 export default usePhrasesStorage;

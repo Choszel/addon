@@ -7,18 +7,10 @@ export interface PopularWord{
 }
 
 const usePopularWords = (language: string) => {
-    let table = "words_polish"
-    switch(language){
-        case "ENG":
-            table = "words_english";
-            break;
-        default: 
-        break;
-    }
  
     return useData<PopularWord>("/words/limit", {
-        params: { table: table, limit: 5 },
-    }, [table] );
+        params: { language: language, limit: 5 },
+    }, [language] );
 }
 
 export default usePopularWords

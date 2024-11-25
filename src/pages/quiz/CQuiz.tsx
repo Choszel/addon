@@ -5,7 +5,7 @@ import FormTemplate, {
 import useLanguages from "../../hooks/useLanguages";
 import { HStack, Text, useToast } from "@chakra-ui/react";
 import usePhrasesStorage from "../../hooks/usePhrasesStorage";
-import useTranslationPL_ENG from "../../hooks/useTranslationPL_ENG";
+import useTranslationPL_ from "../../hooks/useTranslationPL_";
 import actionData from "../../hooks/actionData";
 import { useNavigate } from "react-router-dom";
 import useTokenData from "../../others/useTokenData";
@@ -19,20 +19,22 @@ export interface QuizzQuestion {
   word_pln?: string;
   category?: string;
   level?: string;
+  language?: string;
 }
 
 const CQuiz = () => {
   const [refs, setRefs] = useState<
     (HTMLInputElement | HTMLSelectElement | null)[]
   >([]);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("ENG");
   const [phrasesData, setPhrasesData] = useState<QuizzQuestion[]>([]);
   const { data: languages } = useLanguages();
-  const { fetchAll } = useTranslationPL_ENG();
-  const { data: translations } = fetchAll();
+  const { fetchAll } = useTranslationPL_();
+  const { data: translations } = fetchAll(selectedLanguage);
   const { postData: postQuiz } = actionData("/quizzes");
   const { postData: postQuizQuestions } = actionData("/quizzesQuestions/ENG");
   const { savedPhrases, isLoading, clearPhraseLocalStorage } =
-    usePhrasesStorage("ENG");
+    usePhrasesStorage(selectedLanguage);
   const navigate = useNavigate();
   const toast = useToast();
   const { GetUserId } = useTokenData();
@@ -42,6 +44,10 @@ const CQuiz = () => {
   const [levelsQuizz, setLevelsQuizz] = useState<(string | undefined)[]>([""]);
   const { data: categories } = useCategories();
   const { data: difficultyLevels } = useDifficultyLevels();
+
+  useEffect(() => {
+    console.log("savedPhrases", savedPhrases);
+  }, [savedPhrases]);
 
   const handleSave = async () => {
     const uniqueTranslations = new Set<number | undefined>();
@@ -104,7 +110,7 @@ const CQuiz = () => {
 
   useEffect(() => {
     if (
-      savedPhrases.length < 1 ||
+      savedPhrases.length < 0 ||
       categories.length < 1 ||
       difficultyLevels.length < 0
     )
@@ -114,6 +120,7 @@ const CQuiz = () => {
       const foundPhrase = translations.find(
         (tr) => tr.id == sp?.translation_id
       );
+
       tempArray.push({
         category:
           categories.find((cat) => cat.id === foundPhrase?.category_id)?.name ??
@@ -125,6 +132,7 @@ const CQuiz = () => {
         translation_id: foundPhrase?.id,
         word_pln: foundPhrase?.word_polish,
         id: id,
+        language: selectedLanguage,
       });
     });
     setPhrasesData(tempArray);
@@ -153,8 +161,9 @@ const CQuiz = () => {
         isRequired: false,
         data:
           languages
-            ?.map((lang) => ({ id: lang.id, value: lang.code }))
+            ?.map((lang) => ({ id: lang.code, value: lang.code }))
             .filter((lang) => lang.value != "PLN") || [],
+        onChange: (e) => setSelectedLanguage(e.target.value),
       },
     ],
     setRefs: function (): void {},
@@ -162,7 +171,7 @@ const CQuiz = () => {
     onCancel: handleCancel,
     others: (
       <div>
-        <HStack marginBottom="2%">
+        <HStack marginBottom="2%" flexWrap="wrap" gap="10px">
           <Text>Kategorie:</Text>
           {categoriesQuizz.map((cq) => (
             <button className="tag_category" key={cq}>
@@ -170,7 +179,7 @@ const CQuiz = () => {
             </button>
           ))}
         </HStack>
-        <HStack marginBottom="2%">
+        <HStack marginBottom="2%" flexWrap="wrap" gap="10px">
           <Text>Poziomy trudności:</Text>
           {levelsQuizz.map((lq) => (
             <button className="tag_category" key={lq}>

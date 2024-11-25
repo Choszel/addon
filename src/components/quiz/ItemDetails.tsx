@@ -92,7 +92,7 @@ const ItemDetails = ({
       >
         {games.map((game) => (
           <Link
-            to={game.path + quiz.id}
+            to={game.path + quiz.language + "/" + quiz.id}
             className="game_type"
             onClick={addToUserQuizzes}
             key={game.path}

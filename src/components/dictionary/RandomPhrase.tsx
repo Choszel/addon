@@ -10,6 +10,9 @@ const RandomPhrase = ({ onSearch, language }: Props) => {
       case "ENG":
         endpoint = "wordsEnglish";
         break;
+      case "SPA":
+        endpoint = "wordsSpanish";
+        break;
       default:
         endpoint = "wordsPolish";
         break;

@@ -158,10 +158,16 @@ function App() {
           <Route element={<LowestProtectedRoute></LowestProtectedRoute>}>
             <Route path="/noTranslation" element={<NoTranslation />} />
             <Route path="/quiz/create" element={<CQuiz />} />
-            <Route path="/quiz/FlashcardGame/:id" element={<FlashcardGame />} />
-            <Route path="/quiz/matchGame/:id" element={<MatchGame />} />
-            <Route path="/quiz/testGame/:id" element={<TestGame />} />
-            <Route path="/quiz/story/:id" element={<StoryWithQuestions />} />
+            <Route
+              path="/quiz/FlashcardGame/:code/:id"
+              element={<FlashcardGame />}
+            />
+            <Route path="/quiz/matchGame/:code/:id" element={<MatchGame />} />
+            <Route path="/quiz/testGame/:code/:id" element={<TestGame />} />
+            <Route
+              path="/quiz/story/:code/:id"
+              element={<StoryWithQuestions />}
+            />
             <Route path="/flashcards/:id?" element={<FlashcardsHome />} />
           </Route>
         </Route>

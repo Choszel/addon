@@ -1,10 +1,11 @@
 import { Box } from "@chakra-ui/react";
-import useTranslationPL_ENG from "../../hooks/useTranslationPL_ENG";
+import useTranslationPL_ from "../../hooks/useTranslationPL_";
 import { useEffect } from "react";
 
 interface Props {
   word: string;
   rowId: number;
+  language: string;
   setTranslationId: (value: {
     row_id: number;
     translation_id: number;
@@ -13,25 +14,31 @@ interface Props {
   }) => void;
 }
 
-const EnglishTranslation = ({ word, rowId, setTranslationId }: Props) => {
-  const { fetchForPLNWord } = useTranslationPL_ENG();
-  const { data: englishTranslations } = fetchForPLNWord(word);
+const PhraseTranslation = ({
+  word,
+  rowId,
+  setTranslationId,
+  language,
+}: Props) => {
+  const { fetchForPLNWord } = useTranslationPL_();
+  const { data: PhraseTranslations } = fetchForPLNWord(language, word);
 
   useEffect(() => {
+    console.log("PhraseTranslations", PhraseTranslations);
     setTranslationId({
       row_id: rowId,
-      translation_id: englishTranslations[0]?.translation_id ?? 0,
-      category: englishTranslations[0]?.category,
-      level: englishTranslations[0]?.level,
+      translation_id: PhraseTranslations[0]?.translation_id ?? 0,
+      category: PhraseTranslations[0]?.category,
+      level: PhraseTranslations[0]?.level ?? "",
     });
-  }, [englishTranslations]);
+  }, [PhraseTranslations]);
 
   return (
     <Box className="question">
       <select
         className="select-primary"
         onChange={(e) => {
-          const selectedPhrase = englishTranslations.find(
+          const selectedPhrase = PhraseTranslations.find(
             (et) => et.id == parseInt(e.target.value)
           );
           setTranslationId({
@@ -43,7 +50,7 @@ const EnglishTranslation = ({ word, rowId, setTranslationId }: Props) => {
         }}
         key={rowId}
       >
-        {englishTranslations.map((et) => (
+        {PhraseTranslations.map((et) => (
           <option value={et.id} key={et.id}>
             {et.word}
           </option>
@@ -53,4 +60,4 @@ const EnglishTranslation = ({ word, rowId, setTranslationId }: Props) => {
   );
 };
 
-export default EnglishTranslation;
+export default PhraseTranslation;

@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import GameLayout from "../../components/quiz/GameLayout";
 
 const MatchGame = () => {
-  const { id } = useParams();
-  const { fetchENG } = useQuizzes();
-  const { data: questions } = fetchENG(parseInt(id ?? "0"));
+  const { code, id } = useParams();
+  const { fetchQuestions } = useQuizzes();
+  const { data: questions } = fetchQuestions(code ?? "", parseInt(id ?? "0"));
   const [drawNumbers, setDrawNumbers] = useState<number[]>([]);
   const [currentWord, setCurrentWord] = useState<QuizQuestion | undefined>();
   const [wronglyAnswered, setWronglyAnswered] = useState<number[]>([]);

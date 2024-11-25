@@ -46,13 +46,13 @@ const useQuizzes = () => {
         title: quizQuery.title}}, 
     [quizQuery]);
 
-  const fetchENG = (id?: number) => {
+  const fetchQuestions = (language: string, id?: number) => {
     return useData<QuizQuestion>(
-      "/quizzesQuestions/ENG",
+      "/quizzesQuestions",
       {
-        params: { id: id },
+        params: { language: language, id: id },
       },
-      [id]
+      [language, id]
     );
   };
 
@@ -66,39 +66,39 @@ const useQuizzes = () => {
     );
   };
 
-  const fetchUserQuestionsDetailed = (id?: number, userId?: number) => {
+  const fetchUserQuestionsDetailed = (language: string, id?: number, userId?: number) => {
     return useData<QuizQuestion>(
       "/usersQuizzesQuestionsDetailed",
       {
-        params: { id: id, userId: userId },
+        params: { language: language, id: id, userId: userId },
       },
-      [id, userId]
+      [language, id, userId]
     );
   };
 
-  const fetchUserQuestions = (id?: number) => {
+  const fetchUserQuestions = (language: string, id?: number) => {
     return useData<UserQuizQuestion>(
       "/usersQuizzesQuestions",
       {
-        params: { id: id },
+        params: { language: language, id: id },
       },
-      [id]
+      [language, id]
     );
   };
 
-  const fetchAmountOfQuestions = (id: number) => {
+  const fetchAmountOfQuestions = (language: string, id: number) => {
     return useData<AmountOfQuestions>(
       "/quizzesQuestions/Count",
       {
-        params: { id: id },
+        params: { language: language, id: id },
       },
-      [id]
+      [language, id]
     );
   };
 
   return {
     fetchQuizzes,
-    fetchENG,
+    fetchQuestions,
     fetchUserScores,
     fetchUserQuestions,
     fetchUserQuestionsDetailed,

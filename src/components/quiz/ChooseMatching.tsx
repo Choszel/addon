@@ -108,7 +108,7 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
       alignItems="center"
     >
       <Card
-        height={{ base: "200px", md: "250px" }}
+        height={"250px"}
         width={{ base: "90%", md: "40%" }}
         padding="0%"
         backgroundColor="var(--primary-dark)"

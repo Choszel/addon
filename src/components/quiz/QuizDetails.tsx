@@ -64,7 +64,7 @@ const QuizDetails = ({
         </>
       }
       games={games}
-      questionsNode={questions.map((question) => (
+      questionsNode={questions?.map((question) => (
         <HStack margin={{ base: "6% 3%", md: "3% 3%" }} key={question.id}>
           <Card
             bg={

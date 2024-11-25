@@ -16,7 +16,7 @@ const StoryCard = ({ quiz, isScore, userId, open }: Props) => {
     data: questions,
     isLoading: quesIsLoading,
     error: quesError,
-  } = fetchUserQuestions(quiz.id ?? 0, userId);
+  } = fetchUserQuestions(quiz.language ?? "", quiz.id ?? 0, userId);
   const { data: amountOfQuestions } = fetchAmountOfQuestions(quiz.id ?? 0);
 
   return (

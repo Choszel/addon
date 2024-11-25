@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useWordsEnglish from "../../hooks/useWordsEnglish";
-import useTranslationPL_ENG, {
-  TranslationPL_ENG,
-} from "../../hooks/useTranslationPL_ENG";
+import useTranslationPL_, {
+  TranslationPL_,
+} from "../../hooks/useTranslationPL_";
 import ReadTemplate, {
   TableData,
 } from "../../components/crud_templates/ReadTemplate";
@@ -17,14 +17,14 @@ const DetailsWordsEnglish = () => {
   const { id } = useParams<{ id: string }>();
   const { fetchAllDetailed } = useWordsEnglish(parseInt(id ?? "-1"));
   const { data, isLoading, error } = fetchAllDetailed();
-  const { fetchForENG } = useTranslationPL_ENG();
+  const { fetchFor_ } = useTranslationPL_();
   const {
     data: translations,
     isLoading: tranIsLoading,
     error: tranError,
-  } = fetchForENG(parseInt(id ?? "-1"));
+  } = fetchFor_("ENG", parseInt(id ?? "-1"));
   const [translationsData, setTranslationsData] = useState<Translation[]>();
-  const { postData: postTranslations } = actionData("/translationPLNENG");
+  const { postData: postTranslations } = actionData("/translationPLN_");
   const navigate = useNavigate();
 
   const handleSave = async () => {
@@ -55,7 +55,7 @@ const DetailsWordsEnglish = () => {
       </>
     );
 
-  const tableData: TableData<TranslationPL_ENG> = {
+  const tableData: TableData<TranslationPL_> = {
     title: "Tłumaczenia",
     headers: ["id", "word"],
     data: translations,

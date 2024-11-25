@@ -24,6 +24,9 @@ const AlphabeticalSearch = () => {
       case "ENG":
         endpoint = "English";
         break;
+      case "SPA":
+        endpoint = "Spanish";
+        break;
       default:
         endpoint = "Polish";
         break;

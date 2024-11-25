@@ -9,13 +9,13 @@ import { Show } from "@chakra-ui/react";
 import GameLayout from "../../components/quiz/GameLayout";
 
 const TestGame = () => {
-  const { id } = useParams();
+  const { code, id } = useParams();
   const { GetUserId } = useTokenData();
-  const { fetchENG, fetchUserScores, fetchUserQuestions } = useQuizzes();
-  const { data: questions } = fetchENG(parseInt(id ?? "0"));
+  const { fetchQuestions, fetchUserScores, fetchUserQuestions } = useQuizzes();
+  const { data: questions } = fetchQuestions(code ?? "", parseInt(id ?? "0"));
   const { data: userScores } = fetchUserScores(GetUserId());
   const [currentScore, setCurrentScore] = useState<number>(0);
-  const { data: userQuestions } = fetchUserQuestions(currentScore);
+  const { data: userQuestions } = fetchUserQuestions(code ?? "", currentScore);
   const [drawNumbers, setDrawNumbers] = useState<number[]>([]);
   const [questionType, setQuestionType] = useState<number>(0);
   const [drawNumbersAnswers, setDrawNumbersAnswers] = useState<number[]>([]);
@@ -58,6 +58,7 @@ const TestGame = () => {
     );
 
     const formData = new URLSearchParams();
+    formData.append("language", code ?? "");
     formData.append("quiz_score_id", currentScore.toString());
     formData.append("data", JSON.stringify([...correctAnswers]));
     postUserQuestions(formData);
