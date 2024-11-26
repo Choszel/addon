@@ -6,11 +6,17 @@ import PhraseTranslation from "./PhraseTranslation";
 
 interface Props {
   language: string;
+  selectedLanguage: string;
   phraseData: QuizzQuestion[];
   setPhrasesData: (Phrases: QuizzQuestion[]) => void;
 }
 
-const AddPhraseButton = ({ language, phraseData, setPhrasesData }: Props) => {
+const AddPhraseButton = ({
+  language,
+  selectedLanguage,
+  phraseData,
+  setPhrasesData,
+}: Props) => {
   const [translationId, setTranslationId] = useState<{
     row_id: number;
     translation_id: number;
@@ -19,7 +25,10 @@ const AddPhraseButton = ({ language, phraseData, setPhrasesData }: Props) => {
   }>();
 
   const handleAddTranslation = () => {
-    setPhrasesData([...phraseData, { id: Date.now() }]);
+    setPhrasesData([
+      ...phraseData,
+      { id: Date.now(), language: selectedLanguage },
+    ]);
   };
 
   const handleDeleteTranslation = (id: number) => {

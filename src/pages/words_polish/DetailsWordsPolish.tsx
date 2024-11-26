@@ -20,24 +20,26 @@ const DetailsWordsPolish = () => {
   const { data, isLoading, error } = fetchWords(parseInt(id ?? "-1"));
   const { fetchForPLN } = useTranslationPL_();
   const {
-    data: translations,
-    isLoading: tranIsLoading,
-    error: tranError,
+    data: translationsENG,
+    isLoading: tranENGIsLoading,
+    error: tranENGError,
   } = fetchForPLN("ENG", parseInt(id ?? "-1"));
+  const {
+    data: translationsSPA,
+    isLoading: tranSPAIsLoading,
+    error: tranSPAError,
+  } = fetchForPLN("SPA", parseInt(id ?? "-1"));
   const [translationsData, setTranslationsData] = useState<Translation[]>();
-  const { postData: postTranslations } = actionData("/translationPLNENG");
+  const { postData: postTranslations } = actionData("/translationPLN_");
   const navigate = useNavigate();
 
   const handleSave = async () => {
     translationsData?.forEach((element) => {
       const translation = new URLSearchParams();
-      switch (element.language) {
-        default:
-          translation.append("word_polish_id", data[0].id.toString());
-          translation.append("word_english_id", element.id?.toString() ?? "");
-          postTranslations(translation);
-          break;
-      }
+      translation.append("language", element.language ?? "");
+      translation.append("word_polish_id", data[0].id.toString());
+      translation.append("word_second_id", element.id?.toString() ?? "");
+      postTranslations(translation);
     });
 
     return window.location.reload();
@@ -56,12 +58,21 @@ const DetailsWordsPolish = () => {
       </>
     );
 
-  const tableData: TableData<TranslationPL_> = {
-    title: "Tłumaczenia",
+  const tableDataENG: TableData<TranslationPL_> = {
+    title: "Tłumaczenia angielskie",
     headers: ["id", "word"],
-    data: translations,
+    data: translationsENG,
     canDelete: true,
-    routeName: "/translationPLNENG",
+    routeName: "/translationPLN_?language=ENG",
+    isLoading: tranENGIsLoading,
+    error: tranENGError,
+  };
+  const tableDataSPA: TableData<TranslationPL_> = {
+    title: "Tłumaczenia hiszpańskie",
+    headers: ["id", "word"],
+    data: translationsSPA,
+    canDelete: true,
+    routeName: "/translationPLN_?language=SPA",
     others: (
       <>
         <AddTranslationButton
@@ -77,8 +88,8 @@ const DetailsWordsPolish = () => {
         </Button>
       </>
     ),
-    isLoading: tranIsLoading,
-    error: tranError,
+    isLoading: tranSPAIsLoading,
+    error: tranSPAError,
   };
 
   return (
@@ -118,7 +129,10 @@ const DetailsWordsPolish = () => {
         </Stack>
       ))}
       <br></br>
-      <ReadTemplate {...tableData}></ReadTemplate>
+      <ReadTemplate {...tableDataENG}></ReadTemplate>
+      <br></br>
+      <br></br>
+      <ReadTemplate {...tableDataSPA}></ReadTemplate>
     </>
   );
 };

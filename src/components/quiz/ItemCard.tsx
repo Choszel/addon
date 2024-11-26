@@ -55,13 +55,14 @@ const ItemCard = ({
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (amountOfQuestions.length < 1 || questions.length < 1) return;
     const answeredQuestions = questions.filter(
       (question) => question.done == true
     );
     const tempScore =
       answeredQuestions.length / amountOfQuestions[0]?.amount_of_questions;
     setScore(tempScore > 0 ? tempScore : 0);
-  }, [amountOfQuestions]);
+  }, [amountOfQuestions, questions]);
 
   useEffect(() => {
     if (open) onOpen();

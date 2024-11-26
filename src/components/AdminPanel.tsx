@@ -20,6 +20,7 @@ const AdminPanel = () => {
     { path: "/missingPhrases", phrase: "Brakujące frazy" },
     { path: "/wordsPolish", phrase: "Polskie słowa" },
     { path: "/wordsEnglish", phrase: "Angielskie słowa" },
+    { path: "/wordsSpanish", phrase: "Hiszpańskie słowa" },
   ];
   const menuAdminItems = [
     { path: "/language", phrase: "Języki" },

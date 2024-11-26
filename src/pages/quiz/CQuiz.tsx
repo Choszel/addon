@@ -32,7 +32,7 @@ const CQuiz = () => {
   const { fetchAll } = useTranslationPL_();
   const { data: translations } = fetchAll(selectedLanguage);
   const { postData: postQuiz } = actionData("/quizzes");
-  const { postData: postQuizQuestions } = actionData("/quizzesQuestions/ENG");
+  const { postData: postQuizQuestions } = actionData("/quizzesQuestions");
   const { savedPhrases, isLoading, clearPhraseLocalStorage } =
     usePhrasesStorage(selectedLanguage);
   const navigate = useNavigate();
@@ -87,6 +87,7 @@ const CQuiz = () => {
     const response = await postQuiz(formData);
 
     const questionData = new URLSearchParams();
+    questionData.append("language", selectedLanguage);
     questionData.append("quiz_id", (response.id ?? 0).toString());
     questionData.append("data", JSON.stringify([...phrasesData]));
     postQuizQuestions(questionData);
@@ -189,7 +190,9 @@ const CQuiz = () => {
         </HStack>
 
         <AddPhraseButton
+          key={selectedLanguage}
           setPhrasesData={setPhrasesData}
+          selectedLanguage={selectedLanguage}
           language={"PLN"}
           phraseData={phrasesData}
         />

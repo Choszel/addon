@@ -35,27 +35,35 @@ const SearchInput = ({ onSearch, language }: Props) => {
       }
 
       let endpoint = "";
-      switch (language) {
+      switch (language.substring(0, 3)) {
         case "SPA":
           endpoint = "wordsSpanish";
           break;
-        default:
+        case "ENG":
           endpoint = "wordsEnglish";
           break;
+        default:
+          break;
       }
+      let data = [];
       try {
-        const response = await fetch(
-          "http://localhost:3001/api/" +
-            endpoint +
-            "/word?word=" +
-            debounceSearchInput
-        );
-        const data = await response.json();
-        const response2 = await fetch(
-          "http://localhost:3001/api/wordsPolish/word?word=" +
-            debounceSearchInput
-        );
-        const data2 = await response2.json();
+        if (endpoint.length > 0) {
+          const response = await fetch(
+            "http://localhost:3001/api/" +
+              endpoint +
+              "/word?word=" +
+              debounceSearchInput
+          );
+          data = await response.json();
+        }
+        let data2 = [];
+        if (language.includes("PLN")) {
+          const response2 = await fetch(
+            "http://localhost:3001/api/wordsPolish/word?word=" +
+              debounceSearchInput
+          );
+          data2 = await response2.json();
+        }
         setWords(data.concat(data2));
       } catch (err) {
         console.log(err);

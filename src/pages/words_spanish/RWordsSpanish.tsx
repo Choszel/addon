@@ -1,15 +1,16 @@
-import useWordsEnglish, { SecondWord } from "../../hooks/useWordsEnglish";
+import useWordsSpanish from "../../hooks/useWordsSpanish";
 import ReadTemplate, {
   TableData,
 } from "../../components/crud_templates/ReadTemplate";
+import { SecondWord } from "../../hooks/useWordsEnglish";
 
-const RWordsEnglish = () => {
-  const { fetchAllDetailed } = useWordsEnglish();
+const RWordsSpanish = () => {
+  const { fetchAllDetailed } = useWordsSpanish();
   const { data, isLoading, error } = fetchAllDetailed();
   const headers = ["id", "word", "category", "level", "part of speech"];
 
   const tableData: TableData<SecondWord> = {
-    title: "Wykaz Angielskich słów",
+    title: "Wykaz Hiszpańskich słów",
     headers: headers,
     data: data,
     isLoading: isLoading,
@@ -18,10 +19,10 @@ const RWordsEnglish = () => {
     canDelete: true,
     canEdit: true,
     details: true,
-    routeName: "/wordsEnglish",
+    routeName: "/wordsSpanish",
   };
 
   return <ReadTemplate {...tableData}></ReadTemplate>;
 };
 
-export default RWordsEnglish;
+export default RWordsSpanish;

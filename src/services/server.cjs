@@ -652,10 +652,10 @@ app.get('/api/translationPLN_/pln', async(req, res)=>{
     try{
         const condition = 'SELECT tr.id, ws.word as word '
             + `FROM translations_pl_${language.toLowerCase()} tr, ${table} ws `
-            + `WHERE tr.${fkName}=we.id AND tr.word_polish_id = ' + id + ';`;
+            + `WHERE tr.${fkName}=ws.id AND tr.word_polish_id = ` + id + `;`;
         const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word, ws.word '
             + `FROM translations_pl_${language.toLowerCase()} tr, words_polish wp, ${table} ws `
-            + `WHERE tr.word_polish_id=wp.id and tr.${fkName}=we.id ORDER BY id ASC;`);
+            + `WHERE tr.word_polish_id=wp.id and tr.${fkName}=ws.id ORDER BY id ASC;`);
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -752,6 +752,11 @@ app.get('/api/translationPLN_Detailed/pln/word', async(req, res)=>{
 app.delete('/api/translationPLN_', async (req, res) =>{
     const { id } = req.body;
     const { language } = req.query;
+    const { isAllowed } = allowedLanguage(language);
+
+    if (!isAllowed) {
+        return res.status(400).send('Invalid language');
+    } 
 
     try{
         const result = await pool.query(`DELETE FROM translations_pl_${language.toLowerCase()} WHERE id = $1`, [id]);
@@ -763,9 +768,8 @@ app.delete('/api/translationPLN_', async (req, res) =>{
 })
 
 app.post('/api/translationPLN_', async (req, res) =>{
-    const { word_polish_id, word_second_id } = req.body;
-    const { language } = req.query;
-    const { isAllowed = true, table, fkName}= allowedLanguage(language);
+    const { language, word_polish_id, word_second_id } = req.body;
+    const { isAllowed = true, fkName}= allowedLanguage(language);
 
     if (!isAllowed) {
         return res.status(400).send('Invalid language');
@@ -878,7 +882,7 @@ app.get('/api/quizzesQuestions', async(req, res)=>{
 });
 
 app.post('/api/quizzesQuestions', async (req, res) => {
-    const { language, quiz_id, data } = req.query;
+    const { language, quiz_id, data } = req.body;
     const { isAllowed = true }= allowedLanguage(language);
 
     if (!isAllowed) {
@@ -1057,7 +1061,7 @@ app.post('/api/usersQuizzesScores', async(req, res)=>{
 
 app.delete('/api/usersQuizzesScores', async (req, res) => {
     try{
-        const { user_id, quiz_id } = req.query;
+        const { user_id, quiz_id } = req.body;
         console.log("usersQuizzesScores delete", user_id, quiz_id);
         const result = await pool.query('DELETE FROM users_quizzes_scores WHERE user_id = $1 AND quiz_id = $2', [user_id, quiz_id]);
         res.status(200).json({message: result});

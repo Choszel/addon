@@ -194,11 +194,11 @@ const DictionarySearchResult = () => {
         <div style={{ width: "5%" }}></div>
         <SearchInput
           onSearch={(id, searchText) => onSearch(id, searchText)}
-          language={selectedLanguage}
+          language={selectedLanguage + "_PLN"}
         ></SearchInput>
         <RandomPhrase
           onSearch={(id, searchText) => onSearch(id, searchText)}
-          language={selectedLanguage ?? ""}
+          language={selectedLanguage}
         ></RandomPhrase>
       </Stack>
       <HStack justifyContent="space-around">

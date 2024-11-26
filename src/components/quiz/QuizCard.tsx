@@ -40,6 +40,12 @@ const QuizCard = ({
   const [levelsQuizzes, setLevelsQuizzes] = useState<string[]>([""]);
 
   useEffect(() => {
+    if (
+      questions.length < 1 ||
+      categories.length < 1 ||
+      difficultyLevels.length < 1
+    )
+      return;
     let questionsCategories = [
       ...new Set(
         questions.map(
@@ -57,7 +63,7 @@ const QuizCard = ({
     ];
     setCategoriesQuizzes(questionsCategories);
     setLevelsQuizzes(questionsLevels);
-  }, [questions]);
+  }, [questions, categories, difficultyLevels]);
 
   return (
     <ItemCard

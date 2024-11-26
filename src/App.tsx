@@ -43,6 +43,10 @@ import useTokenData from "./others/useTokenData";
 import { useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
 import TextDetector from "./pages/dictionary/TextDetector";
+import RWordsSpanish from "./pages/words_spanish/RWordsSpanish";
+import CWordsSpanish from "./pages/words_spanish/CWordsSpanish";
+import EWordsSpanish from "./pages/words_spanish/EWordsSpanish";
+import DetailsWordsSpanish from "./pages/words_spanish/DetailsWordsSpanish";
 
 function App() {
   const { CheckUserType } = useTokenData();
@@ -152,6 +156,13 @@ function App() {
             <Route
               path="/wordsEnglish/details/:id"
               element={<DetailsWordsEnglish />}
+            />
+            <Route path="/wordsSpanish" element={<RWordsSpanish />} />
+            <Route path="/wordsSpanish/create" element={<CWordsSpanish />} />
+            <Route path="/wordsSpanish/edit/:id" element={<EWordsSpanish />} />
+            <Route
+              path="/wordsSpanish/details/:id"
+              element={<DetailsWordsSpanish />}
             />
           </Route>
 

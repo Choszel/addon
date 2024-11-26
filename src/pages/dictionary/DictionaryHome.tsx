@@ -57,11 +57,11 @@ const DictionaryHome = () => {
       >
         <SearchInput
           onSearch={(id, searchText) => onSearch(id, searchText)}
-          language={selectedLanguage ?? ""}
+          language={selectedLanguage + "_PLN"}
         ></SearchInput>
         <RandomPhrase
           onSearch={(id, searchText) => onSearch(id, searchText)}
-          language={selectedLanguage ?? ""}
+          language={selectedLanguage}
         ></RandomPhrase>
         <button
           className="button_secondary"

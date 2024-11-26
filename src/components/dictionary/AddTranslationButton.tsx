@@ -23,9 +23,15 @@ const AddTranslationButton = ({
   const toast = useToast();
 
   const handleAddTranslation = () => {
-    setDataRow((dataRow) => [...dataRow, { id: Date.now(), language: "" }]);
-    console.log(localRefs);
+    setDataRow((dataRow) => [
+      ...dataRow,
+      { id: Date.now(), language: langugeOption ? "ENG" : "PLN" },
+    ]);
   };
+
+  useEffect(() => {
+    console.log("dataRow", dataRow);
+  }, [dataRow]);
 
   const handleDeleteTranslation = (id: number) => {
     setDataRow((dataRow) => dataRow.filter((row) => row.id !== id));
@@ -81,11 +87,15 @@ const AddTranslationButton = ({
             <select
               style={{ width: "20%" }}
               className="select-primary"
-              ref={(el) => {
-                localRefs.current[row.id] = { languageRef: el };
-              }}
+              value={row.language}
               disabled={row.wordId != null}
-              defaultValue={row.language}
+              onChange={(e) => {
+                setDataRow((dataRow) =>
+                  dataRow.map((r) =>
+                    r.id === row.id ? { ...r, language: e.target.value } : r
+                  )
+                );
+              }}
             >
               {languages.map((language) =>
                 language.code != "PLN" ? (
@@ -101,16 +111,10 @@ const AddTranslationButton = ({
               <div key={row.id}>{row.word}</div>
             ) : (
               <SearchInput
-                language={
-                  localRefs.current[row.id]?.languageRef?.value ?? "ENG"
-                }
+                key={row.language}
+                language={row.language}
                 onSearch={(id, word) =>
-                  onSearch(
-                    row.id,
-                    word,
-                    id,
-                    localRefs.current[row.id]?.languageRef?.value ?? "ENG"
-                  )
+                  onSearch(row.id, word, id, row.language)
                 }
               />
             )}

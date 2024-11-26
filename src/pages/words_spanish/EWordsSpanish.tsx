@@ -1,24 +1,24 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import actionData from "../../hooks/actionData";
+import useCategories from "../../hooks/useCategories";
+import useDifficultyLevels from "../../hooks/useDifficultyLevels";
+import useWordsSpanish from "../../hooks/useWordsSpanish";
+import { Spinner, Text } from "@chakra-ui/react";
+import usePartOfSpeech from "../../hooks/usePartOfSpeech";
 import FormTemplate, {
   FormData,
 } from "../../components/crud_templates/CreateTemplate";
-import useCategories from "../../hooks/useCategories";
-import AddTranslationButton from "../../components/dictionary/AddTranslationButton";
-import { Translation } from "../words_polish/CWordsPolish";
-import useDifficultyLevels from "../../hooks/useDifficultyLevels";
-import usePartOfSpeech from "../../hooks/usePartOfSpeech";
 
-const CWordsEnglish = () => {
+const EWordsSpanish = () => {
+  const { id } = useParams<{ id: string }>();
   const [refs, setRefs] = useState<
     (HTMLInputElement | HTMLSelectElement | null)[]
   >([]);
-  const [translationsData, setTranslationsData] = useState<Translation[]>();
   const navigate = useNavigate();
-  const routeName = "/wordsEnglish";
-  const { postData } = actionData(routeName);
-  const { postData: postTranslations } = actionData("/translationPLN_");
+  const routeName = "/wordsSpanish";
+  const { putData } = actionData(routeName);
+
   const {
     data: categories,
     isLoading: catIsLoading,
@@ -29,44 +29,37 @@ const CWordsEnglish = () => {
     isLoading: diffIsLoading,
     error: diffError,
   } = useDifficultyLevels();
+  const { fetchAllDetailed } = useWordsSpanish(parseInt(id ?? "-1"));
+  const { data, isLoading, error } = fetchAllDetailed();
 
-  const handleSave = async () => {
+  const handleSave = () => {
     const formData = new URLSearchParams();
+    formData.append("id", id || "");
     formData.append("word", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");
     formData.append("difficulty_level_id", refs[2]?.value ?? "");
     formData.append("category_id", refs[3]?.value ?? "");
     formData.append("part_of_speech", refs[4]?.value ?? "");
-
-    const response = await postData(formData);
-    if (response?.id) {
-      translationsData?.forEach((element) => {
-        const translation = new URLSearchParams();
-        switch (element.language) {
-          default:
-            translation.append("language", "ENG");
-            translation.append("word_polish_id", element.id?.toString() ?? "");
-            translation.append(
-              "word_second_id",
-              (response.id ?? -1).toString()
-            );
-            postTranslations(translation);
-            break;
-        }
-      });
-
-      return navigate(routeName);
-    } else {
-      console.error("Błąd: Nie udało się uzyskać ID nowo dodanego słowa");
-    }
+    putData(formData);
+    return navigate(routeName);
   };
 
   const handleCancel = () => {
     return navigate(routeName);
   };
 
+  useEffect(() => {
+    if (data && refs[0] && refs[1]) {
+      refs[0].value = data[0].word;
+      refs[1].value = data[0].definition;
+    }
+  }, [data, refs]);
+
+  if (isLoading) return <Spinner size="xl" />;
+  if (error) return <Text color="var(--error)">{error}</Text>;
+
   const formData: FormData = {
-    title: "Dodawanie Angielskiej Frazy",
+    title: "Edytowanie Angielskiej Frazy",
     headers: [
       { inputName: "Word", inputType: "text", isRequired: true },
       { inputName: "Definition", inputType: "text", isRequired: true },
@@ -99,14 +92,9 @@ const CWordsEnglish = () => {
     setRefs: function (): void {},
     onSave: handleSave,
     onCancel: handleCancel,
-    others: <AddTranslationButton setTranslationsData={setTranslationsData} />,
   };
 
-  return (
-    <div>
-      <FormTemplate {...formData} setRefs={setRefs} />
-    </div>
-  );
+  return <FormTemplate {...formData} setRefs={setRefs} />;
 };
 
-export default CWordsEnglish;
+export default EWordsSpanish;

@@ -1,6 +1,6 @@
 import useData from "./useData";
 
-export interface EnglishWord{
+export interface SecondWord{
     id: number;
     translation_id?: number | null;
     word: string;
@@ -16,13 +16,13 @@ const useWordsEnglish = (id?: number) => {
   const fetchAll = () =>{
     const config = id ? { params: { id: id } } : {};
 
-    return useData<EnglishWord>("/wordsEnglish", config);
+    return useData<SecondWord>("/wordsEnglish", config);
   }
 
     const fetchAllDetailed = () =>{
       const config = id ? { params: { id: id } } : {};
   
-      return useData<EnglishWord>("/wordsEnglishDetailed", config);
+      return useData<SecondWord>("/wordsEnglishDetailed", config);
     }
     return {fetchAll, fetchAllDetailed}
   };

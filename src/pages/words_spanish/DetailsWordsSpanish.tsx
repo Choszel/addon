@@ -1,28 +1,28 @@
 import { useNavigate, useParams } from "react-router-dom";
-import useWordsEnglish from "../../hooks/useWordsEnglish";
+import useWordsSpanish from "../../hooks/useWordsSpanish";
 import useTranslationPL_, {
   TranslationPL_,
 } from "../../hooks/useTranslationPL_";
+import { useState } from "react";
+import { Translation } from "../words_polish/CWordsPolish";
+import actionData from "../../hooks/actionData";
+import { Button, Spinner, Stack, Text } from "@chakra-ui/react";
+import GoBack from "../../components/GoBack";
 import ReadTemplate, {
   TableData,
 } from "../../components/crud_templates/ReadTemplate";
 import AddTranslationButton from "../../components/dictionary/AddTranslationButton";
-import { Button, Spinner, Stack, Text } from "@chakra-ui/react";
-import actionData from "../../hooks/actionData";
-import { useState } from "react";
-import { Translation } from "../words_polish/CWordsPolish";
-import GoBack from "../../components/GoBack";
 
-const DetailsWordsEnglish = () => {
+const DetailsWordsSpanish = () => {
   const { id } = useParams<{ id: string }>();
-  const { fetchAllDetailed } = useWordsEnglish(parseInt(id ?? "-1"));
+  const { fetchAllDetailed } = useWordsSpanish(parseInt(id ?? "-1"));
   const { data, isLoading, error } = fetchAllDetailed();
   const { fetchFor_ } = useTranslationPL_();
   const {
     data: translations,
     isLoading: tranIsLoading,
     error: tranError,
-  } = fetchFor_("ENG", parseInt(id ?? "-1"));
+  } = fetchFor_("SPA", parseInt(id ?? "-1"));
   const [translationsData, setTranslationsData] = useState<Translation[]>();
   const { postData: postTranslations } = actionData("/translationPLN_");
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ const DetailsWordsEnglish = () => {
       const translation = new URLSearchParams();
       switch (element.language) {
         default:
-          translation.append("language", "ENG");
+          translation.append("language", "SPA");
           translation.append("word_polish_id", element.id?.toString() ?? "");
           translation.append("word_second_id", data[0].id.toString());
           postTranslations(translation);
@@ -49,7 +49,7 @@ const DetailsWordsEnglish = () => {
       <>
         <GoBack
           goBack={() => {
-            navigate("/wordsEnglish");
+            navigate("/wordsSpanish");
           }}
         ></GoBack>
         <Text color="var(--error)">{error}</Text>
@@ -61,7 +61,7 @@ const DetailsWordsEnglish = () => {
     headers: ["id", "word"],
     data: translations,
     canDelete: true,
-    routeName: "/translationPLN_?language=ENG",
+    routeName: "/translationPLN_?language=SPA",
     others: (
       <>
         <AddTranslationButton setTranslationsData={setTranslationsData} />
@@ -82,7 +82,7 @@ const DetailsWordsEnglish = () => {
     <>
       <GoBack
         goBack={() => {
-          navigate("/wordsEnglish");
+          navigate("/wordsSpanish");
         }}
       ></GoBack>
       {data.map((e) => (
@@ -121,4 +121,4 @@ const DetailsWordsEnglish = () => {
   );
 };
 
-export default DetailsWordsEnglish;
+export default DetailsWordsSpanish;

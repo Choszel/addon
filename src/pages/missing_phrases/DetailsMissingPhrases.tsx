@@ -35,7 +35,7 @@ const DetailsMissingPhrases = () => {
   const [postRoute, setPostRoute] = useState<string>("/wordsEnglish");
   const { postData } = actionData(postRoute);
   const { deleteData } = actionData(routeName);
-  const { postData: postTranslations } = actionData("/translationPLNENG");
+  const { postData: postTranslations } = actionData("/translationPLN_");
   const [refs, setRefs] = useState<
     (HTMLInputElement | HTMLSelectElement | null)[]
   >([]);
@@ -59,16 +59,18 @@ const DetailsMissingPhrases = () => {
         const translation = new URLSearchParams();
         switch (languageValue) {
           case "PLN":
+            translation.append("language", element.language ?? "");
             translation.append(
               "word_polish_id",
               (response.id ?? -1).toString()
             );
-            translation.append("word_english_id", element.id?.toString() ?? "");
+            translation.append("word_second_id", element.id?.toString() ?? "");
             break;
           default:
+            translation.append("language", "PLN");
             translation.append("word_polish_id", element.id?.toString() ?? "");
             translation.append(
-              "word_english_id",
+              "word_second_id",
               (response.id ?? -1).toString()
             );
             break;
@@ -187,7 +189,12 @@ const DetailsMissingPhrases = () => {
     setRefs: function (): void {},
     onSave: handleSave,
     onCancel: () => navigate(routeName),
-    others: <AddTranslationButton setTranslationsData={setTranslationsData} />,
+    others: (
+      <AddTranslationButton
+        langugeOption={languageValue == "PLN"}
+        setTranslationsData={setTranslationsData}
+      />
+    ),
   };
 
   if (isLoading) return <Spinner />;
