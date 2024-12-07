@@ -8,6 +8,7 @@ import getCroppedImageUrl from "../../services/image-url";
 import actionData from "../../hooks/actionData";
 import { HiSpeakerWave } from "react-icons/hi2";
 import RandomPhrase from "../../components/dictionary/RandomPhrase";
+import SimilarPhrases from "../../components/dictionary/SimilarPhrases";
 
 export interface Phrase {
   id: number;
@@ -245,6 +246,12 @@ const DictionarySearchResult = () => {
               ))}
             </ul>
           )}
+          <Show below="md">
+            <SimilarPhrases
+              phrase={searchPhrase?.word ?? ""}
+              inLanguage={selectedLanguage}
+            />
+          </Show>
         </div>
         <Show above="md">
           <Img
@@ -254,6 +261,10 @@ const DictionarySearchResult = () => {
             src={getCroppedImageUrl(
               searchPhrase?.photo ?? translations[0]?.photo ?? ""
             )}
+          />
+          <SimilarPhrases
+            phrase={searchPhrase?.word ?? ""}
+            inLanguage={selectedLanguage}
           />
         </Show>
       </HStack>

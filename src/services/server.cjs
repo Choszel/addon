@@ -32,7 +32,7 @@ app.post('/api/ai', async (req, res) => {
             model: "gpt-4o-mini",
             messages: [
                 { role: "system", content: `Translate the given text in language which code is "${inLanguage}" into language which code is "${outLanguage}".` },
-                { role: "user", content: `Please, translate this into Polish: "${inputText}"` }
+                { role: "user", content: `Please, translate this: "${inputText}"` }
             ]
         });
 
@@ -40,6 +40,25 @@ app.post('/api/ai', async (req, res) => {
     } catch (error) {
         console.error("Error from OpenAI API:", error);
         res.status(500).json({ error: "Translation failed" });
+    }
+});
+
+app.post('/api/ai/similarPhrases', async (req, res) => {
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const { inputText, inLanguage } = req.body;
+    try {
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages: [
+                { role: "system", content: `Proszę znajdź podone frazy, synonimy, związki frazeologiczne, powiedzenia, itp. w języku "${inLanguage}" z polskimi tłumaczeniami do słowa: "${inputText}".` },
+                { role: "user", content: `Proszę znajdź podone frazy, synonimy, związki frazeologiczne, powiedzenia, itp. do słowa: "${inputText}"` }
+            ]
+        });
+
+        res.json({ analysis: completion.choices[0].message.content });
+    } catch (error) {
+        console.error("Error from OpenAI API:", error);
+        res.status(500).json({ error: "Search failed" });
     }
 });
 
