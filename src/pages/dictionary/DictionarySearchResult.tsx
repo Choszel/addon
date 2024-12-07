@@ -202,7 +202,7 @@ const DictionarySearchResult = () => {
           language={selectedLanguage}
         ></RandomPhrase>
       </Stack>
-      <HStack justifyContent="space-around">
+      <HStack justifyContent="space-around" alignItems="start">
         <div>
           <HStack
             marginBottom="3%"
@@ -216,6 +216,17 @@ const DictionarySearchResult = () => {
               }}
               cursor={"pointer"}
             />
+            <Show above="md">
+              <Img
+                boxSize="35%"
+                marginX={"5%"}
+                marginY="2%"
+                borderRadius="20px"
+                src={getCroppedImageUrl(
+                  searchPhrase?.photo ?? translations[0]?.photo ?? ""
+                )}
+              />
+            </Show>
           </HStack>
           <Show below="md">
             <Img
@@ -254,14 +265,6 @@ const DictionarySearchResult = () => {
           </Show>
         </div>
         <Show above="md">
-          <Img
-            boxSize="22%"
-            marginY="2%"
-            borderRadius="20px"
-            src={getCroppedImageUrl(
-              searchPhrase?.photo ?? translations[0]?.photo ?? ""
-            )}
-          />
           <SimilarPhrases
             phrase={searchPhrase?.word ?? ""}
             inLanguage={selectedLanguage}
