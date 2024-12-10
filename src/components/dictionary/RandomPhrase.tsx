@@ -32,7 +32,11 @@ const RandomPhrase = ({ onSearch, language }: Props) => {
   };
 
   return (
-    <button className="button_secondary" onClick={findRandomPhrase}>
+    <button
+      className="button_secondary"
+      onClick={findRandomPhrase}
+      id="random-phrase"
+    >
       Losuj frazę
     </button>
   );

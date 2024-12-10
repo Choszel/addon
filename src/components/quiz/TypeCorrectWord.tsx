@@ -107,7 +107,10 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
           readOnly={verified}
           onKeyUp={handleKeyPress}
         ></Input>
-        <button onClick={() => checkCorectness(refInput.current?.value ?? "")}>
+        <button
+          onClick={() => checkCorectness(refInput.current?.value ?? "")}
+          id={"answear"}
+        >
           Zatwierdź
         </button>
       </Stack>

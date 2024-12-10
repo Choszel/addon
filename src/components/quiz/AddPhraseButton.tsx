@@ -82,6 +82,7 @@ const AddPhraseButton = ({
           flexWrap="wrap"
           align={{ base: "unset", md: "center" }}
           direction={{ base: "column", md: "row" }}
+          id="quiz-phrase"
         >
           {row.word_pln ? (
             <>

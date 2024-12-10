@@ -20,7 +20,7 @@ const Navbar = () => {
       alignItems="center"
       height="100%"
     >
-      <Link to="/">
+      <Link to="/" id="main-page-navigator">
         <p>Addon</p>
       </Link>
       <Spacer width="50%"></Spacer>
@@ -52,7 +52,9 @@ const Navbar = () => {
       ) : (
         <>
           <Link to="/login">
-            <button className="button_primary">Zaloguj się</button>
+            <button className="button_primary" name="login-button">
+              Zaloguj się
+            </button>
           </Link>
           <Show above="sm">
             <Link to="/register">

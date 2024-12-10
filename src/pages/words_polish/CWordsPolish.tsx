@@ -39,7 +39,7 @@ const CWordsPolish = () => {
     if (response?.id) {
       translationsData?.forEach((element) => {
         const translation = new URLSearchParams();
-        translation.append("code", element.language ?? "");
+        translation.append("language", element.language ?? "");
         translation.append("word_polish_id", (response.id ?? -1).toString());
         translation.append("word_second_id", element.id?.toString() ?? "");
         postTranslations(translation);

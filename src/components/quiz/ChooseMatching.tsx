@@ -146,6 +146,7 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
               questions[shuffledNumbers[0]]?.word_polish ?? ""
             )
           }
+          id={"answear" + 0}
         >
           <p>{questions[shuffledNumbers[0]]?.word_second}</p>
         </div>
@@ -158,6 +159,7 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
               questions[shuffledNumbers[1]]?.word_polish ?? ""
             )
           }
+          id={"answear" + 1}
         >
           <p>{questions[shuffledNumbers[1]]?.word_second}</p>
         </div>
@@ -170,6 +172,7 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
               questions[shuffledNumbers[2]]?.word_polish ?? ""
             )
           }
+          id={"answear" + 2}
         >
           <p>{questions[shuffledNumbers[2]]?.word_second}</p>
         </div>
@@ -182,6 +185,7 @@ const ChooseMatching = ({ questions, type, checkIfCorrect }: Props) => {
               questions[shuffledNumbers[3]]?.word_polish ?? ""
             )
           }
+          id={"answear" + 3}
         >
           <p>{questions[shuffledNumbers[3]]?.word_second}</p>
         </div>

@@ -37,7 +37,7 @@ const StoryWithQuestions = () => {
   const { fetchUserQuestions, fetchUserScores } = useQuizzes();
   const { data: userScores } = fetchUserScores(GetUserId());
   const { data: userQuestions } = fetchUserQuestions(code ?? "", currentScore);
-  const { postData: postUserQuestions } = actionData("/usersQuizzesQuestions");
+  const { postData: postUserQuestions } = actionData("/usersStoriesQuestions");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   function getSelectionText() {
@@ -88,6 +88,7 @@ const StoryWithQuestions = () => {
     );
 
     const formData = new URLSearchParams();
+    formData.append("language", code ?? "");
     formData.append("quiz_score_id", currentScore.toString());
     formData.append("data", JSON.stringify([...correctAnswers]));
     postUserQuestions(formData);

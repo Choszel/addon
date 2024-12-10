@@ -225,6 +225,7 @@ const DictionarySearchResult = () => {
                 src={getCroppedImageUrl(
                   searchPhrase?.photo ?? translations[0]?.photo ?? ""
                 )}
+                bgColor="var(--copy)"
               />
             </Show>
           </HStack>
@@ -252,7 +253,7 @@ const DictionarySearchResult = () => {
                   index={index + 1}
                   link={true}
                   addToQuiz={true}
-                  language={code == "PLN" ? phrase.language ?? "ENG" : "PLN"}
+                  language={phrase.language ?? "ENG"}
                 ></TranslationTab>
               ))}
             </ul>

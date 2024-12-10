@@ -53,8 +53,9 @@ const TextDetector = () => {
         accept="image/*"
         onChange={(e) => handleImageUpload(e)}
         className="button_primary"
+        style={{ width: "100%", margin: "3% 0%" }}
       />
-      <Box justifySelf="center" marginY={"2%"}>
+      <Box justifySelf="center" marginY={{ base: "4%", md: "2%" }}>
         {selectedImage && (
           <img
             src={selectedImage}
@@ -63,11 +64,19 @@ const TextDetector = () => {
           />
         )}
       </Box>
-      <Stack direction="row" marginY="2%" align="center">
+      <Stack
+        direction={{ base: "column", md: "row" }}
+        marginY="4%"
+        align="center"
+      >
         <Text> Język, w którym jest podany tekst:</Text>
         <SelectLanguage setSelectedLanguage={setTextLanguage} />
       </Stack>
-      <Stack direction="row" marginY="2%" align="center">
+      <Stack
+        direction={{ base: "column", md: "row" }}
+        marginY="4%"
+        align="center"
+      >
         <Text> Język, na który ma zostać przetłumaczona fraza:</Text>
         <SelectLanguage setSelectedLanguage={setTranslateLanguage} />
       </Stack>

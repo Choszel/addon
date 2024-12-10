@@ -112,6 +112,7 @@ const SearchInput = ({ onSearch, language }: Props) => {
                 if (words) onSearch(words[0].id, words[0].word);
               }}
               cursor="pointer"
+              id="search-button"
             />
           </InputGroup>
         </HStack>

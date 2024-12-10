@@ -1141,19 +1141,14 @@ app.get('/api/storiesQuestions/Count', async(req, res)=>{
 });
 
 app.get('/api/usersStoriesQuestions', async(req, res)=>{
-    const { language, id, userId } = req.query;
-    const { isAllowed = true }= allowedLanguage(language);
-
-    if (!isAllowed) {
-        return res.status(400).send('Invalid language');
-    }
-
+    const { id, userId } = req.query;
+    
     try{
         const condition = 'SELECT sq.id, sq.quiz_id, sq.question, '
-        + `EXISTS (SELECT 1 FROM users_quizzes_questions_${language.toLowerCase()} uqq, users_quizzes_scores uqs WHERE uqq.quiz_question_id = sq.id AND uqs.quiz_id=sq.quiz_id AND uqs.user_id = ` + userId + ' AND uqq.user_quiz_score_id=uqs.id) AS done '
+        + `EXISTS (SELECT 1 FROM users_stories_questions usq, users_quizzes_scores uqs WHERE usq.story_question_id = sq.id AND uqs.quiz_id=sq.quiz_id AND uqs.user_id = ` + userId + ' AND usq.user_quiz_score_id=uqs.id) AS done '
         + 'FROM stories_questions sq WHERE sq.quiz_id = ' + id + ' ORDER BY sq.quiz_id ASC'
         const result = await pool.query(userId ? condition : 'SELECT sq.id, sq.quiz_id, sq.question, '
-        + `EXISTS (SELECT 1 FROM users_quizzes_questions_${language.toLowerCase()} uqq, users_quizzes_scores uqs WHERE uqq.quiz_question_id = sq.id AND uqs.quiz_id=sq.quiz_id AND uqq.user_quiz_score_id=uqs.id) AS done `
+        + `EXISTS (SELECT 1 FROM users_stories_questions usq, users_quizzes_scores uqs WHERE usq.story_question_id = sq.id AND uqs.quiz_id=sq.quiz_id AND usq.user_quiz_score_id=uqs.id) AS done `
         + 'FROM stories_questions sq WHERE sq.quiz_id = ' + id + ' ORDER BY sq.quiz_id ASC');
         res.json(result.rows);
     }catch(err){
@@ -1161,6 +1156,30 @@ app.get('/api/usersStoriesQuestions', async(req, res)=>{
         res.status(500).send('Server error');
     }
 });  
+
+app.post('/api/usersStoriesQuestions', async (req, res) => {
+    const { quiz_score_id, data } = req.body;
+    console.log("Post usersStoriesQuestions", quiz_score_id, data)
+
+    try {
+      const questions = JSON.parse(data);
+      const values = questions.map((q) => [
+        quiz_score_id,
+        q,
+      ]);
+  
+      const query =
+        `INSERT INTO users_stories_questions(user_quiz_score_id, story_question_id) VALUES ($1, $2)`;
+      const results = await Promise.all(
+        values.map((value) => {return pool.query(query, value)})
+      );
+  
+      res.json({ success: true, rows: results.map((result) => result.rows) });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
+    }
+});
 
 
 app.listen(port, ()=>{

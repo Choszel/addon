@@ -37,6 +37,7 @@ const PhraseTranslation = ({
     <Box className="question">
       <select
         className="select-primary"
+        name="select-phrase"
         onChange={(e) => {
           const selectedPhrase = PhraseTranslations.find(
             (et) => et.id == parseInt(e.target.value)

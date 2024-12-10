@@ -44,6 +44,7 @@ const Login = () => {
           ref={refLogin}
           className="basic_style"
           _focus={{ border: "2px solid var(--secondary-dark)" }}
+          id="user-name"
         ></Input>
       </HStack>
       <HStack
@@ -58,10 +59,15 @@ const Login = () => {
           onKeyUp={handleKeyPress}
           className="basic_style"
           _focus={{ border: "2px solid var(--secondary-dark)" }}
+          id="password"
         ></Input>
       </HStack>
       <Box marginTop={{ base: "7%", lg: "3%" }}>
-        <button className="button_secondary" onClick={handleLogin}>
+        <button
+          className="button_secondary"
+          onClick={handleLogin}
+          id="login-submit"
+        >
           Zaloguj się
         </button>
       </Box>

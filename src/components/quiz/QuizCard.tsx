@@ -119,8 +119,16 @@ const QuizCard = ({
           </HStack>
           <HStack>
             <p>Poziom: </p>
-            {levelsQuizzes.length > 4 ? (
-              <FaCirclePlus color="var(--primary)" size="30px" />
+            {levelsQuizzes.length > 3 ? (
+              <HStack>
+                <button className="tag_category" key={levelsQuizzes[0]}>
+                  {levelsQuizzes[0] ?? "No level"}
+                </button>
+                <button className="tag_category" key={levelsQuizzes[1]}>
+                  {levelsQuizzes[1] ?? "No level"}
+                </button>
+                <FaCirclePlus color="var(--primary)" size="30px" />
+              </HStack>
             ) : levelsQuizzes.length == 0 ? (
               <button className="tag_error">X</button>
             ) : (

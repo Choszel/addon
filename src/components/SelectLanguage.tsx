@@ -16,6 +16,7 @@ const SelectLanguage = ({ selectedLanguage, setSelectedLanguage }: Props) => {
         setSelectedLanguage(event.target.value);
       }}
       value={selectedLanguage}
+      name="select-language"
     >
       {data.map((language) => (
         <option key={language.id} className="select-primary-option">

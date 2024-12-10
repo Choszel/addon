@@ -51,6 +51,7 @@ const FlashcardsHome = () => {
         <button
           className="button_secondary"
           onClick={() => navigate("/quiz/create")}
+          name="create-quiz"
         >
           Stwórz własny quiz
         </button>

@@ -50,6 +50,9 @@ const CQuiz = () => {
   }, [savedPhrases]);
 
   const handleSave = async () => {
+    console.log("phrasesData", phrasesData);
+    console.log("phrasesData length", phrasesData.length);
+
     const uniqueTranslations = new Set<number | undefined>();
 
     phrasesData.forEach((phrase) => {
@@ -67,7 +70,16 @@ const CQuiz = () => {
       return;
     }
 
-    if (phrasesData?.length ?? 0 < 15) {
+    if (phrasesData.length < 15) {
+      toast({
+        title: "Minimalna wymagana ilość fraz wynosi 15.",
+        status: "error",
+        position: "bottom-right",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    } else if (phrasesData.length > 25) {
       toast({
         title: "Minimalna wymagana ilość fraz wynosi 15.",
         status: "error",
@@ -77,10 +89,16 @@ const CQuiz = () => {
       });
       return;
     }
+
     const formData = new URLSearchParams();
     formData.append("title", refs[0]?.value ?? "");
     formData.append("user_id", GetUserId().toString());
-    formData.append("language_id", refs[1]?.value ?? "");
+    formData.append(
+      "language_id",
+      (
+        languages.find((lang) => lang.code == refs[1]?.value)?.id ?? -1
+      )?.toString()
+    );
     const dateNow = new Date().toJSON().substring(0, 10);
     formData.append("execution_date", dateNow.toString());
 

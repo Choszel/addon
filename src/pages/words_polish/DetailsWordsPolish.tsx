@@ -125,6 +125,7 @@ const DetailsWordsPolish = () => {
             boxSize={{ base: "60%", md: "20%" }}
             src={getCroppedImageUrl(e.photo)}
             borderRadius="20px"
+            bgColor="var(--copy)"
           ></Image>
         </Stack>
       ))}
