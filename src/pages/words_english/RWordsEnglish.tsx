@@ -1,27 +1,16 @@
-import useWordsEnglish, { SecondWord } from "../../hooks/useWordsEnglish";
-import ReadTemplate, {
-  TableData,
-} from "../../components/crud_templates/ReadTemplate";
+import useWordsEnglish from "../../hooks/useWordsEnglish";
+import RWordsSecond from "../../components/crud_templates/RWordsSecond";
 
 const RWordsEnglish = () => {
   const { fetchAllDetailed } = useWordsEnglish();
-  const { data, isLoading, error } = fetchAllDetailed();
-  const headers = ["id", "word", "category", "level", "part of speech"];
 
-  const tableData: TableData<SecondWord> = {
-    title: "Wykaz Angielskich słów",
-    headers: headers,
-    data: data,
-    isLoading: isLoading,
-    error: error,
-    canCreate: true,
-    canDelete: true,
-    canEdit: true,
-    details: true,
-    routeName: "/wordsEnglish",
-  };
-
-  return <ReadTemplate {...tableData}></ReadTemplate>;
+  return (
+    <RWordsSecond
+      routeName={"/wordsEnglish"}
+      titlePart={"Angielskich"}
+      fetchAllDetailed={fetchAllDetailed}
+    />
+  );
 };
 
 export default RWordsEnglish;
