@@ -1,9 +1,11 @@
-import { HStack, Stack, Text, useToast, VStack } from "@chakra-ui/react";
+import { HStack, Img, Stack, Text, useToast, VStack } from "@chakra-ui/react";
 import { Phrase } from "../../pages/dictionary/DictionarySearchResult";
 import { useNavigate } from "react-router-dom";
 import { HiSpeakerWave } from "react-icons/hi2";
 import usePhrasesStorage from "../../hooks/usePhrasesStorage";
 import useTokenData from "../../others/useTokenData";
+import getFlag from "../../hooks/useFlags";
+import { useEffect } from "react";
 
 interface Props {
   phrase: Phrase;
@@ -31,7 +33,7 @@ const TranslationTab = ({
     let speakLanguage = "pl-PL";
     switch (language) {
       case "ENG":
-        speakLanguage = "en-US";
+        speakLanguage = "en-GB";
         break;
       case "SPA":
         speakLanguage = "es-ES";
@@ -52,8 +54,6 @@ const TranslationTab = ({
   };
 
   const handleAddToQuiz = () => {
-    // localStorage.removeItem("translations_pln_eng");
-
     if (CheckUserType() != "none")
       addToSavedPhrases({
         translation_id: phrase?.translation_id ?? 0,
@@ -82,35 +82,43 @@ const TranslationTab = ({
     }
   };
 
+  useEffect(() => {
+    console.log(phrase);
+    console.log(phrase.language);
+  }, []);
   return (
     <VStack marginBottom={{ base: "10%", md: "4%" }}>
       <Stack
         key={phrase.word + phrase.id}
         marginBottom="1%"
-        direction={{ base: "column", md: "row" }}
+        direction={{ base: "column", xl: "row" }}
         justify="center"
         align="center"
       >
-        <HStack>
+        <Stack direction={{ base: "column", md: "row" }}>
           <HStack
             onClick={redirectButton}
             cursor={link ? "pointer" : "default"}
           >
+            <Img src={getFlag(phrase?.language ?? "")}></Img>
             <p>{index}.</p>
             <p>{phrase.word}</p>
           </HStack>
 
-          <HiSpeakerWave
-            size={phrase?.level ? "40px" : "40px"}
-            onClick={() => {
-              handleSpeak();
-            }}
-            cursor={"pointer"}
-          />
-          {phrase.part_of_speech != undefined ? (
-            <Text>{"[" + phrase.part_of_speech + "]"}</Text>
-          ) : null}
-        </HStack>
+          <HStack marginY={{ base: "2%", md: "0%" }}>
+            <HiSpeakerWave
+              size={phrase?.level ? "40px" : "40px"}
+              onClick={() => {
+                handleSpeak();
+              }}
+              cursor={"pointer"}
+              width="100%"
+            />
+            {phrase.part_of_speech != undefined ? (
+              <Text>{"[" + phrase.part_of_speech + "]"}</Text>
+            ) : null}
+          </HStack>
+        </Stack>
 
         <HStack>
           {phrase.level != undefined ? (

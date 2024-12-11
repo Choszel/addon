@@ -23,6 +23,7 @@ const AdminPanel = () => {
     { path: "/wordsSpanish", phrase: "Hiszpańskie słowa" },
   ];
   const menuAdminItems = [
+    { path: "/stories", phrase: "Historie" },
     { path: "/language", phrase: "Języki" },
     { path: "/user", phrase: "Użytkownicy" },
   ];

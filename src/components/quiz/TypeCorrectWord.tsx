@@ -7,9 +7,15 @@ interface Props {
   question: QuizQuestion;
   type: string;
   checkIfCorrect: (word: string) => boolean;
+  language: string;
 }
 
-const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
+const TypeCorrectWord = ({
+  question,
+  type,
+  checkIfCorrect,
+  language,
+}: Props) => {
   const refInput = useRef<HTMLInputElement>(null);
   const msg = new SpeechSynthesisUtterance();
   const [verified, setVerified] = useState<boolean>(false);
@@ -39,7 +45,6 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
   };
 
   const handleSpeak = () => {
-    msg.lang = "en-US";
     msg.text = question?.word_second ?? "";
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(msg);
@@ -47,9 +52,21 @@ const TypeCorrectWord = ({ question, type, checkIfCorrect }: Props) => {
 
   useEffect(() => {
     const loadVoices = () => {
+      let speakLanguage = "pl-PL";
+      switch (language) {
+        case "ENG":
+          speakLanguage = "en-GB";
+          break;
+        case "SPA":
+          speakLanguage = "es-ES";
+          break;
+        default:
+          break;
+      }
+      msg.lang = speakLanguage;
       const voices = window.speechSynthesis
         .getVoices()
-        .filter((voice) => voice.lang === "en-US");
+        .filter((voice) => voice.lang === speakLanguage);
       msg.voice = voices[0];
     };
 

@@ -17,7 +17,7 @@ const Home = () => {
         justifyContent="center"
         spacing={10}
         marginBottom="3%"
-        height={{ base: "300px" }}
+        height={{ base: "325px" }}
       >
         <Link
           to="/dictionary"

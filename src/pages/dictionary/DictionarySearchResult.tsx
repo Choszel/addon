@@ -107,10 +107,14 @@ const DictionarySearchResult = () => {
           formData.append("language", code ?? "");
           formData.append("id", id || "");
           putData(formData);
-          const data2: Phrase[] = await fetchData("translationPLN_Detailed/_", {
+          let data2: Phrase[] = await fetchData("translationPLN_Detailed/_", {
             language: code,
             id: id || 0,
           });
+          data2 = data2.map((element) => ({
+            ...element,
+            language: "PLN",
+          }));
 
           setTranslations(data2);
         } else {
@@ -121,13 +125,17 @@ const DictionarySearchResult = () => {
           putData(formData);
           if (data[0].word == word) {
             setSearchPhrase(data[0]);
-            const data2: Phrase[] = await fetchData(
+            let data2: Phrase[] = await fetchData(
               "translationPLN_Detailed/pln",
               {
                 language: code,
                 id: id || 0,
               }
             );
+            data2 = data2.map((element) => ({
+              ...element,
+              language: code,
+            }));
             setTranslations(data2);
           }
         }
@@ -161,7 +169,7 @@ const DictionarySearchResult = () => {
     let speakLanguage = "pl-PL";
     switch (code) {
       case "ENG":
-        speakLanguage = "en-US";
+        speakLanguage = "en-GB";
         break;
       case "SPA":
         speakLanguage = "es-ES";

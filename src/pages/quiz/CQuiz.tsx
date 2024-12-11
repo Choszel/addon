@@ -101,6 +101,7 @@ const CQuiz = () => {
     );
     const dateNow = new Date().toJSON().substring(0, 10);
     formData.append("execution_date", dateNow.toString());
+    formData.append("type", "quiz");
 
     const response = await postQuiz(formData);
 

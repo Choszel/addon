@@ -47,6 +47,8 @@ import RWordsSpanish from "./pages/words_spanish/RWordsSpanish";
 import CWordsSpanish from "./pages/words_spanish/CWordsSpanish";
 import EWordsSpanish from "./pages/words_spanish/EWordsSpanish";
 import DetailsWordsSpanish from "./pages/words_spanish/DetailsWordsSpanish";
+import RStories from "./pages/stories/RStories";
+import CStories from "./pages/stories/CStories";
 
 function App() {
   const { CheckUserType } = useTokenData();
@@ -164,6 +166,9 @@ function App() {
               path="/wordsSpanish/details/:id"
               element={<DetailsWordsSpanish />}
             />
+
+            <Route path="/stories" element={<RStories />} />
+            <Route path="/stories/create" element={<CStories />} />
           </Route>
 
           <Route element={<LowestProtectedRoute></LowestProtectedRoute>}>

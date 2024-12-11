@@ -859,11 +859,11 @@ app.delete('/api/quizzes', async (req, res) => {
 });
 
 app.post('/api/quizzes', async (req, res) =>{
-    const { title, user_id, language_id, execution_date } = req.body;
+    const { title, user_id, language_id, execution_date, type } = req.body;
     console.log("App ", title, user_id, language_id, execution_date);
     try{
         const insertResult = await pool.query(
-            'INSERT INTO quizzes(title, user_id, language_id, execution_date, type) VALUES ($1, $2, $3, $4, $5) RETURNING id', [title, user_id, language_id, execution_date, "quiz"]
+            'INSERT INTO quizzes(title, user_id, language_id, execution_date, type) VALUES ($1, $2, $3, $4, $5) RETURNING id', [title, user_id, language_id, execution_date, type]
         );
         const newQuizId = insertResult.rows[0].id; 
 
@@ -1093,10 +1093,25 @@ app.delete('/api/usersQuizzesScores', async (req, res) => {
 app.get('/api/stories', async(req, res)=>{
     try{
         const { quiz_id } = req.query;
-        const result = await pool.query('SELECT * '
+        const condition = 'SELECT * '
         + 'FROM stories '
-        + 'WHERE quiz_id = $1;', [quiz_id]);
+        + 'WHERE quiz_id = ' + quiz_id + ' ' 
+        const result = await pool.query(quiz_id ? condition : 'SELECT * FROM stories '
+        + 'ORDER BY id ASC');
         res.json(result.rows);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+app.post('/api/stories', async(req, res)=>{
+    try{
+        const { quiz_id, text } = req.body;
+        await pool.query(
+            'INSERT INTO stories(quiz_id, text) VALUES ($1, $2)', [quiz_id, text]
+        );
+        res.status(200).json({ message: "Story added successfully" });
     }catch(err){
         console.error(err.message);
         res.status(500).send('Server error');
@@ -1116,6 +1131,62 @@ app.get('/api/storiesQuestions', async(req, res)=>{
     }
 });
 
+app.post('/api/storiesQuestionsAndAnswers', async (req, res) => {
+    const { quiz_id, data } = req.body;
+  
+    try {
+      const questions = JSON.parse(data);
+  
+      const results = await Promise.all(
+        questions.map(async (q) => {
+          const questionResult = await pool.query(
+            `INSERT INTO stories_questions(quiz_id, question) VALUES ($1, $2) RETURNING id`,
+            [quiz_id, q.question]
+          );
+          const questionId = questionResult.rows[0].id;
+  
+          if (q.answers && q.answers.length > 0) {
+            const answerValues = q.answers.map((a) => [questionId, a.answear, a.correct]);
+            const answerQuery = `INSERT INTO stories_answers(question_id, answear, correct) VALUES ($1, $2, $3)`;
+            await Promise.all(answerValues.map((value) => pool.query(answerQuery, value)));
+          }
+  
+          return { questionId, question: q.question };
+        })
+      );
+  
+      res.json({ success: true, questions: results });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
+    }
+  });
+  
+
+app.post('/api/storiesQuestions', async(req, res)=>{
+    const { quiz_id, data } = req.body;
+
+    console.log(quiz_id, data)
+    try {
+      const questions = JSON.parse(data);
+      const values = questions.map((q) => [
+        quiz_id,
+        q.question,
+      ]);
+  
+      const query =
+        `INSERT INTO stories_questions(quiz_id, question) VALUES ($1, $2) RETURNING id`;
+      const results = await Promise.all(
+        values.map((value) => {return pool.query(query, value)})
+      );
+  
+      res.json({ success: true, rows: results.map((result) => result.rows) });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
+    }
+});
+
 app.get('/api/storiesAnswers', async(req, res)=>{
     try{
         const { question_id } = req.query;
@@ -1126,6 +1197,31 @@ app.get('/api/storiesAnswers', async(req, res)=>{
     }catch(err){
         console.error(err.message);
         res.status(500).send('Server error');
+    }
+});
+
+app.post('/api/storiesAnswers', async(req, res)=>{
+    const { question_id, data } = req.body;
+
+    console.log(question_id, data)
+    try {
+      const questions = JSON.parse(data);
+      const values = questions.map((q) => [
+        question_id,
+        q.answear,
+        q.correct
+      ]);
+  
+      const query =
+        `INSERT INTO stories_answers(question_id, answear, correct) VALUES ($1, $2,) RETURNING id`;
+      const results = await Promise.all(
+        values.map((value) => {return pool.query(query, value)})
+      );
+  
+      res.json({ success: true, rows: results.map((result) => result.rows) });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
     }
 });
 
