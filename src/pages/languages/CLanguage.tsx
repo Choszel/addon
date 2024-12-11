@@ -26,7 +26,7 @@ const CLanguage = () => {
 
   const formData: FormData = {
     title: "Dodawanie Języka",
-    headers: [{ inputName: "Code", inputType: "text", isRequired: true }],
+    headers: [{ inputName: "Kod języka", inputType: "text", isRequired: true }],
     setRefs: function (): void {},
     onSave: handleSave,
     onCancel: handleCancel,

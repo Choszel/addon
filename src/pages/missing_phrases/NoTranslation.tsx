@@ -120,7 +120,7 @@ const NoTranslation = () => {
           languages?.map((lang) => ({ id: lang.code, value: lang.code })) || [],
         onChange: (e) => setLanguageValue(e.target.value),
       },
-      { inputName: "Photo", inputType: "text", isRequired: false },
+      { inputName: "Zdjęcie", inputType: "text", isRequired: false },
       {
         inputName: "Poziom trudności",
         inputType: "select",
@@ -134,7 +134,7 @@ const NoTranslation = () => {
         data: categories?.map((cat) => ({ id: cat.id, value: cat.name })),
       },
       {
-        inputName: "Part of speech",
+        inputName: "Część mowy",
         inputType: "select",
         isRequired: false,
         data: usePartOfSpeech(),

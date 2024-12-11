@@ -45,7 +45,7 @@ const ECategory = () => {
 
   const formData: FormData = {
     title: "Edytowanie Kategorii",
-    headers: [{ inputName: "Name", inputType: "text", isRequired: true }],
+    headers: [{ inputName: "Nazwa", inputType: "text", isRequired: true }],
     setRefs: function (): void {},
     onSave: handleSave,
     onCancel: handleCancel,

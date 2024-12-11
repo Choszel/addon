@@ -68,10 +68,10 @@ const CWordsSpanish = () => {
   const formData: FormData = {
     title: "Dodawanie Hiszpańskiej Frazy",
     headers: [
-      { inputName: "Word", inputType: "text", isRequired: true },
-      { inputName: "Definition", inputType: "text", isRequired: true },
+      { inputName: "Fraza", inputType: "text", isRequired: true },
+      { inputName: "Definicja", inputType: "text", isRequired: true },
       {
-        inputName: "Difficulty Level",
+        inputName: "Poziom trudności",
         inputType: "select",
         isRequired: false,
         data: difficultyLevels?.map((cat) => ({
@@ -82,7 +82,7 @@ const CWordsSpanish = () => {
         error: diffError,
       },
       {
-        inputName: "Category",
+        inputName: "Kategoria",
         inputType: "select",
         isRequired: false,
         data: categories?.map((cat) => ({ id: cat.id, value: cat.name })),
@@ -90,7 +90,7 @@ const CWordsSpanish = () => {
         error: catError,
       },
       {
-        inputName: "Part of speech",
+        inputName: "Część mowy",
         inputType: "select",
         isRequired: false,
         data: usePartOfSpeech(),

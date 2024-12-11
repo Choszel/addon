@@ -22,6 +22,7 @@ import {
 import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import actionData from "../../hooks/actionData";
+import useStaticTexts from "../../hooks/useStaticTexts";
 
 export interface TableData<T> {
   title: string;
@@ -54,6 +55,7 @@ const ReadTemplate = <T extends object>({
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
   const { deleteData } = actionData(routeName ?? "");
   const navigate = useNavigate();
+  const { findTemplateTextValue } = useStaticTexts();
 
   return (
     <>
@@ -92,7 +94,7 @@ const ReadTemplate = <T extends object>({
                       color="var(--primary-light)"
                       borderBottom="2px solid var(--copy)"
                     >
-                      {element}
+                      {findTemplateTextValue(element)}
                     </Th>
                   </Show>
                   <Show below="md" key={"below" + index}>

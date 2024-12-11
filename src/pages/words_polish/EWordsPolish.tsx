@@ -53,17 +53,17 @@ const EWordsPolish = () => {
   const formData: FormData = {
     title: "Edytowanie Polskiej Frazy",
     headers: [
-      { inputName: "Word", inputType: "text", isRequired: true },
-      { inputName: "Definition", inputType: "text", isRequired: true },
+      { inputName: "Fraza", inputType: "text", isRequired: true },
+      { inputName: "Definicja", inputType: "text", isRequired: true },
       {
-        inputName: "Category",
+        inputName: "Kategoria",
         inputType: "select",
         isRequired: false,
         data: categories?.map((cat) => ({ id: cat.id, value: cat.name })),
         isLoading: catIsLoading,
         error: catError,
       },
-      { inputName: "Photo", inputType: "text", isRequired: false },
+      { inputName: "Zdjęcie", inputType: "text", isRequired: false },
     ],
     setRefs: function (): void {},
     onSave: handleSave,

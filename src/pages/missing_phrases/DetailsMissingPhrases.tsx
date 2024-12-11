@@ -151,10 +151,14 @@ const DetailsMissingPhrases = () => {
   const formData: FormData = {
     title: "Szczegóły i edycja brakującej frazy",
     headers: [
-      { inputName: "Phrase", inputType: "text", isRequired: true },
-      { inputName: "Definition", inputType: "text", isRequired: true },
+      { inputName: "Brakująca fraza", inputType: "text", isRequired: true },
       {
-        inputName: "Language",
+        inputName: "Definicja (max. 250 znaków)",
+        inputType: "text",
+        isRequired: true,
+      },
+      {
+        inputName: "Język, w którym jest podana fraza",
         inputType: "select",
         isRequired: false,
         data: languages?.map((lan) => ({ id: lan.code, value: lan.code })),
@@ -162,9 +166,9 @@ const DetailsMissingPhrases = () => {
         error: langError,
         onChange: (e) => setLanguageValue(e.target.value),
       },
-      { inputName: "Photo", inputType: "text", isRequired: false },
+      { inputName: "Zdjęcie", inputType: "text", isRequired: false },
       {
-        inputName: "Level",
+        inputName: "Poziom trudności",
         inputType: "select",
         isRequired: false,
         data: difficultyLevels?.map((df) => ({ id: df.id, value: df.level })),
@@ -172,7 +176,7 @@ const DetailsMissingPhrases = () => {
         error: diffError,
       },
       {
-        inputName: "Category",
+        inputName: "Kategoria",
         inputType: "select",
         isRequired: false,
         data: categories?.map((cat) => ({ id: cat.id, value: cat.name })),
@@ -180,7 +184,7 @@ const DetailsMissingPhrases = () => {
         error: catError,
       },
       {
-        inputName: "Part of speech",
+        inputName: "Część mowy",
         inputType: "select",
         isRequired: false,
         data: usePartOfSpeech(),
