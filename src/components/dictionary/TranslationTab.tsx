@@ -30,6 +30,8 @@ const TranslationTab = ({
 
   console.log(language);
   const handleSpeak = () => {
+    console.log("handleSpeak language:", language);
+
     let speakLanguage = "pl-PL";
     switch (language) {
       case "ENG":
@@ -105,7 +107,7 @@ const TranslationTab = ({
             <p>{phrase.word}</p>
           </HStack>
 
-          <HStack marginY={{ base: "2%", md: "0%" }}>
+          <HStack marginY={{ base: "2%", md: "0%" }} justifyContent="center">
             <HiSpeakerWave
               size={phrase?.level ? "40px" : "40px"}
               onClick={() => {

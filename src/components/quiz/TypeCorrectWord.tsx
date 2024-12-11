@@ -51,8 +51,9 @@ const TypeCorrectWord = ({
   };
 
   useEffect(() => {
+    console.log(language);
     const loadVoices = () => {
-      let speakLanguage = "pl-PL";
+      let speakLanguage = "en-GB";
       switch (language) {
         case "ENG":
           speakLanguage = "en-GB";

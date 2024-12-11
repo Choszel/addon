@@ -61,6 +61,7 @@ const DictionarySearchResult = () => {
       try {
         const data = await fetchData("wordsPolishDetailed", { id: id || 0 });
         if (data[0].word == word) {
+          data[0].language = "PLN";
           const formData = new URLSearchParams();
           formData.append("language", code ?? "PLN");
           formData.append("id", id || "");
@@ -101,7 +102,9 @@ const DictionarySearchResult = () => {
           default:
             break;
         }
-        if (data[0].word == word) {
+        console.log(data);
+        if (data[0]?.word == word) {
+          data[0].language = code;
           setSearchPhrase(data[0]);
           const formData = new URLSearchParams();
           formData.append("language", code ?? "");
@@ -124,6 +127,7 @@ const DictionarySearchResult = () => {
           formData.append("id", id || "");
           putData(formData);
           if (data[0].word == word) {
+            data[0].language = "PLN";
             setSearchPhrase(data[0]);
             let data2: Phrase[] = await fetchData(
               "translationPLN_Detailed/pln",
@@ -166,8 +170,9 @@ const DictionarySearchResult = () => {
   };
 
   const handleSpeak = () => {
+    console.log("handleSpeak language:", searchPhrase?.language);
     let speakLanguage = "pl-PL";
-    switch (code) {
+    switch (searchPhrase?.language) {
       case "ENG":
         speakLanguage = "en-GB";
         break;

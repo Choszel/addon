@@ -64,17 +64,17 @@ const AdminPanel = () => {
                   </MenuItem>
                 </Link>
               ))}
-              {authContext && authContext.isLoggedIn && (
-                <button
-                  className="button_primary"
-                  onClick={authContext.logout}
-                  style={{ margin: "0% 0% 0% 2%" }}
-                >
-                  Wyloguj się
-                </button>
-              )}
             </>
           ) : null}
+          {authContext && authContext.isLoggedIn && (
+            <button
+              className="button_primary"
+              onClick={authContext.logout}
+              style={{ margin: "0% 0% 0% 2%" }}
+            >
+              Wyloguj się
+            </button>
+          )}
         </MenuList>
       </Menu>
     </>

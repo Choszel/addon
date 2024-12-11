@@ -22,7 +22,7 @@ const Register = () => {
   const handleRegistration = async (event: React.FormEvent) => {
     event?.preventDefault();
     if (isLoginError || isPassError) return;
-    sendRegisterForm(
+    await sendRegisterForm(
       refLogin.current?.value ?? "",
       refPassword.current?.value ?? ""
     );

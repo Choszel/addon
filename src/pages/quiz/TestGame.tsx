@@ -150,7 +150,7 @@ const TestGame = () => {
           question={questions[drawNumbers[drawNumbers.length - 1]]}
           type={questionType == 2 ? "word" : "speaker"}
           checkIfCorrect={checkIfCorrect}
-          languauge={code ?? "ENG"}
+          language={code ?? "ENG"}
         ></TypeCorrectWord>
       )}
     </GameLayout>

@@ -105,7 +105,7 @@ const StoryWithQuestions = () => {
     <div>
       <GoBack
         goBack={() => {
-          navigate("/flashcards");
+          navigate("/flashcards/" + id);
         }}
       ></GoBack>
       <Text whiteSpace="pre-line" onMouseUp={getSelectionText} marginTop="2%">

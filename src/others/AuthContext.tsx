@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }: Props) => {
   const logout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
+    window.location.reload();
   };
 
   return (

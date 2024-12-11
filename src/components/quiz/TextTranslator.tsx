@@ -4,6 +4,8 @@ import "../../index.css";
 import useTranslationPL_, {
   TranslationPL_,
 } from "../../hooks/useTranslationPL_";
+import useTokenData from "../../others/useTokenData";
+import { useToast } from "@chakra-ui/react";
 interface Props {
   text: string;
   maxTextLength?: number;
@@ -22,6 +24,8 @@ const TextTranslator = ({
   const { data: phrases } = fetchAll(inLanguage);
   const [foundPhrases, setFoundPhrases] = useState<TranslationPL_[]>([]);
   const [translation, setTranslation] = useState<string>();
+  const { CheckUserType } = useTokenData();
+  const toast = useToast();
 
   const responseGenerate = async (inputText: string) => {
     const prompt = {
@@ -55,6 +59,21 @@ const TextTranslator = ({
     }
   }, [text]);
 
+  const handleAddToQuiz = (phraseId: number) => {
+    if (CheckUserType() != "none")
+      addToSavedPhrases({
+        translation_id: phraseId,
+      });
+    else
+      toast({
+        title: "Treść tylko dla zalogowanych użytkowników",
+        status: "error",
+        position: "bottom-right",
+        duration: 5000,
+        isClosable: true,
+      });
+  };
+
   useEffect(() => {
     if (phrases) {
       const phraseMap = new Map(
@@ -84,7 +103,7 @@ const TextTranslator = ({
         {foundPhrases.map((phrase) => (
           <button
             key={phrase.id.toString()}
-            onClick={() => addToSavedPhrases({ translation_id: phrase.id })}
+            onClick={() => handleAddToQuiz(phrase.id ?? 0)}
             style={{ marginLeft: "8px", color: "var(--primary-light)" }}
           >
             {phrase.word_second}

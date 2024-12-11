@@ -81,7 +81,7 @@ const UserProfile = () => {
               data={data}
               error={error}
               isLoading={isLoading}
-              userId={GetUserId()}
+              userId={userData[0]?.id}
             ></QuizGrid>
           </TabPanel>
           <TabPanel>

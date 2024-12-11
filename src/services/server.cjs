@@ -69,7 +69,7 @@ app.post('/api/register', async (req, res) => {
         const userExists = await pool.query('SELECT * FROM users WHERE login = $1', [login]);
 
         if (userExists.rows.length > 0) {
-            return res.status(400).json({ error: "User already exists" });
+            return res.status(400).json({ error: "Dany użytkownik już istnieje" });
         }
         const hashedPass = await bcrypt.hash(password, 10);
 
@@ -78,10 +78,10 @@ app.post('/api/register', async (req, res) => {
             [login, hashedPass]
         );
 
-        res.status(201).json({ message: "User registered successfully" });
+        res.status(201).json({ message: "Pomyślnie zarejestrowano" });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });
 
@@ -92,12 +92,12 @@ app.post('/api/login', async (req, res) =>{
         const user = await pool.query('SELECT * FROM users WHERE login = $1', [login]);
 
         if (user.rows.length === 0) {
-            return res.status(400).json({ error: "Invalid login" });
+            return res.status(400).json({ error: "Podano niepoprawny login" });
         }
         const validPassword = await bcrypt.compare(password, user.rows[0].password);
 
         if (!validPassword) {
-            return res.status(400).json({ error: "Invalid password" });
+            return res.status(400).json({ error: "Podano niepoprawne hasło" });
         }
 
         const token = jwt.sign(
@@ -109,7 +109,7 @@ app.post('/api/login', async (req, res) =>{
         res.status(201).json({ token });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });
 
@@ -121,7 +121,7 @@ app.get('/api/headers', async(req, res)=>{
         res.json(result.rows.map(row => row.column_name));
     }catch(err){
         console.log(err);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -133,7 +133,7 @@ app.get('/api/categories', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }   
 });
 
@@ -143,15 +143,15 @@ app.post('/api/category', async (req, res) =>{
     try{
         const categoryExists = await pool.query('SELECT * FROM categories WHERE name = $1', [name]);
         if(categoryExists.rows.length > 0){
-            return res.status(400).json({ error: "Category already exists" });
+            return res.status(400).json({ error: "Dana kategoria już istnieje" });
         }
         await pool.query(
             'INSERT INTO categories(name) VALUES ($1)', [name]
         );
-        res.status(200).json({ message: "Category added successfully" });
+        res.status(200).json({ message: "Pomyślnie dodano kategorię" });
     }catch(err){
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -159,10 +159,10 @@ app.delete('/api/category', async (req, res) =>{
     const { id } = req.body;
     try{
         const result = await pool.query('DELETE FROM categories WHERE id = $1', [id]);
-        res.status(200).json({message: "Deleted successfully"});
+        res.status(200).json({message: "Pomyślnie usunięto kategorię"});
     }catch(err){
         console.log(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -171,10 +171,10 @@ app.put('/api/category', async (req, res) =>{
     console.log(id, " ", name);
     try{
         const result = await pool.query('UPDATE categories SET name = $1 WHERE id = $2', [name, id]);
-        res.status(200).json({message: "Updated successfully"})
+        res.status(200).json({message: "Pomyślnie edytowano kategorię"})
     }catch(err){
         console.log(err.message)
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -184,7 +184,7 @@ app.get('/api/difficultyLevel', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });
 
@@ -196,7 +196,7 @@ app.get('/api/languages', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }   
 })
 
@@ -206,13 +206,13 @@ app.post('/api/language', async (req, res) =>{
     try{
         const languageExists = await pool.query('SELECT * FROM languages WHERE code = $1', [code]);
         if(languageExists.rows.length > 0){
-            return res.status(400).json({ error: "Language already exists" });
+            return res.status(400).json({ error: "Dany język już istnieje" });
         }
         await pool.query('INSERT INTO languages(code) VALUES ($1);', [code]);
-        res.status(200).json({ message: "Language added successfully" });
+        res.status(200).json({ message: "Pomyślnie dodano język" });
     }catch(err){
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -220,10 +220,10 @@ app.delete('/api/language', async (req, res) =>{
     const { id } = req.body;
     try{
         const result = await pool.query('DELETE FROM languages WHERE id = $1', [id]);
-        res.status(200).json({message: "Deleted successfully"});
+        res.status(200).json({message: "Pomyślnie usunięto język"});
     }catch(err){
         console.log(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -232,7 +232,7 @@ app.put('/api/language', async (req, res) =>{
     console.log(id, " ", code);
     try{
         await pool.query('UPDATE languages SET code = $1 WHERE id = $2', [code, id]);
-        res.status(200).json({message: "Updated successfully"})
+        res.status(200).json({message: "Pomyślnie edytowano język"})
     }catch(err){
         console.log(err.message)
         res.status(500).json(err.message);
@@ -247,7 +247,7 @@ app.get('/api/users', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }   
 });
 
@@ -256,10 +256,10 @@ app.put('/api/users', async (req, res) =>{
     console.log("users put", login, " ", user_type);
     try{
         await pool.query('UPDATE users SET user_type = $1 WHERE login = $2', [user_type, login]);
-        res.status(200).json({message: "Updated successfully"})
+        res.status(200).json({message: "Pomyślnie " + user_type == "0" ? "zdegradowano " : "mianowano " + "użytkownika"})
     }catch(err){
         console.log(err.message)
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -271,7 +271,7 @@ app.get('/api/missingPhrases', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }   
 })
 
@@ -295,7 +295,7 @@ app.get('/api/missingPhrasesDetailed', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }   
 })
 
@@ -305,15 +305,15 @@ app.post('/api/missingPhrases', async (req, res) =>{
     try{
         const phraseExists = await pool.query('SELECT * FROM missing_phrases WHERE phrase = $1', [phrase]);
         if(phraseExists.rows.length > 0){
-            return res.status(400).json({ error: "Phrase already reported" });
+            return res.status(400).json({ error: "Dana fraza już została zgłoszona" });
         }
         await pool.query(
             'INSERT INTO missing_phrases(phrase, definition, language_id, user_id, photo, difficulty_level_id, category_id, part_of_speech) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [phrase, definition, language_id, user_id, photo, difficulty_level_id, category_id, part_of_speech]
         );
-        res.status(200).json({ message: "Phrase reported successfully" });
+        res.status(200).json({ message: "Pomyślnie zgłoszono frazę" });
     }catch(err){
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -322,10 +322,10 @@ app.delete('/api/missingPhrases', async (req, res) =>{
     console.log(id);
     try{
         const result = await pool.query('DELETE FROM missing_phrases WHERE id = $1', [id]);
-        res.status(200).json({message: "Deleted successfully"});
+        res.status(200).json({message: "Pomyślnie usunięto frazę"});
     }catch(err){
         console.log(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -337,7 +337,7 @@ app.get('/api/wordsPolish', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }  
 });
 
@@ -349,7 +349,7 @@ app.get('/api/wordsPolish/word', async (req, res) => {
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     } 
 });
 
@@ -366,7 +366,7 @@ app.get('/api/wordsPolishDetailed', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }  
 });
 
@@ -378,7 +378,7 @@ app.get('/api/wordsPolishByWord', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }  
 });
 
@@ -387,10 +387,10 @@ app.delete('/api/wordsPolish', async (req, res) =>{
     console.log(id);
     try{
         const result = await pool.query('DELETE FROM words_polish WHERE id = $1', [id]);
-        res.status(200).json({message: "Deleted successfully"});
+        res.status(200).json({message: "Pomyślnie usunięto frazę"});
     }catch(err){
         console.log(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -399,10 +399,10 @@ app.put('/api/wordsPolish', async (req, res) =>{
     console.log(id, " ", word);
     try{
         const result = await pool.query('UPDATE words_polish SET word = $2, definition = $3, category_id = $4, photo = $5 WHERE id = $1', [id, word, definition, category_id, photo]);
-        res.status(200).json({message: "Updated successfully"})
+        res.status(200).json({message: "Pomyślnie edytowano frazę"})
     }catch(err){
         console.log(err.message)
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -413,7 +413,7 @@ app.post('/api/wordsPolish', async (req, res) => {
     try {
         const phraseExists = await pool.query('SELECT * FROM words_polish WHERE word = $1 AND category_id = $2', [word, category_id]);
         if (phraseExists.rows.length > 0) {
-            return res.status(400).json({ error: "Phrase already exists" });
+            return res.status(400).json({ error: "Dana fraza już istnieje" });
         }
         const insertResult = await pool.query('INSERT INTO words_polish(word, category_id, definition, photo) VALUES ($1, $2, $3, $4) RETURNING id', 
             [word, category_id, definition, photo]);
@@ -423,7 +423,7 @@ app.post('/api/wordsPolish', async (req, res) => {
         res.json({ id: newWordId }); 
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 });
 
@@ -432,7 +432,7 @@ app.get('/api/words/limit', async (req, res) => {
     const { isAllowed = true, table }= allowedLanguage(language);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }
 
     try {
@@ -443,7 +443,7 @@ app.get('/api/words/limit', async (req, res) => {
         res.json(result.rows);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });
 
@@ -452,7 +452,7 @@ app.put('/api/words/raisePopularity', async (req, res) =>{
     const { isAllowed = true, table }= allowedLanguage(language);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }
 
     console.log(id);
@@ -460,7 +460,7 @@ app.put('/api/words/raisePopularity', async (req, res) =>{
         const result = await pool.query(`UPDATE ${table} SET popularity = popularity+1 WHERE id = $1`, [id]);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -472,7 +472,7 @@ app.get('/api/wordsEnglish/word', async (req, res) => {
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     } 
 });
 
@@ -484,7 +484,7 @@ app.get('/api/wordsEnglish', async (req, res) => {
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     } 
 });
 
@@ -501,7 +501,7 @@ app.get('/api/wordsEnglishDetailed', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }  
 });
 
@@ -510,10 +510,10 @@ app.delete('/api/wordsEnglish', async (req, res) =>{
     console.log(id);
     try{
         const result = await pool.query('DELETE FROM words_english WHERE id = $1', [id]);
-        res.status(200).json({message: "Deleted successfully"});
+        res.status(200).json({message: "Pomyślnie usunięto frazę"});
     }catch(err){
         console.log(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -522,10 +522,10 @@ app.put('/api/wordsEnglish', async (req, res) =>{
     console.log(id, " ", word);
     try{
         const result = await pool.query('UPDATE words_english SET word = $2, definition = $3, difficulty_level_id = $4, category_id = $5, part_of_speech = $6 WHERE id = $1', [id, word, definition, difficulty_level_id, category_id, part_of_speech]);
-        res.status(200).json({message: "Updated successfully"})
+        res.status(200).json({message: "Pomyślnie edytowano frazę"})
     }catch(err){
         console.log(err.message)
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -536,7 +536,7 @@ app.post('/api/wordsEnglish', async (req, res) => {
     try {
         const phraseExists = await pool.query('SELECT * FROM words_english WHERE word = $1 AND category_id = $2', [word, category_id]);
         if (phraseExists.rows.length > 0) {
-            return res.status(400).json({ error: "Phrase already exists" });
+            return res.status(400).json({ error: "Dana fraza już istnieje" });
         }
         const insertResult = await pool.query('INSERT INTO words_english(word, definition, difficulty_level_id, category_id, part_of_speech) VALUES ($1, $2, $3, $4, $5) RETURNING id', 
             [word, definition, difficulty_level_id, category_id, part_of_speech]);
@@ -546,7 +546,7 @@ app.post('/api/wordsEnglish', async (req, res) => {
         res.json({ id: newWordId }); 
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 });
 
@@ -558,7 +558,7 @@ app.get('/api/wordsSpanish/word', async (req, res) => {
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     } 
 });
 
@@ -570,7 +570,7 @@ app.get('/api/wordsSpanish', async (req, res) => {
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     } 
 });
 
@@ -587,7 +587,7 @@ app.get('/api/wordsSpanishDetailed', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }  
 });
 
@@ -596,10 +596,10 @@ app.delete('/api/wordsSpanish', async (req, res) =>{
     console.log(id);
     try{
         const result = await pool.query('DELETE FROM words_english WHERE id = $1', [id]);
-        res.status(200).json({message: "Deleted successfully"});
+        res.status(200).json({message: "Pomyślnie usunięto frazę"});
     }catch(err){
         console.log(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -608,10 +608,10 @@ app.put('/api/wordsSpanish', async (req, res) =>{
     console.log(id, " ", word);
     try{
         const result = await pool.query('UPDATE words_english SET word = $2, definition = $3, difficulty_level_id = $4, category_id = $5, part_of_speech = $6 WHERE id = $1', [id, word, definition, difficulty_level_id, category_id, part_of_speech]);
-        res.status(200).json({message: "Updated successfully"})
+        res.status(200).json({message: "Pomyślnie edytowano frazę"})
     }catch(err){
         console.log(err.message)
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -622,7 +622,7 @@ app.post('/api/wordsSpanish', async (req, res) => {
     try {
         const phraseExists = await pool.query('SELECT * FROM words_english WHERE word = $1 AND category_id = $2', [word, category_id]);
         if (phraseExists.rows.length > 0) {
-            return res.status(400).json({ error: "Phrase already exists" });
+            return res.status(400).json({ error: "Dana fraza już istnieje" });
         }
         const insertResult = await pool.query('INSERT INTO words_english(word, definition, difficulty_level_id, category_id, part_of_speech) VALUES ($1, $2, $3, $4, $5) RETURNING id', 
             [word, definition, difficulty_level_id, category_id, part_of_speech]);
@@ -632,7 +632,7 @@ app.post('/api/wordsSpanish', async (req, res) => {
         res.json({ id: newWordId }); 
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 });
 
@@ -643,7 +643,7 @@ app.get('/api/translationPLN_Detailed', async(req, res)=>{
     console.log("translationPLN_Detailed", language, id);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }
 
     try{
@@ -656,7 +656,7 @@ app.get('/api/translationPLN_Detailed', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     } 
 });
 
@@ -665,7 +665,7 @@ app.get('/api/translationPLN_/pln', async(req, res)=>{
     const { isAllowed = true, table, fkName}= allowedLanguage(language);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }
 
     try{
@@ -678,7 +678,7 @@ app.get('/api/translationPLN_/pln', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     } 
 });
 
@@ -687,7 +687,7 @@ app.get('/api/translationPLN_Detailed/pln', async(req, res)=>{
     const { isAllowed = true, table, fkName}= allowedLanguage(language);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }
 
     try{
@@ -700,7 +700,7 @@ app.get('/api/translationPLN_Detailed/pln', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     } 
 });
 
@@ -709,7 +709,7 @@ app.get('/api/translationPLN_/_', async(req, res)=>{
     const { isAllowed = true, table, fkName}= allowedLanguage(language);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }
 
     try{
@@ -722,7 +722,7 @@ app.get('/api/translationPLN_/_', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     } 
 });
 
@@ -731,7 +731,7 @@ app.get('/api/translationPLN_Detailed/_', async(req, res)=>{
     const { isAllowed = true, fkName}= allowedLanguage(language);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }
     console.log("translationPLN_Detailed/_",language, id)
 
@@ -745,7 +745,7 @@ app.get('/api/translationPLN_Detailed/_', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     } 
 });
 
@@ -754,7 +754,7 @@ app.get('/api/translationPLN_Detailed/pln/word', async(req, res)=>{
     const { isAllowed = true, table, fkName}= allowedLanguage(language);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }
 
     try{
@@ -764,7 +764,7 @@ app.get('/api/translationPLN_Detailed/pln/word', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     } 
 });
 
@@ -774,15 +774,15 @@ app.delete('/api/translationPLN_', async (req, res) =>{
     const { isAllowed } = allowedLanguage(language);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     } 
 
     try{
         const result = await pool.query(`DELETE FROM translations_pl_${language.toLowerCase()} WHERE id = $1`, [id]);
-        res.status(200).json({message: "Deleted successfully"});
+        res.status(200).json({message: "Pomyślnie usunięto tłumaczenie"});
     }catch(err){
         console.log(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -791,22 +791,22 @@ app.post('/api/translationPLN_', async (req, res) =>{
     const { isAllowed = true, fkName}= allowedLanguage(language);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }  
 
     console.log("App ", word_polish_id, word_second_id);
     try{
         const phraseExists = await pool.query(`SELECT * FROM translations_pl_${language.toLowerCase()} WHERE word_polish_id = $1 AND ${fkName} = $2`, [word_polish_id, word_second_id]);
         if(phraseExists.rows.length > 0){
-            return res.status(400).json({ error: "Translation already exists" });
+            return res.status(400).json({ error: "Dane tłumaczenie już istnieje" });
         }
         await pool.query(
             `INSERT INTO translations_pl_${language.toLowerCase()}(word_polish_id, ${fkName}) VALUES ($1, $2)`, [word_polish_id, word_second_id]
         );
-        res.status(200).json({ message: "Translation added successfully" });
+        res.status(200).json({ message: "Pomyślnie dodano tłumaczenie" });
     }catch(err){
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -831,7 +831,7 @@ app.get('/api/quizzes', async (req, res) => {
         res.json(result.rows);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });
 
@@ -842,7 +842,7 @@ app.put('/api/quizzes/raisePopularity', async (req, res) =>{
         await pool.query('UPDATE quizzes SET popularity = popularity+1 WHERE id = $1', [id]);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 })
 
@@ -851,10 +851,10 @@ app.delete('/api/quizzes', async (req, res) => {
         const { id } = req.body;
         console.log(id);
         const result = await pool.query('DELETE FROM quizzes WHERE id = $1', [id]);
-        res.status(200).json({message: result});
+        res.status(200).json({ message: "Pomyślnie usunięto zestaw do nauki" });
     }catch(err){
         console.log(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 });
 
@@ -870,7 +870,7 @@ app.post('/api/quizzes', async (req, res) =>{
         res.json({ id: newQuizId }); 
     }catch(err){
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 });
 
@@ -879,7 +879,7 @@ app.get('/api/quizzesQuestions', async(req, res)=>{
     const { isAllowed = true, table, fkName}= allowedLanguage(language);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }
 
     try{
@@ -896,7 +896,7 @@ app.get('/api/quizzesQuestions', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });
 
@@ -905,7 +905,7 @@ app.post('/api/quizzesQuestions', async (req, res) => {
     const { isAllowed = true }= allowedLanguage(language);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }
   
     console.log(quiz_id, data)
@@ -925,7 +925,7 @@ app.post('/api/quizzesQuestions', async (req, res) => {
       res.json({ success: true, rows: results.map((result) => result.rows) });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error");
+      res.status(500).send("Błąd serwera");
     }
 });
 
@@ -934,7 +934,7 @@ app.get('/api/quizzesQuestions/Count', async(req, res)=>{
     const { isAllowed = true }= allowedLanguage(language);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }
 
     try{
@@ -942,7 +942,7 @@ app.get('/api/quizzesQuestions/Count', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });
 
@@ -952,7 +952,7 @@ app.get('/api/usersQuizzesQuestions', async(req, res)=>{
         const { isAllowed = true }= allowedLanguage(language);
 
         if (!isAllowed) {
-            return res.status(400).send('Invalid language');
+            return res.status(400).send('Niepoprawny język');
         }
 
         const condition = `SELECT * FROM users_quizzes_questions_${language.toLowerCase()} uqq `
@@ -962,7 +962,7 @@ app.get('/api/usersQuizzesQuestions', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 }); 
 
@@ -995,7 +995,7 @@ app.get('/api/usersQuizzesQuestionsDetailed', async(req, res)=>{
     const { isAllowed = true, table, fkName}= allowedLanguage(language);
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }
 
     try{
@@ -1013,7 +1013,7 @@ app.get('/api/usersQuizzesQuestionsDetailed', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });  
 
@@ -1023,7 +1023,7 @@ app.post('/api/usersQuizzesQuestions', async (req, res) => {
     console.log("Post usersQuizzesQuestions", language, quiz_score_id, data)
 
     if (!isAllowed) {
-        return res.status(400).send('Invalid language');
+        return res.status(400).send('Niepoprawny język');
     }
   
     try {
@@ -1042,7 +1042,7 @@ app.post('/api/usersQuizzesQuestions', async (req, res) => {
       res.json({ success: true, rows: results.map((result) => result.rows) });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error");
+      res.status(500).send("Błąd serwera");
     }
 });
 
@@ -1055,7 +1055,7 @@ app.get('/api/usersQuizzesScores', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });
 
@@ -1074,7 +1074,7 @@ app.post('/api/usersQuizzesScores', async(req, res)=>{
         res.status(200).json({ message: "Rozpoczęto nowy quiz" });
     }catch(err){
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 });
 
@@ -1086,7 +1086,7 @@ app.delete('/api/usersQuizzesScores', async (req, res) => {
         res.status(200).json({message: result});
     }catch(err){
         console.log(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send("Błąd serwera");
     }
 });
 
@@ -1101,7 +1101,7 @@ app.get('/api/stories', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });
 
@@ -1111,10 +1111,10 @@ app.post('/api/stories', async(req, res)=>{
         await pool.query(
             'INSERT INTO stories(quiz_id, text) VALUES ($1, $2)', [quiz_id, text]
         );
-        res.status(200).json({ message: "Story added successfully" });
+        res.status(200).json({ message: "Pomyślnie dodano historię" });
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });
 
@@ -1127,7 +1127,7 @@ app.get('/api/storiesQuestions', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });
 
@@ -1158,7 +1158,7 @@ app.post('/api/storiesQuestionsAndAnswers', async (req, res) => {
       res.json({ success: true, questions: results });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error");
+      res.status(500).send("Błąd serwera");
     }
   });
   
@@ -1183,7 +1183,7 @@ app.post('/api/storiesQuestions', async(req, res)=>{
       res.json({ success: true, rows: results.map((result) => result.rows) });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error");
+      res.status(500).send("Błąd serwera");
     }
 });
 
@@ -1196,7 +1196,7 @@ app.get('/api/storiesAnswers', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });
 
@@ -1221,7 +1221,7 @@ app.post('/api/storiesAnswers', async(req, res)=>{
       res.json({ success: true, rows: results.map((result) => result.rows) });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error");
+      res.status(500).send("Błąd serwera");
     }
 });
 
@@ -1232,7 +1232,7 @@ app.get('/api/storiesQuestions/Count', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });
 
@@ -1249,7 +1249,7 @@ app.get('/api/usersStoriesQuestions', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Błąd serwera');
     }
 });  
 
@@ -1273,7 +1273,7 @@ app.post('/api/usersStoriesQuestions', async (req, res) => {
       res.json({ success: true, rows: results.map((result) => result.rows) });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error");
+      res.status(500).send("Błąd serwera");
     }
 });
 
