@@ -24,6 +24,7 @@ export interface FormData {
     inputName: string;
     inputType: string;
     isRequired: boolean;
+    maxLength?: number;
     data?: Props[];
     isLoading?: boolean;
     error?: string;
@@ -54,7 +55,9 @@ const FormTemplate = ({
 
   const handleInputChange = (value: string, index: number) => {
     const updatedErrors = [...errors];
-    updatedErrors[index] = headers[index].isRequired && value === "";
+    updatedErrors[index] =
+      (headers[index].isRequired && value === "") ||
+      value.length > (headers[index].maxLength ?? value.length + 1);
     setErrors(updatedErrors);
   };
 
@@ -129,7 +132,9 @@ const FormTemplate = ({
               marginBottom="2%"
               style={{ color: "var(--error)" }}
             >
-              Pole "{input.inputName}" nie może być puste.
+              {localRefs.current[index]?.value == ""
+                ? `Pole ${input.inputName}" nie może być puste.`
+                : `Wartość pola ${input.inputName}" jest zbyt długa.`}
             </Text>
           )}
         </div>
@@ -140,7 +145,9 @@ const FormTemplate = ({
           colorScheme="blue"
           onClick={() => {
             const errorId = errors.findIndex(
-              (e, index) => e == true && headers[index].isRequired
+              (e, index) =>
+                (e == true && headers[index].isRequired) ||
+                (e == true && (headers[index].maxLength ?? 0 > 0))
             );
             if (errorId != -1) {
               localRefs.current[errorId]?.focus();

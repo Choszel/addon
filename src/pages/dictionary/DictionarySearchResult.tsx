@@ -57,17 +57,17 @@ const DictionarySearchResult = () => {
     console.log("Load");
 
     let data: Phrase[] = [];
-    if (code == "PLN") {
+    if (code == "POL") {
       try {
         const data = await fetchData("wordsPolishDetailed", { id: id || 0 });
         if (data[0].word == word) {
-          data[0].language = "PLN";
+          data[0].language = "POL";
           const formData = new URLSearchParams();
-          formData.append("language", code ?? "PLN");
+          formData.append("language", code ?? "POL");
           formData.append("id", id || "");
           putData(formData);
           setSearchPhrase(data[0]);
-          let data2: Phrase[] = await fetchData("translationPLN_Detailed/pln", {
+          let data2: Phrase[] = await fetchData("translationPOL_Detailed/pol", {
             language: "ENG",
             id: id || 0,
           });
@@ -76,7 +76,7 @@ const DictionarySearchResult = () => {
             language: "ENG",
           }));
 
-          let data3: Phrase[] = await fetchData("translationPLN_Detailed/pln", {
+          let data3: Phrase[] = await fetchData("translationPOL_Detailed/pol", {
             language: "SPA",
             id: id || 0,
           });
@@ -104,27 +104,27 @@ const DictionarySearchResult = () => {
           formData.append("language", code ?? "");
           formData.append("id", id || "");
           putData(formData);
-          let data2: Phrase[] = await fetchData("translationPLN_Detailed/_", {
+          let data2: Phrase[] = await fetchData("translationPOL_Detailed/_", {
             language: code,
             id: id || 0,
           });
           data2 = data2.map((element) => ({
             ...element,
-            language: "PLN",
+            language: "POL",
           }));
 
           setTranslations(data2);
         } else {
           data = await fetchData("wordsPolishDetailed", { id: id || 0 });
           const formData = new URLSearchParams();
-          formData.append("language", "PLN");
+          formData.append("language", "POL");
           formData.append("id", id || "");
           putData(formData);
           if (data[0].word == word) {
-            data[0].language = "PLN";
+            data[0].language = "POL";
             setSearchPhrase(data[0]);
             let data2: Phrase[] = await fetchData(
-              "translationPLN_Detailed/pln",
+              "translationPOL_Detailed/pol",
               {
                 language: code,
                 id: id || 0,
@@ -202,7 +202,7 @@ const DictionarySearchResult = () => {
         <div style={{ width: "5%" }}></div>
         <SearchInput
           onSearch={(id, searchText) => onSearch(id, searchText)}
-          language={selectedLanguage + "_PLN"}
+          language={selectedLanguage + "_POL"}
         ></SearchInput>
         <RandomPhrase
           onSearch={(id, searchText) => onSearch(id, searchText)}

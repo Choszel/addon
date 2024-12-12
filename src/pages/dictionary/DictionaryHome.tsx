@@ -57,7 +57,7 @@ const DictionaryHome = () => {
       >
         <SearchInput
           onSearch={(id, searchText) => onSearch(id, searchText)}
-          language={selectedLanguage + "_PLN"}
+          language={selectedLanguage + "_POL"}
         ></SearchInput>
         <RandomPhrase
           onSearch={(id, searchText) => onSearch(id, searchText)}

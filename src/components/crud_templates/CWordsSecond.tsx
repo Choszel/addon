@@ -23,7 +23,7 @@ const CWordsSecond = ({ routeName, code, titlePart }: Props) => {
   const [translationsData, setTranslationsData] = useState<Translation[]>();
   const navigate = useNavigate();
   const { postData } = actionData(routeName);
-  const { postData: postTranslations } = actionData("/translationPLN_");
+  const { postData: postTranslations } = actionData("/translationPOL_");
   const {
     data: categories,
     isLoading: catIsLoading,
@@ -73,8 +73,18 @@ const CWordsSecond = ({ routeName, code, titlePart }: Props) => {
   const formData: FormData = {
     title: "Dodawanie " + titlePart + " Frazy",
     headers: [
-      { inputName: "Fraza", inputType: "text", isRequired: true },
-      { inputName: "Definicja", inputType: "text", isRequired: true },
+      {
+        inputName: "Fraza",
+        inputType: "text",
+        isRequired: true,
+        maxLength: 50,
+      },
+      {
+        inputName: "Definicja",
+        inputType: "text",
+        isRequired: true,
+        maxLength: 200,
+      },
       {
         inputName: "Poziom trudności",
         inputType: "select",
@@ -99,6 +109,7 @@ const CWordsSecond = ({ routeName, code, titlePart }: Props) => {
         inputType: "select",
         isRequired: false,
         data: usePartOfSpeech(),
+        maxLength: 15,
       },
     ],
     setRefs: function (): void {},

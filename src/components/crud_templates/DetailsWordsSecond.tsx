@@ -25,7 +25,7 @@ const DetailsWordsSecond = ({ routeName, code }: Props) => {
     error: tranError,
   } = fetchFor_(code, parseInt(id ?? ""));
   const [translationsData, setTranslationsData] = useState<Translation[]>();
-  const { postData: postTranslations } = actionData("/translationPLN_");
+  const { postData: postTranslations } = actionData("/translationPOL_");
   const navigate = useNavigate();
   const { fetchAllDetailed } = useWordsSecond(code, parseInt(id ?? "-1"));
   const { data, isLoading, error } = fetchAllDetailed();
@@ -64,7 +64,7 @@ const DetailsWordsSecond = ({ routeName, code }: Props) => {
     headers: ["id", "word"],
     data: translations,
     canDelete: true,
-    routeName: "/translationPLN_?language=" + code,
+    routeName: "/translationPOL_?language=" + code,
     others: (
       <>
         <AddTranslationButton setTranslationsData={setTranslationsData} />

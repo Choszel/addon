@@ -47,7 +47,7 @@ const SearchInput = ({ onSearch, language }: Props) => {
         data = await response.json();
 
         let data2 = [];
-        if (!language.substring(0, 3).includes("PLN")) {
+        if (!language.substring(0, 3).includes("POL")) {
           const response2 = await fetch(
             "http://localhost:3001/api/wordsPolish/word?word=" +
               debounceSearchInput

@@ -18,19 +18,19 @@ const DetailsWordsPolish = () => {
   const { id } = useParams<{ id: string }>();
   const { fetchWords } = useWordsPolish();
   const { data, isLoading, error } = fetchWords(parseInt(id ?? "-1"));
-  const { fetchForPLN } = useTranslationPL_();
+  const { fetchForPOL } = useTranslationPL_();
   const {
     data: translationsENG,
     isLoading: tranENGIsLoading,
     error: tranENGError,
-  } = fetchForPLN("ENG", parseInt(id ?? "-1"));
+  } = fetchForPOL("ENG", parseInt(id ?? "-1"));
   const {
     data: translationsSPA,
     isLoading: tranSPAIsLoading,
     error: tranSPAError,
-  } = fetchForPLN("SPA", parseInt(id ?? "-1"));
+  } = fetchForPOL("SPA", parseInt(id ?? "-1"));
   const [translationsData, setTranslationsData] = useState<Translation[]>();
-  const { postData: postTranslations } = actionData("/translationPLN_");
+  const { postData: postTranslations } = actionData("/translationPOL_");
   const navigate = useNavigate();
 
   const handleSave = async () => {
@@ -63,7 +63,7 @@ const DetailsWordsPolish = () => {
     headers: ["id", "word"],
     data: translationsENG,
     canDelete: true,
-    routeName: "/translationPLN_?language=ENG",
+    routeName: "/translationPOL_?language=ENG",
     isLoading: tranENGIsLoading,
     error: tranENGError,
   };
@@ -72,7 +72,7 @@ const DetailsWordsPolish = () => {
     headers: ["id", "word"],
     data: translationsSPA,
     canDelete: true,
-    routeName: "/translationPLN_?language=SPA",
+    routeName: "/translationPOL_?language=SPA",
     others: (
       <>
         <AddTranslationButton

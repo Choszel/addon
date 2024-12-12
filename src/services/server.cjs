@@ -39,7 +39,7 @@ app.post('/api/ai', async (req, res) => {
         res.json({ analysis: completion.choices[0].message.content });
     } catch (error) {
         console.error("Error from OpenAI API:", error);
-        res.status(500).json({ error: "Translation failed" });
+        res.status(500).json({ error: "Tłumaczenie zakończono niepowodzeniem" });
     }
 });
 
@@ -58,7 +58,7 @@ app.post('/api/ai/similarPhrases', async (req, res) => {
         res.json({ analysis: completion.choices[0].message.content });
     } catch (error) {
         console.error("Error from OpenAI API:", error);
-        res.status(500).json({ error: "Search failed" });
+        res.status(500).json({ error: "Wyszukiwanie zakończono niepowodzeniem" });
     }
 });
 
@@ -153,7 +153,7 @@ app.post('/api/category', async (req, res) =>{
         console.error(err.message);
         res.status(500).send("Błąd serwera");
     }
-})
+});
 
 app.delete('/api/category', async (req, res) =>{
     const { id } = req.body;
@@ -370,18 +370,6 @@ app.get('/api/wordsPolishDetailed', async(req, res)=>{
     }  
 });
 
-app.get('/api/wordsPolishByWord', async(req, res)=>{
-    const { word, category } = req.query;
-    try{
-        const condition = "SELECT * FROM words_polish WHERE word = '" + word + "' AND category_id = " + category + ";";
-        const result = await pool.query(id ? condition : 'SELECT * FROM words_polish ORDER BY id ASC;');
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Błąd serwera');
-    }  
-});
-
 app.delete('/api/wordsPolish', async (req, res) =>{
     const { id } = req.body;
     console.log(id);
@@ -582,11 +570,11 @@ app.post('/api/wordsSecond', async (req, res) => {
     }
 });
 
-app.get('/api/translationPLN_Detailed', async(req, res)=>{
+app.get('/api/translationPOL_Detailed', async(req, res)=>{
     const { language, id } = req.query;
     const { isAllowed = true, table, fkName}= allowedLanguage(language);
 
-    console.log("translationPLN_Detailed", language, id);
+    console.log("translationPOL_Detailed", language, id);
 
     if (!isAllowed) {
         return res.status(400).send('Niepoprawny język');
@@ -606,7 +594,7 @@ app.get('/api/translationPLN_Detailed', async(req, res)=>{
     } 
 });
 
-app.get('/api/translationPLN_/pln', async(req, res)=>{
+app.get('/api/translationPOL_/pol', async(req, res)=>{
     const { language, id } = req.query;
     const { isAllowed = true, table, fkName}= allowedLanguage(language);
 
@@ -628,7 +616,7 @@ app.get('/api/translationPLN_/pln', async(req, res)=>{
     } 
 });
 
-app.get('/api/translationPLN_Detailed/pln', async(req, res)=>{
+app.get('/api/translationPOL_Detailed/pol', async(req, res)=>{
     const { language, id } = req.query;
     const { isAllowed = true, table, fkName}= allowedLanguage(language);
 
@@ -650,7 +638,7 @@ app.get('/api/translationPLN_Detailed/pln', async(req, res)=>{
     } 
 });
 
-app.get('/api/translationPLN_/_', async(req, res)=>{
+app.get('/api/translationPOL_/_', async(req, res)=>{
     const { language, id } = req.query;
     const { isAllowed = true, table, fkName}= allowedLanguage(language);
 
@@ -672,14 +660,14 @@ app.get('/api/translationPLN_/_', async(req, res)=>{
     } 
 });
 
-app.get('/api/translationPLN_Detailed/_', async(req, res)=>{
+app.get('/api/translationPOL_Detailed/_', async(req, res)=>{
     const { language, id } = req.query;
     const { isAllowed = true, fkName}= allowedLanguage(language);
 
     if (!isAllowed) {
         return res.status(400).send('Niepoprawny język');
     }
-    console.log("translationPLN_Detailed/_",language, id)
+    console.log("translationPOL_Detailed/_",language, id)
 
     try{
         const condition = 'SELECT wp.id, tr.id as translation_id, wp.word as word, definition, c. name as category, photo '
@@ -695,7 +683,7 @@ app.get('/api/translationPLN_Detailed/_', async(req, res)=>{
     } 
 });
 
-app.get('/api/translationPLN_Detailed/pln/word', async(req, res)=>{
+app.get('/api/translationPOL_Detailed/pol/word', async(req, res)=>{
     const { language, word } = req.query;
     const { isAllowed = true, table, fkName}= allowedLanguage(language);
 
@@ -714,7 +702,7 @@ app.get('/api/translationPLN_Detailed/pln/word', async(req, res)=>{
     } 
 });
 
-app.delete('/api/translationPLN_', async (req, res) =>{
+app.delete('/api/translationPOL_', async (req, res) =>{
     const { id } = req.body;
     const { language } = req.query;
     const { isAllowed } = allowedLanguage(language);
@@ -732,7 +720,7 @@ app.delete('/api/translationPLN_', async (req, res) =>{
     }
 })
 
-app.post('/api/translationPLN_', async (req, res) =>{
+app.post('/api/translationPOL_', async (req, res) =>{
     const { language, word_polish_id, word_second_id } = req.body;
     const { isAllowed = true, fkName}= allowedLanguage(language);
 
@@ -913,7 +901,7 @@ app.get('/api/usersQuizzesQuestions', async(req, res)=>{
 }); 
 
 function allowedLanguage(language){
-    const allowedLanguages = ["PLN", "ENG", "SPA"];
+    const allowedLanguages = ["POL", "ENG", "SPA"];
 
     if (!allowedLanguages.includes(language)) {
         return {isAllowed: false};

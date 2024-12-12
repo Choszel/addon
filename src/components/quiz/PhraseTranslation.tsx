@@ -20,8 +20,8 @@ const PhraseTranslation = ({
   setTranslationId,
   language,
 }: Props) => {
-  const { fetchForPLNWord } = useTranslationPL_();
-  const { data: PhraseTranslations } = fetchForPLNWord(language, word);
+  const { fetchForPOLWord } = useTranslationPL_();
+  const { data: PhraseTranslations } = fetchForPOLWord(language, word);
 
   useEffect(() => {
     console.log("PhraseTranslations", PhraseTranslations);

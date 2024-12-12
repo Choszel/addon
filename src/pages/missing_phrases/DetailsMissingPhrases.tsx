@@ -35,7 +35,7 @@ const DetailsMissingPhrases = () => {
   const [postRoute, setPostRoute] = useState<string>("/wordsSecond");
   const { postData } = actionData(postRoute);
   const { deleteData } = actionData(routeName);
-  const { postData: postTranslations } = actionData("/translationPLN_");
+  const { postData: postTranslations } = actionData("/translationPOL_");
   const [refs, setRefs] = useState<
     (HTMLInputElement | HTMLSelectElement | null)[]
   >([]);
@@ -59,7 +59,7 @@ const DetailsMissingPhrases = () => {
       translationsData?.forEach((element) => {
         const translation = new URLSearchParams();
         switch (languageValue) {
-          case "PLN":
+          case "POL":
             translation.append("language", element.language ?? "");
             translation.append(
               "word_polish_id",
@@ -68,7 +68,7 @@ const DetailsMissingPhrases = () => {
             translation.append("word_second_id", element.id?.toString() ?? "");
             break;
           default:
-            translation.append("language", "PLN");
+            translation.append("language", "POL");
             translation.append("word_polish_id", element.id?.toString() ?? "");
             translation.append(
               "word_second_id",
@@ -97,7 +97,7 @@ const DetailsMissingPhrases = () => {
 
   const disableUnused = () => {
     switch (languageValue) {
-      case "PLN":
+      case "POL":
         setPostRoute("/wordsPolish");
         if (refs[3] && refs[4] && refs[6]) {
           console.log("disable");
@@ -152,11 +152,17 @@ const DetailsMissingPhrases = () => {
   const formData: FormData = {
     title: "Szczegóły i edycja brakującej frazy",
     headers: [
-      { inputName: "Brakująca fraza", inputType: "text", isRequired: true },
+      {
+        inputName: "Brakująca fraza",
+        inputType: "text",
+        isRequired: true,
+        maxLength: 250,
+      },
       {
         inputName: "Definicja (max. 250 znaków)",
         inputType: "text",
         isRequired: true,
+        maxLength: 250,
       },
       {
         inputName: "Język, w którym jest podana fraza",
@@ -189,6 +195,7 @@ const DetailsMissingPhrases = () => {
         inputType: "select",
         isRequired: false,
         data: usePartOfSpeech(),
+        maxLength: 15,
       },
     ],
     setRefs: function (): void {},
@@ -196,7 +203,7 @@ const DetailsMissingPhrases = () => {
     onCancel: () => navigate(routeName),
     others: (
       <AddTranslationButton
-        langugeOption={languageValue == "PLN"}
+        langugeOption={languageValue == "POL"}
         setTranslationsData={setTranslationsData}
       />
     ),

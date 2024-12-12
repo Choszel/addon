@@ -35,13 +35,13 @@ const AddPhraseButton = ({
     setPhrasesData(phraseData.filter((row) => row.id !== id));
   };
 
-  const onSearch = (id: number, word_pln: string) => {
+  const onSearch = (id: number, word_pol: string) => {
     setPhrasesData(
       phraseData.map((row) =>
         row.id === id
           ? {
               ...row,
-              word_pln: word_pln,
+              word_pol: word_pol,
             }
           : row
       )
@@ -84,12 +84,12 @@ const AddPhraseButton = ({
           direction={{ base: "column", md: "row" }}
           id="quiz-phrase"
         >
-          {row.word_pln ? (
+          {row.word_pol ? (
             <>
-              <Box className="question">{row.word_pln}</Box>
+              <Box className="question">{row.word_pol}</Box>
               <PhraseTranslation
                 key={`${row.id}-${row.language}`}
-                word={row.word_pln}
+                word={row.word_pol}
                 setTranslationId={setTranslationId}
                 rowId={row.id}
                 language={row.language ?? ""}

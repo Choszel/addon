@@ -71,8 +71,18 @@ const EWordsSecond = ({ routeName, titlePart, code }: Props) => {
   const formData: FormData = {
     title: "Edytowanie " + titlePart + " Frazy",
     headers: [
-      { inputName: "Fraza", inputType: "text", isRequired: true },
-      { inputName: "Definicja", inputType: "text", isRequired: true },
+      {
+        inputName: "Fraza",
+        inputType: "text",
+        isRequired: true,
+        maxLength: 50,
+      },
+      {
+        inputName: "Definicja",
+        inputType: "text",
+        isRequired: true,
+        maxLength: 200,
+      },
       {
         inputName: "Poziom trudności",
         inputType: "select",
@@ -97,6 +107,7 @@ const EWordsSecond = ({ routeName, titlePart, code }: Props) => {
         inputType: "select",
         isRequired: false,
         data: usePartOfSpeech(),
+        maxLength: 15,
       },
     ],
     setRefs: function (): void {},

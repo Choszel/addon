@@ -85,7 +85,12 @@ const CStories = () => {
   const formData: FormData = {
     title: "Dodawanie Historii",
     headers: [
-      { inputName: "Tytuł", inputType: "text", isRequired: true },
+      {
+        inputName: "Tytuł",
+        inputType: "text",
+        isRequired: true,
+        maxLength: 50,
+      },
       {
         inputName: "Język",
         inputType: "select",
@@ -93,7 +98,7 @@ const CStories = () => {
         data:
           languages
             ?.map((lang) => ({ id: lang.code, value: lang.code }))
-            .filter((lang) => lang.value != "PLN") || [],
+            .filter((lang) => lang.value != "POL") || [],
         onChange: (e) => setSelectedLanguage(e.target.value),
       },
       { inputName: "Treść", inputType: "text", isRequired: true },

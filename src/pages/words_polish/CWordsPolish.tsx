@@ -21,7 +21,7 @@ const CWordsPolish = () => {
   const navigate = useNavigate();
   const routeName = "/wordsPolish";
   const { postData } = actionData(routeName);
-  const { postData: postTranslations } = actionData("/translationPLN_");
+  const { postData: postTranslations } = actionData("/translationPOL_");
   const {
     data: categories,
     isLoading: catIsLoading,
@@ -58,8 +58,18 @@ const CWordsPolish = () => {
   const formData: FormData = {
     title: "Dodawanie Polskiej Frazy",
     headers: [
-      { inputName: "Fraza", inputType: "text", isRequired: true },
-      { inputName: "Definicja", inputType: "text", isRequired: true },
+      {
+        inputName: "Fraza",
+        inputType: "text",
+        isRequired: true,
+        maxLength: 150,
+      },
+      {
+        inputName: "Definicja",
+        inputType: "text",
+        isRequired: true,
+        maxLength: 250,
+      },
       {
         inputName: "Kategoria",
         inputType: "select",

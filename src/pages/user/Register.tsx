@@ -50,6 +50,7 @@ const Register = () => {
           onChange={(e) => setLoginInput(e.target.value)}
           className="basic_style"
           _focus={{ border: "2px solid var(--secondary-dark)" }}
+          maxLength={35}
         ></Input>
       </HStack>
       {isLoginError && (

@@ -16,7 +16,7 @@ import useDifficultyLevels from "../../hooks/useDifficultyLevels";
 export interface QuizzQuestion {
   id: number;
   translation_id?: number;
-  word_pln?: string;
+  word_pol?: string;
   category?: string;
   level?: string;
   language?: string;
@@ -150,7 +150,7 @@ const CQuiz = () => {
             (dif) => dif.id === foundPhrase?.difficulty_level_id
           )?.level ?? "",
         translation_id: foundPhrase?.id,
-        word_pln: foundPhrase?.word_polish,
+        word_pol: foundPhrase?.word_polish,
         id: id,
         language: selectedLanguage,
       });
@@ -174,7 +174,12 @@ const CQuiz = () => {
   const formData: FormData = {
     title: "Tworzenie Quizu",
     headers: [
-      { inputName: "Tytuł", inputType: "text", isRequired: true },
+      {
+        inputName: "Tytuł",
+        inputType: "text",
+        isRequired: true,
+        maxLength: 50,
+      },
       {
         inputName: "Język",
         inputType: "select",
@@ -182,7 +187,7 @@ const CQuiz = () => {
         data:
           languages
             ?.map((lang) => ({ id: lang.code, value: lang.code }))
-            .filter((lang) => lang.value != "PLN") || [],
+            .filter((lang) => lang.value != "POL") || [],
         onChange: (e) => setSelectedLanguage(e.target.value),
       },
     ],
@@ -212,7 +217,7 @@ const CQuiz = () => {
           key={selectedLanguage}
           setPhrasesData={setPhrasesData}
           selectedLanguage={selectedLanguage}
-          language={"PLN"}
+          language={"POL"}
           phraseData={phrasesData}
         />
       </div>

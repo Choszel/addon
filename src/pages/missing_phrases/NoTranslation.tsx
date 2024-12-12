@@ -47,7 +47,7 @@ const NoTranslation = () => {
     );
     formData.append("user_id", GetUserId().toString());
     formData.append("category_id", refs[5]?.value ?? "");
-    if (languageValue != "PLN") {
+    if (languageValue != "POL") {
       formData.append("part_of_speech", refs[6]?.value ?? "");
       formData.append("difficulty_level_id", refs[4]?.value ?? "");
     } else {
@@ -63,7 +63,7 @@ const NoTranslation = () => {
 
   const disableUnused = () => {
     switch (languageValue) {
-      case "PLN":
+      case "POL":
         if (refs[3] && refs[4] && refs[6]) {
           console.log("disable");
           refs[3].disabled = false;
@@ -106,11 +106,17 @@ const NoTranslation = () => {
   const formData: FormData = {
     title: "Proszę wypełnić poniższy formularz",
     headers: [
-      { inputName: "Brakująca fraza", inputType: "text", isRequired: true },
+      {
+        inputName: "Brakująca fraza",
+        inputType: "text",
+        isRequired: true,
+        maxLength: 250,
+      },
       {
         inputName: "Definicja (max. 250 znaków)",
         inputType: "text",
         isRequired: true,
+        maxLength: 250,
       },
       {
         inputName: "Język, w którym jest podana fraza",
@@ -138,6 +144,7 @@ const NoTranslation = () => {
         inputType: "select",
         isRequired: false,
         data: usePartOfSpeech(),
+        maxLength: 15,
       },
     ],
     setRefs: function (): void {},

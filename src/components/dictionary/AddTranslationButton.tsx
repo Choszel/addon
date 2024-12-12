@@ -25,7 +25,7 @@ const AddTranslationButton = ({
   const handleAddTranslation = () => {
     setDataRow((dataRow) => [
       ...dataRow,
-      { id: Date.now(), language: langugeOption ? "ENG" : "PLN" },
+      { id: Date.now(), language: langugeOption ? "ENG" : "POL" },
     ]);
   };
 
@@ -98,7 +98,7 @@ const AddTranslationButton = ({
               }}
             >
               {languages.map((language) =>
-                language.code != "PLN" ? (
+                language.code != "POL" ? (
                   <option value={language.code} key={language.id}>
                     {language.code}
                   </option>

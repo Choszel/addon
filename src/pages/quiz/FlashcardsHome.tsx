@@ -78,7 +78,7 @@ const FlashcardsHome = () => {
             Wybierz język
           </option>
           {languages.map((language) =>
-            language.code != "PLN" ? (
+            language.code != "POL" ? (
               <option
                 key={"language" + language.id}
                 value={language.code}

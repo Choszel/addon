@@ -45,6 +45,7 @@ const Login = () => {
           className="basic_style"
           _focus={{ border: "2px solid var(--secondary-dark)" }}
           id="user-name"
+          maxLength={35}
         ></Input>
       </HStack>
       <HStack

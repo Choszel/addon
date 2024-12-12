@@ -115,7 +115,7 @@ const StoryWithQuestions = () => {
         <TextTranslator
           text={marked}
           inLanguage={"ENG"}
-          outLanguage={"PLN"}
+          outLanguage={"POL"}
           maxTextLength={500}
         ></TextTranslator>
       </span>

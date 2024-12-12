@@ -59,7 +59,7 @@ const usePhrasesStorage = (languageCode: string) => {
   };
 
   const clearPhraseLocalStorage = () => {
-      localStorage.removeItem("translations_pln_" + languageCode.toLowerCase());
+      localStorage.removeItem("translations_pol_" + languageCode.toLowerCase());
       return;
   }
 
@@ -67,12 +67,12 @@ const usePhrasesStorage = (languageCode: string) => {
 };
 
 const getPhrasesFromLocalStorage = (languageCode: string): localStoragePhrase[] => {
-    const savedPhrases = localStorage.getItem("translations_pln_" + languageCode.toLowerCase());
+    const savedPhrases = localStorage.getItem("translations_pol_" + languageCode.toLowerCase());
     return savedPhrases ? JSON.parse(savedPhrases) : [];  
 };
 
 const savePhrasesToLocalStorage = (languageCode: string, savedPhrases: localStoragePhrase[]) => { 
-    localStorage.setItem("translations_pln_" + languageCode.toLowerCase(), JSON.stringify(savedPhrases));
+    localStorage.setItem("translations_pol_" + languageCode.toLowerCase(), JSON.stringify(savedPhrases));
     return;
 };
 
