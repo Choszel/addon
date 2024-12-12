@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useTranslationPL_, {
   TranslationPL_,
 } from "../../hooks/useTranslationPL_";
@@ -9,35 +9,26 @@ import { Button, Spinner, Stack, Text } from "@chakra-ui/react";
 import GoBack from "../GoBack";
 import ReadTemplate, { TableData } from "./ReadTemplate";
 import AddTranslationButton from "../dictionary/AddTranslationButton";
-import { SecondWord } from "../../hooks/useWordsEnglish";
+import useWordsSecond from "../../hooks/useWordsSecond";
 
 interface Props {
-  id: string;
   routeName: string;
   code: string;
-  fetchAllDetailed: () => {
-    data: SecondWord[];
-    isLoading: boolean;
-    error: string;
-  };
 }
 
-const DetailsWordsSecond = ({
-  id,
-  routeName,
-  code,
-  fetchAllDetailed,
-}: Props) => {
-  const { data, isLoading, error } = fetchAllDetailed();
+const DetailsWordsSecond = ({ routeName, code }: Props) => {
+  const { id } = useParams<{ id: string }>();
   const { fetchFor_ } = useTranslationPL_();
   const {
     data: translations,
     isLoading: tranIsLoading,
     error: tranError,
-  } = fetchFor_(code, parseInt(id));
+  } = fetchFor_(code, parseInt(id ?? ""));
   const [translationsData, setTranslationsData] = useState<Translation[]>();
   const { postData: postTranslations } = actionData("/translationPLN_");
   const navigate = useNavigate();
+  const { fetchAllDetailed } = useWordsSecond(code, parseInt(id ?? "-1"));
+  const { data, isLoading, error } = fetchAllDetailed();
 
   const handleSave = async () => {
     translationsData?.forEach((element) => {

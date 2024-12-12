@@ -464,11 +464,16 @@ app.put('/api/words/raisePopularity', async (req, res) =>{
     }
 })
 
-app.get('/api/wordsEnglish/word', async (req, res) => {
-    const { word } = req.query;
+app.get('/api/wordsSecond/word', async (req, res) => {
+    const { language, word } = req.query;
+    const { isAllowed = true, table}= allowedLanguage(language);
+    if (!isAllowed) {
+        return res.status(400).send('Niepoprawny język');
+    }
+
     try{
         if(!word)return;
-        const result = await pool.query("SELECT id, word FROM words_english WHERE word like '" + word + "%' ORDER BY popularity;");
+        const result = await pool.query(`SELECT id, word FROM ${table} WHERE word like '` + word + "%' ORDER BY popularity;");
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -476,85 +481,16 @@ app.get('/api/wordsEnglish/word', async (req, res) => {
     } 
 });
 
-app.get('/api/wordsEnglish', async (req, res) => {
-    const { id } = req.query;
-    try{
-        const condition = "SELECT * FROM words_english WHERE id = " + id + ";";
-        const result = await pool.query(id ? condition : 'SELECT * FROM words_english ORDER BY popularity DESC;');
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Błąd serwera');
-    } 
-});
-
-app.get('/api/wordsEnglishDetailed', async(req, res)=>{
-    const { id } = req.query;
-    try{
-        const condition = `SELECT we.id, word, definition, dl.level as level, c.name as category, part_of_speech `
-            + 'FROM words_english we, categories c, difficulty_levels dl '
-            + 'WHERE we.category_id=c.id and we.difficulty_level_id=dl.id AND we.id = ' + id + ';'
-        const result = await pool.query(id ? condition : 
-            `SELECT we.id, word, definition, dl.level as level, c.name as category, part_of_speech as "part of speech"`
-            + 'FROM words_english we, categories c, difficulty_levels dl '
-            + 'WHERE we.category_id=c.id and we.difficulty_level_id=dl.id ORDER BY we.id ASC;');
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Błąd serwera');
-    }  
-});
-
-app.delete('/api/wordsEnglish', async (req, res) =>{
-    const { id } = req.body;
-    console.log(id);
-    try{
-        const result = await pool.query('DELETE FROM words_english WHERE id = $1', [id]);
-        res.status(200).json({message: "Pomyślnie usunięto frazę"});
-    }catch(err){
-        console.log(err.message);
-        res.status(500).send("Błąd serwera");
+app.get('/api/wordsSecond', async (req, res) => {
+    const { language, id } = req.query;
+    const { isAllowed = true, table }= allowedLanguage(language);
+    if (!isAllowed) {
+        return res.status(400).send('Niepoprawny język');
     }
-})
 
-app.put('/api/wordsEnglish', async (req, res) =>{
-    const { id, word, definition, difficulty_level_id, category_id, part_of_speech } = req.body;
-    console.log(id, " ", word);
     try{
-        const result = await pool.query('UPDATE words_english SET word = $2, definition = $3, difficulty_level_id = $4, category_id = $5, part_of_speech = $6 WHERE id = $1', [id, word, definition, difficulty_level_id, category_id, part_of_speech]);
-        res.status(200).json({message: "Pomyślnie edytowano frazę"})
-    }catch(err){
-        console.log(err.message)
-        res.status(500).send("Błąd serwera");
-    }
-})
-
-app.post('/api/wordsEnglish', async (req, res) => {
-    const { word, definition, difficulty_level_id, category_id, part_of_speech } = req.body;
-    console.log("App ", word, category_id);
-    
-    try {
-        const phraseExists = await pool.query('SELECT * FROM words_english WHERE word = $1 AND category_id = $2', [word, category_id]);
-        if (phraseExists.rows.length > 0) {
-            return res.status(400).json({ error: "Dana fraza już istnieje" });
-        }
-        const insertResult = await pool.query('INSERT INTO words_english(word, definition, difficulty_level_id, category_id, part_of_speech) VALUES ($1, $2, $3, $4, $5) RETURNING id', 
-            [word, definition, difficulty_level_id, category_id, part_of_speech]);
-        
-        const newWordId = insertResult.rows[0].id; 
-
-        res.json({ id: newWordId }); 
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send("Błąd serwera");
-    }
-});
-
-app.get('/api/wordsSpanish/word', async (req, res) => {
-    const { word } = req.query;
-    try{
-        if(!word)return;
-        const result = await pool.query("SELECT id, word FROM words_spanish WHERE word like '" + word + "%' ORDER BY popularity;");
+        const condition = `SELECT * FROM ${table} WHERE id = ` + id + ";";
+        const result = await pool.query(id ? condition : `SELECT * FROM ${table} ORDER BY popularity DESC;`);
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
@@ -562,27 +498,21 @@ app.get('/api/wordsSpanish/word', async (req, res) => {
     } 
 });
 
-app.get('/api/wordsSpanish', async (req, res) => {
-    const { id } = req.query;
-    try{
-        const condition = "SELECT * FROM words_spanish WHERE id = " + id + ";";
-        const result = await pool.query(id ? condition : 'SELECT * FROM words_spanish ORDER BY popularity DESC;');
-        res.json(result.rows);
-    }catch(err){
-        console.error(err.message);
-        res.status(500).send('Błąd serwera');
-    } 
-});
+app.get('/api/wordsSecondDetailed', async(req, res)=>{
+    const { language, id } = req.query;
+    const { isAllowed = true, table } = allowedLanguage(language);
+    console.log("wordsSecondDetailed language", language);
+    if (!isAllowed) {
+        return res.status(400).send('Niepoprawny język');
+    }
 
-app.get('/api/wordsSpanishDetailed', async(req, res)=>{
-    const { id } = req.query;
     try{
         const condition = `SELECT ws.id, word, definition, dl.level as level, c.name as category, part_of_speech `
-            + 'FROM words_spanish ws, categories c, difficulty_levels dl '
+            + `FROM ${table} ws, categories c, difficulty_levels dl `
             + 'WHERE ws.category_id=c.id and ws.difficulty_level_id=dl.id AND ws.id = ' + id + ';'
         const result = await pool.query(id ? condition : 
             `SELECT ws.id, word, definition, dl.level as level, c.name as category, part_of_speech as "part of speech"`
-            + 'FROM words_spanish ws, categories c, difficulty_levels dl '
+            + `FROM ${table} ws, categories c, difficulty_levels dl `
             + 'WHERE ws.category_id=c.id and ws.difficulty_level_id=dl.id ORDER BY ws.id ASC;');
         res.json(result.rows);
     }catch(err){
@@ -591,11 +521,16 @@ app.get('/api/wordsSpanishDetailed', async(req, res)=>{
     }  
 });
 
-app.delete('/api/wordsSpanish', async (req, res) =>{
-    const { id } = req.body;
+app.delete('/api/wordsSecond', async (req, res) =>{
+    const { language, id } = req.body;
+    const { isAllowed = true, table }= allowedLanguage(language);
+    if (!isAllowed) {
+        return res.status(400).send('Niepoprawny język');
+    }
+
     console.log(id);
     try{
-        const result = await pool.query('DELETE FROM words_english WHERE id = $1', [id]);
+        const result = await pool.query(`DELETE FROM ${table} WHERE id = $1`, [id]);
         res.status(200).json({message: "Pomyślnie usunięto frazę"});
     }catch(err){
         console.log(err.message);
@@ -603,11 +538,17 @@ app.delete('/api/wordsSpanish', async (req, res) =>{
     }
 })
 
-app.put('/api/wordsSpanish', async (req, res) =>{
-    const { id, word, definition, difficulty_level_id, category_id, part_of_speech } = req.body;
+app.put('/api/wordsSecond', async (req, res) =>{
+    const { language, id, word, definition, difficulty_level_id, category_id, part_of_speech } = req.body;
+    const { isAllowed = true, table }= allowedLanguage(language);
+    if (!isAllowed) {
+        return res.status(400).send('Niepoprawny język');
+    }
+
     console.log(id, " ", word);
+
     try{
-        const result = await pool.query('UPDATE words_english SET word = $2, definition = $3, difficulty_level_id = $4, category_id = $5, part_of_speech = $6 WHERE id = $1', [id, word, definition, difficulty_level_id, category_id, part_of_speech]);
+        const result = await pool.query(`UPDATE ${table} SET word = $2, definition = $3, difficulty_level_id = $4, category_id = $5, part_of_speech = $6 WHERE id = $1`, [id, word, definition, difficulty_level_id, category_id, part_of_speech]);
         res.status(200).json({message: "Pomyślnie edytowano frazę"})
     }catch(err){
         console.log(err.message)
@@ -615,16 +556,21 @@ app.put('/api/wordsSpanish', async (req, res) =>{
     }
 })
 
-app.post('/api/wordsSpanish', async (req, res) => {
-    const { word, definition, difficulty_level_id, category_id, part_of_speech } = req.body;
+app.post('/api/wordsSecond', async (req, res) => {
+    const { language, word, definition, difficulty_level_id, category_id, part_of_speech } = req.body;
+    const { isAllowed = true, table }= allowedLanguage(language);
+    if (!isAllowed) {
+        return res.status(400).send('Niepoprawny język');
+    }
+
     console.log("App ", word, category_id);
     
     try {
-        const phraseExists = await pool.query('SELECT * FROM words_english WHERE word = $1 AND category_id = $2', [word, category_id]);
+        const phraseExists = await pool.query(`SELECT * FROM ${table} WHERE word = $1 AND category_id = $2`, [word, category_id]);
         if (phraseExists.rows.length > 0) {
             return res.status(400).json({ error: "Dana fraza już istnieje" });
         }
-        const insertResult = await pool.query('INSERT INTO words_english(word, definition, difficulty_level_id, category_id, part_of_speech) VALUES ($1, $2, $3, $4, $5) RETURNING id', 
+        const insertResult = await pool.query(`INSERT INTO ${table}(word, definition, difficulty_level_id, category_id, part_of_speech) VALUES ($1, $2, $3, $4, $5) RETURNING id`, 
             [word, definition, difficulty_level_id, category_id, part_of_speech]);
         
         const newWordId = insertResult.rows[0].id; 

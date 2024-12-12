@@ -102,7 +102,9 @@ const TranslationTab = ({
             onClick={redirectButton}
             cursor={link ? "pointer" : "default"}
           >
-            <Img src={getFlag(phrase?.language ?? "")}></Img>
+            {phrase?.language != null && (
+              <Img src={getFlag(phrase?.language ?? "")}></Img>
+            )}
             <p>{index}.</p>
             <p>{phrase.word}</p>
           </HStack>

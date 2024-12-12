@@ -6,19 +6,15 @@ import useDifficultyLevels from "../../hooks/useDifficultyLevels";
 import { Spinner, Text } from "@chakra-ui/react";
 import usePartOfSpeech from "../../hooks/usePartOfSpeech";
 import FormTemplate, { FormData } from "./CreateTemplate";
-import { SecondWord } from "../../hooks/useWordsEnglish";
+import useWordsSecond from "../../hooks/useWordsSecond";
 
 interface Props {
   routeName: string;
   titlePart: string;
-  fetchAllDetailed: () => {
-    data: SecondWord[];
-    isLoading: boolean;
-    error: string;
-  };
+  code: string;
 }
 
-const EWordsSecond = ({ routeName, titlePart, fetchAllDetailed }: Props) => {
+const EWordsSecond = ({ routeName, titlePart, code }: Props) => {
   const { id } = useParams<{ id: string }>();
   const [refs, setRefs] = useState<
     (HTMLInputElement | HTMLSelectElement | null)[]
@@ -36,6 +32,7 @@ const EWordsSecond = ({ routeName, titlePart, fetchAllDetailed }: Props) => {
     isLoading: diffIsLoading,
     error: diffError,
   } = useDifficultyLevels();
+  const { fetchAllDetailed } = useWordsSecond(code, parseInt(id ?? "-1"));
   const { data, isLoading, error } = fetchAllDetailed();
 
   const handleSave = () => {

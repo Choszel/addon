@@ -11,21 +11,20 @@ export interface SecondWord{
     part_of_speech: string | null;
 }
 
-const useWordsEnglish = (id?: number) => {
+const useWordsSecond = (language: string, id?: number) => {
 
   const fetchAll = () =>{
-    const config = id ? { params: { id: id } } : {};
+    const config = { params: { language: language, id: id } };
 
-    return useData<SecondWord>("/wordsEnglish", config);
+    return useData<SecondWord>("/wordsSecond", config);
   }
 
     const fetchAllDetailed = () =>{
-      const config = id ? { params: { id: id } } : {};
-  
-      return useData<SecondWord>("/wordsEnglishDetailed", config);
+      const config = { params: { language: language, id: id } };
+      return useData<SecondWord>("/wordsSecondDetailed", config);
     }
     return {fetchAll, fetchAllDetailed}
   };
   
 
-export default useWordsEnglish;
+export default useWordsSecond;

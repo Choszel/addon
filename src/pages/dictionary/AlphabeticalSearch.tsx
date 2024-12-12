@@ -19,24 +19,14 @@ const AlphabeticalSearch = () => {
   const [error, setError] = useState<boolean>(false);
 
   const Load = async () => {
-    let endpoint = "";
-    switch (selectedLanguage) {
-      case "ENG":
-        endpoint = "English";
-        break;
-      case "SPA":
-        endpoint = "Spanish";
-        break;
-      default:
-        endpoint = "Polish";
-        break;
-    }
+    const queryString = new URLSearchParams({
+      language: language ?? "",
+      word: letter?.toLowerCase() ?? "",
+    }).toString();
+
     try {
       const response = await fetch(
-        "http://localhost:3001/api/words" +
-          endpoint +
-          "/word?word=" +
-          letter?.toLowerCase()
+        `http://localhost:3001/api/wordsSecond/word?${queryString}`
       );
       const data: Phrase[] = await response.json();
       setWords(data);

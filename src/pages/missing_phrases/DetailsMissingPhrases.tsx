@@ -32,7 +32,7 @@ const DetailsMissingPhrases = () => {
     error: langError,
   } = useLanguages();
   const routeName = "/missingPhrases";
-  const [postRoute, setPostRoute] = useState<string>("/wordsEnglish");
+  const [postRoute, setPostRoute] = useState<string>("/wordsSecond");
   const { postData } = actionData(postRoute);
   const { deleteData } = actionData(routeName);
   const { postData: postTranslations } = actionData("/translationPLN_");
@@ -45,6 +45,7 @@ const DetailsMissingPhrases = () => {
 
   const handleSave = async () => {
     const formData = new URLSearchParams();
+    formData.append("language", languageValue ?? "");
     formData.append("word", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");
     formData.append("photo", refs[3]?.value ?? "");
@@ -106,7 +107,7 @@ const DetailsMissingPhrases = () => {
         }
         break;
       default:
-        setPostRoute("/wordsEnglish");
+        setPostRoute("/wordsSecond");
         if (refs[3] && refs[4] && refs[6]) {
           console.log("enable");
           refs[3].disabled = true;

@@ -1,19 +1,17 @@
 import ReadTemplate, {
   TableData,
 } from "../../components/crud_templates/ReadTemplate";
-import { SecondWord } from "../../hooks/useWordsEnglish";
+import { SecondWord } from "../../hooks/useWordsSecond";
+import useWordsSecond from "../../hooks/useWordsSecond";
 
 interface Props {
   routeName: string;
   titlePart: string;
-  fetchAllDetailed: () => {
-    data: SecondWord[];
-    isLoading: boolean;
-    error: string;
-  };
+  code: string;
 }
 
-const RWordsSecond = ({ routeName, titlePart, fetchAllDetailed }: Props) => {
+const RWordsSecond = ({ routeName, titlePart, code }: Props) => {
+  const { fetchAllDetailed } = useWordsSecond(code);
   const { data, isLoading, error } = fetchAllDetailed();
   const headers = ["id", "word", "category", "level", "part of speech"];
 

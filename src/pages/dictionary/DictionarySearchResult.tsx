@@ -92,16 +92,10 @@ const DictionarySearchResult = () => {
       }
     } else {
       try {
-        switch (code) {
-          case "ENG":
-            data = await fetchData("wordsEnglishDetailed", { id: id || 0 });
-            break;
-          case "SPA":
-            data = await fetchData("wordsSpanishDetailed", { id: id || 0 });
-            break;
-          default:
-            break;
-        }
+        data = await fetchData("wordsSecondDetailed", {
+          language: code,
+          id: id || 0,
+        });
         console.log(data);
         if (data[0]?.word == word) {
           data[0].language = code;
