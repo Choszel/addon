@@ -34,30 +34,20 @@ const SearchInput = ({ onSearch, language }: Props) => {
         return;
       }
 
-      let endpoint = "";
-      switch (language.substring(0, 3)) {
-        case "SPA":
-          endpoint = "wordsSpanish";
-          break;
-        case "ENG":
-          endpoint = "wordsEnglish";
-          break;
-        default:
-          break;
-      }
-      let data = [];
       try {
-        if (endpoint.length > 0) {
-          const response = await fetch(
-            "http://localhost:3001/api/" +
-              endpoint +
-              "/word?word=" +
-              debounceSearchInput
-          );
-          data = await response.json();
-        }
+        let data = [];
+        const queryString = new URLSearchParams({
+          language: language.substring(0, 3) ?? "",
+          word: debounceSearchInput ?? "",
+        }).toString();
+
+        const response = await fetch(
+          `http://localhost:3001/api/wordsSecond/word?${queryString}`
+        );
+        data = await response.json();
+
         let data2 = [];
-        if (language.includes("PLN")) {
+        if (!language.substring(0, 3).includes("PLN")) {
           const response2 = await fetch(
             "http://localhost:3001/api/wordsPolish/word?word=" +
               debounceSearchInput

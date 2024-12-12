@@ -5,21 +5,13 @@ interface Props {
 
 const RandomPhrase = ({ onSearch, language }: Props) => {
   const findRandomPhrase = async () => {
-    let endpoint = "";
-    switch (language) {
-      case "ENG":
-        endpoint = "wordsEnglish";
-        break;
-      case "SPA":
-        endpoint = "wordsSpanish";
-        break;
-      default:
-        endpoint = "wordsPolish";
-        break;
-    }
-
     try {
-      const response = await fetch("http://localhost:3001/api/" + endpoint);
+      const queryString = new URLSearchParams({
+        language: language,
+      }).toString();
+      const response = await fetch(
+        `http://localhost:3001/api/wordsSecond?${queryString}`
+      );
       const data = await response.json();
 
       const randomIndex = Math.floor(Math.random() * data.length);
