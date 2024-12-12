@@ -80,6 +80,7 @@ const ItemCard = ({
         key={quiz.id}
         bg="var(--foreground)"
         height="100%"
+        id={quiz.type ?? ""}
       >
         <CardBody
           w="100%"

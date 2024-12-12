@@ -8,7 +8,7 @@ const RWordsPolish = () => {
   const { data, isLoading, error } = fetchWords();
 
   const tableData: TableData<PolishWord> = {
-    title: "Wykaz Polskich słów",
+    title: "Wykaz Polskich fraz",
     headers: ["id", "word", "category", "definition"],
     data: data,
     isLoading: isLoading,

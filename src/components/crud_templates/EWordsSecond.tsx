@@ -10,6 +10,7 @@ import { SecondWord } from "../../hooks/useWordsEnglish";
 
 interface Props {
   routeName: string;
+  titlePart: string;
   fetchAllDetailed: () => {
     data: SecondWord[];
     isLoading: boolean;
@@ -17,7 +18,7 @@ interface Props {
   };
 }
 
-const EWordsSecond = ({ routeName, fetchAllDetailed }: Props) => {
+const EWordsSecond = ({ routeName, titlePart, fetchAllDetailed }: Props) => {
   const { id } = useParams<{ id: string }>();
   const [refs, setRefs] = useState<
     (HTMLInputElement | HTMLSelectElement | null)[]
@@ -71,7 +72,7 @@ const EWordsSecond = ({ routeName, fetchAllDetailed }: Props) => {
   if (error) return <Text color="var(--error)">{error}</Text>;
 
   const formData: FormData = {
-    title: "Edytowanie Angielskiej Frazy",
+    title: "Edytowanie " + titlePart + " Frazy",
     headers: [
       { inputName: "Fraza", inputType: "text", isRequired: true },
       { inputName: "Definicja", inputType: "text", isRequired: true },

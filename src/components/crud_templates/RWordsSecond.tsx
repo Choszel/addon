@@ -18,7 +18,7 @@ const RWordsSecond = ({ routeName, titlePart, fetchAllDetailed }: Props) => {
   const headers = ["id", "word", "category", "level", "part of speech"];
 
   const tableData: TableData<SecondWord> = {
-    title: "Wykaz " + titlePart + " słów",
+    title: "Wykaz " + titlePart + " fraz",
     headers: headers,
     data: data,
     isLoading: isLoading,

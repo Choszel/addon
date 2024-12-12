@@ -18,9 +18,9 @@ const AdminPanel = () => {
     { path: "/category", phrase: "Kategorie" },
     { path: "/difficultyLevel", phrase: "Poziomy Trudności" },
     { path: "/missingPhrases", phrase: "Brakujące frazy" },
-    { path: "/wordsPolish", phrase: "Polskie słowa" },
-    { path: "/wordsEnglish", phrase: "Angielskie słowa" },
-    { path: "/wordsSpanish", phrase: "Hiszpańskie słowa" },
+    { path: "/wordsPolish", phrase: "Polskie frazy" },
+    { path: "/wordsEnglish", phrase: "Angielskie frazy" },
+    { path: "/wordsSpanish", phrase: "Hiszpańskie frazy" },
   ];
   const menuAdminItems = [
     { path: "/stories", phrase: "Historie" },
@@ -30,7 +30,7 @@ const AdminPanel = () => {
 
   return (
     <>
-      <Menu>
+      <Menu id="admin-menu">
         <MenuButton
           as={IconButton}
           aria-label="Options"

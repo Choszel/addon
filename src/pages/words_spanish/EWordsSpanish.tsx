@@ -10,6 +10,7 @@ const EWordsSpanish = () => {
     <EWordsSecond
       routeName={"/wordsSpanish"}
       fetchAllDetailed={fetchAllDetailed}
+      titlePart={"Hiszpańskiej"}
     />
   );
 };

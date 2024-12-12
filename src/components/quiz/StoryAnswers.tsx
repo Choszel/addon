@@ -59,7 +59,7 @@ const StoryAnswers = ({
         <div key={answers[number]?.id} style={{ marginBottom: "2%" }}>
           <input
             type="radio"
-            id={`answer-${answers[number]?.id}`}
+            id={`answear-${answers[number]?.id}`}
             name={question_id.toString()}
             value={answers[number]?.answear ?? ""}
             className="hidden_radio"
@@ -69,7 +69,7 @@ const StoryAnswers = ({
             disabled={checked}
           />
           <label
-            htmlFor={`answer-${answers[number]?.id}`}
+            htmlFor={`answear-${answers[number]?.id}`}
             className="hidden_radio_label"
             ref={answers[number]?.correct ? correctAnswear : null}
           >

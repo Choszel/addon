@@ -24,10 +24,11 @@ const FlashcardsHome = () => {
     let title: string = "";
     let user: string = "";
     values.forEach((value) => {
-      if (!value.startsWith("@")) title += value;
+      if (!value.startsWith("@")) title += value + " ";
       else user = value.substring(1);
     });
 
+    title = title.substring(0, title.length - 1);
     setQuizQuery({ ...quizQuery, title, user });
   }, [searchValue]);
 

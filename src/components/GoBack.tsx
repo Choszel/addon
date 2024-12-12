@@ -9,7 +9,13 @@ interface Props {
 
 const GoBack = ({ goBack, margin, width }: Props) => {
   return (
-    <HStack marginY={margin} width={width} onClick={goBack} cursor="pointer">
+    <HStack
+      marginY={margin}
+      width={width}
+      onClick={goBack}
+      cursor="pointer"
+      id="go-back"
+    >
       <LuArrowLeft size={32} />
       <Text
         textTransform="uppercase"

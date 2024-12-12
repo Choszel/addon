@@ -128,7 +128,7 @@ const StoryWithQuestions = () => {
         textAlign="left"
       >
         {questions.map((question, index) => (
-          <Box marginBottom="2%" key={question.id}>
+          <Box marginBottom="2%" key={question.id} id="questions">
             <p style={{ fontWeight: "600" }}>{question.question}</p>
             <StoryAnswers
               question_id={question?.id ?? 0}
