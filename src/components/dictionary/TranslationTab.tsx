@@ -6,6 +6,7 @@ import usePhrasesStorage from "../../hooks/usePhrasesStorage";
 import useTokenData from "../../others/useTokenData";
 import getFlag from "../../hooks/useFlags";
 import { useEffect } from "react";
+import useSpeechSynthesis from "../../hooks/useSpeechSynthesis";
 
 interface Props {
   phrase: Phrase;
@@ -23,37 +24,9 @@ const TranslationTab = ({
   language,
 }: Props) => {
   const navigator = useNavigate();
-  const msg = new SpeechSynthesisUtterance();
   const { addToSavedPhrases } = usePhrasesStorage(language);
   const { CheckUserType } = useTokenData();
   const toast = useToast();
-
-  console.log(language);
-  const handleSpeak = () => {
-    console.log("handleSpeak language:", language);
-
-    let speakLanguage = "pl-PL";
-    switch (language) {
-      case "ENG":
-        speakLanguage = "en-GB";
-        break;
-      case "SPA":
-        speakLanguage = "es-ES";
-        break;
-      default:
-        break;
-    }
-    msg.lang = speakLanguage;
-
-    const voices = speechSynthesis
-      .getVoices()
-      .filter((voice) => voice.lang === speakLanguage);
-    msg.voice = voices[1];
-
-    msg.text = phrase.word;
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(msg);
-  };
 
   const handleAddToQuiz = () => {
     if (CheckUserType() != "none")
@@ -113,7 +86,7 @@ const TranslationTab = ({
             <HiSpeakerWave
               size={phrase?.level ? "40px" : "40px"}
               onClick={() => {
-                handleSpeak();
+                useSpeechSynthesis(language, phrase.word);
               }}
               cursor={"pointer"}
               width="100%"

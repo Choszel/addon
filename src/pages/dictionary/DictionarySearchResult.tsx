@@ -9,6 +9,7 @@ import actionData from "../../hooks/actionData";
 import { HiSpeakerWave } from "react-icons/hi2";
 import RandomPhrase from "../../components/dictionary/RandomPhrase";
 import SimilarPhrases from "../../components/dictionary/SimilarPhrases";
+import useSpeechSynthesis from "../../hooks/useSpeechSynthesis";
 
 export interface Phrase {
   id: number;
@@ -37,7 +38,6 @@ const DictionarySearchResult = () => {
   const [translations, setTranslations] = useState<Phrase[]>([]);
   const navigate = useNavigate();
   const { putData } = actionData("/words/raisePopularity");
-  const msg = new SpeechSynthesisUtterance();
   const [error, setError] = useState<boolean>(false);
 
   const fetchData = async (endpoint: string, params?: {}) => {
@@ -163,29 +163,6 @@ const DictionarySearchResult = () => {
     window.location.reload();
   };
 
-  const handleSpeak = () => {
-    console.log("handleSpeak language:", searchPhrase?.language);
-    let speakLanguage = "pl-PL";
-    switch (searchPhrase?.language) {
-      case "ENG":
-        speakLanguage = "en-GB";
-        break;
-      case "SPA":
-        speakLanguage = "es-ES";
-        break;
-      default:
-        break;
-    }
-    const voices = speechSynthesis
-      .getVoices()
-      .filter((voice) => voice.lang === speakLanguage);
-    msg.voice = speakLanguage == "pl-PL" ? voices[1] : voices[0];
-
-    msg.text = searchPhrase?.word ?? "";
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(msg);
-  };
-
   return (
     <>
       <Stack
@@ -219,7 +196,10 @@ const DictionarySearchResult = () => {
             <HiSpeakerWave
               size={40}
               onClick={() => {
-                handleSpeak();
+                useSpeechSynthesis(
+                  searchPhrase?.language ?? "",
+                  searchPhrase?.word ?? ""
+                );
               }}
               cursor={"pointer"}
             />

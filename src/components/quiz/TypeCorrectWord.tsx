@@ -1,7 +1,8 @@
 import { Box, Card, CardBody, Input, Stack, Text } from "@chakra-ui/react";
 import { QuizQuestion } from "../../hooks/useQuizzes";
 import { HiSpeakerWave } from "react-icons/hi2";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import useSpeechSynthesis from "../../hooks/useSpeechSynthesis";
 
 interface Props {
   question: QuizQuestion;
@@ -17,7 +18,6 @@ const TypeCorrectWord = ({
   language,
 }: Props) => {
   const refInput = useRef<HTMLInputElement>(null);
-  const msg = new SpeechSynthesisUtterance();
   const [verified, setVerified] = useState<boolean>(false);
 
   const checkCorectness = (word: string) => {
@@ -44,42 +44,6 @@ const TypeCorrectWord = ({
     }, 2000);
   };
 
-  const handleSpeak = () => {
-    msg.text = question?.word_second ?? "";
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(msg);
-  };
-
-  useEffect(() => {
-    console.log(language);
-    const loadVoices = () => {
-      let speakLanguage = "en-GB";
-      switch (language) {
-        case "ENG":
-          speakLanguage = "en-GB";
-          break;
-        case "SPA":
-          speakLanguage = "es-ES";
-          break;
-        default:
-          break;
-      }
-      msg.lang = speakLanguage;
-      const voices = window.speechSynthesis
-        .getVoices()
-        .filter((voice) => voice.lang === speakLanguage);
-      msg.voice = voices[0];
-    };
-
-    window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
-
-    loadVoices();
-
-    return () => {
-      window.speechSynthesis.removeEventListener("voiceschanged", loadVoices);
-    };
-  }, []);
-
   const handleKeyPress = (event: { key: string }) => {
     if (event.key === "Enter") {
       if (refInput.current) checkCorectness(refInput.current.value);
@@ -102,7 +66,7 @@ const TypeCorrectWord = ({
             <HiSpeakerWave
               size={60}
               onClick={() => {
-                handleSpeak();
+                useSpeechSynthesis(language, question?.word_second ?? "");
               }}
               cursor={"pointer"}
             />
