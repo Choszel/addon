@@ -159,7 +159,11 @@ app.delete('/api/category', async (req, res) =>{
     const { id } = req.body;
     try{
         const result = await pool.query('DELETE FROM categories WHERE id = $1', [id]);
-        res.status(200).json({message: "Pomyślnie usunięto kategorię"});
+        if (result.rowCount > 0) {
+            res.status(200).json({ message: "Pomyślnie usunięto kategorię" });
+        } else {
+            res.status(404).json({ message: "Nie znaleziono kategorii o podanym ID" });
+        }
     }catch(err){
         console.log(err.message);
         res.status(500).send("Błąd serwera");
@@ -170,6 +174,10 @@ app.put('/api/category', async (req, res) =>{
     const { id, name } = req.body;
     console.log(id, " ", name);
     try{
+        const categoryExists = await pool.query('SELECT * FROM categories WHERE name = $1', [name]);
+        if(categoryExists.rows.length > 0){
+            return res.status(400).json({ error: "Dana kategoria już istnieje" });
+        }
         const result = await pool.query('UPDATE categories SET name = $1 WHERE id = $2', [name, id]);
         res.status(200).json({message: "Pomyślnie edytowano kategorię"})
     }catch(err){
@@ -220,7 +228,11 @@ app.delete('/api/language', async (req, res) =>{
     const { id } = req.body;
     try{
         const result = await pool.query('DELETE FROM languages WHERE id = $1', [id]);
-        res.status(200).json({message: "Pomyślnie usunięto język"});
+        if (result.rowCount > 0) {
+            res.status(200).json({ message: "Pomyślnie usunięto język" });
+        } else {
+            res.status(404).json({ message: "Nie znaleziono języka o podanym ID" });
+        }
     }catch(err){
         console.log(err.message);
         res.status(500).send("Błąd serwera");
@@ -231,6 +243,10 @@ app.put('/api/language', async (req, res) =>{
     const { id, code } = req.body;
     console.log(id, " ", code);
     try{
+        const languageExists = await pool.query('SELECT * FROM languages WHERE code = $1', [code]);
+        if(languageExists.rows.length > 0){
+            return res.status(400).json({ error: "Dany język już istnieje" });
+        }
         await pool.query('UPDATE languages SET code = $1 WHERE id = $2', [code, id]);
         res.status(200).json({message: "Pomyślnie edytowano język"})
     }catch(err){
@@ -256,7 +272,7 @@ app.put('/api/users', async (req, res) =>{
     console.log("users put", login, " ", user_type);
     try{
         await pool.query('UPDATE users SET user_type = $1 WHERE login = $2', [user_type, login]);
-        res.status(200).json({message: "Pomyślnie " + user_type == "0" ? "zdegradowano " : "mianowano " + "użytkownika"})
+        res.status(200).json({message: "Pomyślnie mianowano użytkownika"})
     }catch(err){
         console.log(err.message)
         res.status(500).send("Błąd serwera");
@@ -322,8 +338,11 @@ app.delete('/api/missingPhrases', async (req, res) =>{
     console.log(id);
     try{
         const result = await pool.query('DELETE FROM missing_phrases WHERE id = $1', [id]);
-        res.status(200).json({message: "Pomyślnie usunięto frazę"});
-    }catch(err){
+        if (result.rowCount > 0) {
+            res.status(200).json({ message: "Pomyślnie usunięto frazę" });
+        } else {
+            res.status(404).json({ message: "Nie znaleziono frazy o podanym ID" });
+        }    }catch(err){
         console.log(err.message);
         res.status(500).send("Błąd serwera");
     }
@@ -344,7 +363,7 @@ app.get('/api/wordsPolish', async(req, res)=>{
 app.get('/api/wordsPolish/word', async (req, res) => {
     const { word } = req.query;
     try{
-        if(!word)return;
+        if(!word)return res.status(500).send('Nie podano wskaźnika');
         const result = await pool.query("SELECT id, word FROM words_polish WHERE word like '" + word + "%';");
         res.json(result.rows);
     }catch(err){
@@ -375,8 +394,11 @@ app.delete('/api/wordsPolish', async (req, res) =>{
     console.log(id);
     try{
         const result = await pool.query('DELETE FROM words_polish WHERE id = $1', [id]);
-        res.status(200).json({message: "Pomyślnie usunięto frazę"});
-    }catch(err){
+        if (result.rowCount > 0) {
+            res.status(200).json({ message: "Pomyślnie usunięto frazę" });
+        } else {
+            res.status(404).json({ message: "Nie znaleziono frazy o podanym ID" });
+        }    }catch(err){
         console.log(err.message);
         res.status(500).send("Błąd serwera");
     }
@@ -386,6 +408,10 @@ app.put('/api/wordsPolish', async (req, res) =>{
     const { id, word, definition, category_id, photo } = req.body;
     console.log(id, " ", word);
     try{
+        const phraseExists = await pool.query('SELECT * FROM words_polish WHERE word = $1 AND category_id = $2', [word, category_id]);
+        if (phraseExists.rows.length > 0) {
+            return res.status(400).json({ error: "Dana fraza już istnieje" });
+        }
         const result = await pool.query('UPDATE words_polish SET word = $2, definition = $3, category_id = $4, photo = $5 WHERE id = $1', [id, word, definition, category_id, photo]);
         res.status(200).json({message: "Pomyślnie edytowano frazę"})
     }catch(err){
@@ -446,6 +472,7 @@ app.put('/api/words/raisePopularity', async (req, res) =>{
     console.log(id);
     try {       
         const result = await pool.query(`UPDATE ${table} SET popularity = popularity+1 WHERE id = $1`, [id]);
+        res.status(200).json({ message: "Pomyślnie znaleziono frazę" });;
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Błąd serwera");
@@ -519,8 +546,11 @@ app.delete('/api/wordsSecond', async (req, res) =>{
     console.log(id);
     try{
         const result = await pool.query(`DELETE FROM ${table} WHERE id = $1`, [id]);
-        res.status(200).json({message: "Pomyślnie usunięto frazę"});
-    }catch(err){
+        if (result.rowCount > 0) {
+            res.status(200).json({ message: "Pomyślnie usunięto frazę" });
+        } else {
+            res.status(404).json({ message: "Nie znaleziono frazy o podanym ID" });
+        }    }catch(err){
         console.log(err.message);
         res.status(500).send("Błąd serwera");
     }
@@ -536,6 +566,10 @@ app.put('/api/wordsSecond', async (req, res) =>{
     console.log(id, " ", word);
 
     try{
+        const phraseExists = await pool.query(`SELECT * FROM ${table} WHERE word = $1 AND category_id = $2`, [word, category_id]);
+        if (phraseExists.rows.length > 0) {
+            return res.status(400).json({ error: "Dana fraza już istnieje" });
+        }
         const result = await pool.query(`UPDATE ${table} SET word = $2, definition = $3, difficulty_level_id = $4, category_id = $5, part_of_speech = $6 WHERE id = $1`, [id, word, definition, difficulty_level_id, category_id, part_of_speech]);
         res.status(200).json({message: "Pomyślnie edytowano frazę"})
     }catch(err){
@@ -713,8 +747,11 @@ app.delete('/api/translationPOL_', async (req, res) =>{
 
     try{
         const result = await pool.query(`DELETE FROM translations_pl_${language.toLowerCase()} WHERE id = $1`, [id]);
-        res.status(200).json({message: "Pomyślnie usunięto tłumaczenie"});
-    }catch(err){
+        if (result.rowCount > 0) {
+            res.status(200).json({ message: "Pomyślnie usunięto tłumaczenie" });
+        } else {
+            res.status(404).json({ message: "Nie znaleziono tłumaczenia o podanym ID" });
+        }}catch(err){
         console.log(err.message);
         res.status(500).send("Błąd serwera");
     }
@@ -774,6 +811,7 @@ app.put('/api/quizzes/raisePopularity', async (req, res) =>{
     console.log(id);
     try {       
         await pool.query('UPDATE quizzes SET popularity = popularity+1 WHERE id = $1', [id]);
+        res.status(200).json({ message: "Pomyślnie zwiększono popularność quizu" });
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Błąd serwera");
@@ -785,7 +823,11 @@ app.delete('/api/quizzes', async (req, res) => {
         const { id } = req.body;
         console.log(id);
         const result = await pool.query('DELETE FROM quizzes WHERE id = $1', [id]);
-        res.status(200).json({ message: "Pomyślnie usunięto zestaw do nauki" });
+        if (result.rowCount > 0) {
+            res.status(200).json({ message: "Pomyślnie usunięto zestaw do nauki" });
+        } else {
+            res.status(404).json({ message: "Nie znaleziono zestawu do nauki o podanym ID" });
+        }
     }catch(err){
         console.log(err.message);
         res.status(500).send("Błąd serwera");
@@ -1095,7 +1137,6 @@ app.post('/api/storiesQuestionsAndAnswers', async (req, res) => {
       res.status(500).send("Błąd serwera");
     }
   });
-  
 
 app.post('/api/storiesQuestions', async(req, res)=>{
     const { quiz_id, data } = req.body;

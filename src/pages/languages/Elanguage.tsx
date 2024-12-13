@@ -18,12 +18,12 @@ const Elanguage = () => {
 
   const { data, isLoading, error } = useLanguages(parseInt(id ?? "0"));
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const formData = new URLSearchParams();
     formData.append("id", id || "");
     formData.append("code", refs[0]?.value ?? "");
-    putData(formData);
-    return navigate(routeName);
+    const response = await putData(formData);
+    if (response.id != -1) return navigate(routeName);
   };
 
   const handleCancel = () => {

@@ -13,11 +13,11 @@ const CLanguage = () => {
   const routeName = "/language";
   const { postData } = actionData(routeName);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const formData = new URLSearchParams();
     formData.append("code", refs[0]?.value ?? "");
-    postData(formData);
-    return navigate(routeName);
+    const response = await postData(formData);
+    if (response.id != -1) return navigate(routeName);
   };
 
   const handleCancel = () => {

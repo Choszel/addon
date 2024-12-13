@@ -60,7 +60,7 @@ const CWordsSecond = ({ routeName, code, titlePart }: Props) => {
         }
       });
 
-      return navigate(routeName);
+      if (response.id != -1) return navigate(routeName);
     } else {
       console.error("Błąd: Nie udało się uzyskać ID nowo dodanego słowa");
     }

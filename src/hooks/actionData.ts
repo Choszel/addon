@@ -49,7 +49,7 @@ const actionData = (endpoint: string) => {
       } else {
         toast({
           title: "Błąd",
-          description: responseData || response.statusText,
+          description: responseData.error || responseData || response.statusText,
           status: "error",
           position: "bottom-right",
           duration: 5000,

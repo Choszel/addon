@@ -35,7 +35,7 @@ const EWordsSecond = ({ routeName, titlePart, code }: Props) => {
   const { fetchAllDetailed } = useWordsSecond(code, parseInt(id ?? "-1"));
   const { data, isLoading, error } = fetchAllDetailed();
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const formData = new URLSearchParams();
     formData.append("id", id || "");
     formData.append("word", refs[0]?.value ?? "");
@@ -43,8 +43,8 @@ const EWordsSecond = ({ routeName, titlePart, code }: Props) => {
     formData.append("difficulty_level_id", refs[2]?.value ?? "");
     formData.append("category_id", refs[3]?.value ?? "");
     formData.append("part_of_speech", refs[4]?.value ?? "");
-    putData(formData);
-    return navigate(routeName);
+    const response = await putData(formData);
+    if (response.id != -1) return navigate(routeName);
   };
 
   const handleCancel = () => {

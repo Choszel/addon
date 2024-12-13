@@ -36,7 +36,7 @@ const NoTranslation = () => {
   const { GetUserId } = useTokenData();
   const [languageValue, setLanguageValue] = useState<string>("ENG");
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const formData = new URLSearchParams();
     formData.append("phrase", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");
@@ -53,8 +53,8 @@ const NoTranslation = () => {
     } else {
       formData.append("photo", refs[3]?.value ?? "");
     }
-    postData(formData);
-    return navigate("/dictionary");
+    const response = await postData(formData);
+    if (response.id != -1) return navigate("/dictionary");
   };
 
   const handleCancel = () => {

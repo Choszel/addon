@@ -203,11 +203,11 @@ const ReadTemplate = <T extends object>({
               <Button
                 colorScheme="red"
                 mr={3}
-                onClick={() => {
+                onClick={async () => {
                   const formData = new URLSearchParams();
                   formData.append("id", (selectedRow ?? -1).toString());
-                  deleteData(formData);
-                  window.location.reload(); // nie widać po tym toast
+                  const response = await deleteData(formData);
+                  if (response.id != -1) window.location.reload();
                 }}
               >
                 Usuń

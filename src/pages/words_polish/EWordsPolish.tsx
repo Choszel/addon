@@ -24,15 +24,15 @@ const EWordsPolish = () => {
   const { fetchWords } = useWordsPolish();
   const { data, isLoading, error } = fetchWords(parseInt(id ?? "0"));
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const formData = new URLSearchParams();
     formData.append("id", id || "");
     formData.append("word", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");
     formData.append("category_id", refs[2]?.value ?? "");
     formData.append("photo", refs[3]?.value ?? "");
-    putData(formData);
-    return navigate(routeName);
+    const response = await putData(formData);
+    if (response.id != -1) return navigate(routeName);
   };
 
   const handleCancel = () => {
