@@ -20,6 +20,7 @@ const useStaticTexts = () => {
         { templateText: "login", translation: "login" },
         { templateText: "user_type", translation: "typ uż." },
         { templateText: "word_second", translation: "fraza" },
+        { templateText: "word_polish", translation: "fraza" },
     ]
 
     const findTemplateTextValue = (templateText: string) => {
