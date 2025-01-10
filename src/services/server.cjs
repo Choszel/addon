@@ -50,8 +50,11 @@ app.post('/api/ai/similarPhrases', async (req, res) => {
         const completion = await openai.chat.completions.create({
             model: "gpt-4o-mini",
             messages: [
-                { role: "system", content: `Proszę znajdź podone frazy, synonimy, związki frazeologiczne, powiedzenia, itp. w języku "${inLanguage}" z polskimi tłumaczeniami do słowa: "${inputText}".` },
-                { role: "user", content: `Proszę znajdź podone frazy, synonimy, związki frazeologiczne, powiedzenia, itp. do słowa: "${inputText}"` }
+                { role: "system", content: `Proszę, znajdź podone frazy, synonimy, antonimy, związki frazeologiczne, powiedzenia i tym podobne w języku 
+                "${inLanguage}" z polskimi tłumaczeniami do słowa: "${inputText}". Tekst, który przekażesz będzie interpretowany jako surowy HTML, 
+                więc oznacz w <h2><h2> nagłówki. Dodatkowo znalezione frazy w języku "${inLanguage}" oznacz w <strong><strong>.
+                Nie dodawaj słowa html i nie rób listy punktowanej. Oddziel synonimy, związki frazeologiczne i tym podobne czymś w rodzaju nagłówków` },
+                { role: "user", content: `Proszę, znajdź podone frazy, synonimy, związki frazeologiczne, powiedzenia, itp. do słowa: "${inputText}"` }
             ]
         });
 
@@ -81,7 +84,7 @@ app.post('/api/register', async (req, res) => {
         res.status(201).json({ message: "Pomyślnie zarejestrowano" });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -109,7 +112,7 @@ app.post('/api/login', async (req, res) =>{
         res.status(201).json({ token });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -121,7 +124,7 @@ app.get('/api/headers', async(req, res)=>{
         res.json(result.rows.map(row => row.column_name));
     }catch(err){
         console.log(err);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -133,7 +136,7 @@ app.get('/api/categories', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }   
 });
 
@@ -151,7 +154,7 @@ app.post('/api/category', async (req, res) =>{
         res.status(200).json({ message: "Pomyślnie dodano kategorię" });
     }catch(err){
         console.error(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -166,7 +169,7 @@ app.delete('/api/category', async (req, res) =>{
         }
     }catch(err){
         console.log(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -182,7 +185,7 @@ app.put('/api/category', async (req, res) =>{
         res.status(200).json({message: "Pomyślnie edytowano kategorię"})
     }catch(err){
         console.log(err.message)
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -192,7 +195,7 @@ app.get('/api/difficultyLevel', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -204,7 +207,7 @@ app.get('/api/languages', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }   
 })
 
@@ -220,7 +223,7 @@ app.post('/api/language', async (req, res) =>{
         res.status(200).json({ message: "Pomyślnie dodano język" });
     }catch(err){
         console.error(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -235,7 +238,7 @@ app.delete('/api/language', async (req, res) =>{
         }
     }catch(err){
         console.log(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -263,7 +266,7 @@ app.get('/api/users', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }   
 });
 
@@ -275,7 +278,7 @@ app.put('/api/users', async (req, res) =>{
         res.status(200).json({message: "Pomyślnie mianowano użytkownika"})
     }catch(err){
         console.log(err.message)
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -287,7 +290,7 @@ app.get('/api/missingPhrases', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }   
 })
 
@@ -311,7 +314,7 @@ app.get('/api/missingPhrasesDetailed', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }   
 })
 
@@ -329,7 +332,7 @@ app.post('/api/missingPhrases', async (req, res) =>{
         res.status(200).json({ message: "Pomyślnie zgłoszono frazę" });
     }catch(err){
         console.error(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -344,7 +347,7 @@ app.delete('/api/missingPhrases', async (req, res) =>{
             res.status(404).json({ message: "Nie znaleziono frazy o podanym ID" });
         }    }catch(err){
         console.log(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -356,7 +359,7 @@ app.get('/api/wordsPolish', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }  
 });
 
@@ -368,7 +371,7 @@ app.get('/api/wordsPolish/word', async (req, res) => {
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     } 
 });
 
@@ -385,7 +388,7 @@ app.get('/api/wordsPolishDetailed', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }  
 });
 
@@ -400,7 +403,7 @@ app.delete('/api/wordsPolish', async (req, res) =>{
             res.status(404).json({ message: "Nie znaleziono frazy o podanym ID" });
         }    }catch(err){
         console.log(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -409,14 +412,14 @@ app.put('/api/wordsPolish', async (req, res) =>{
     console.log(id, " ", word);
     try{
         const phraseExists = await pool.query('SELECT * FROM words_polish WHERE word = $1 AND category_id = $2', [word, category_id]);
-        if (phraseExists.rows.length > 0) {
+        if (phraseExists.rows.length > 0 && phraseExists.rows[0].id != id) {
             return res.status(400).json({ error: "Dana fraza już istnieje" });
         }
         const result = await pool.query('UPDATE words_polish SET word = $2, definition = $3, category_id = $4, photo = $5 WHERE id = $1', [id, word, definition, category_id, photo]);
         res.status(200).json({message: "Pomyślnie edytowano frazę"})
     }catch(err){
         console.log(err.message)
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -437,7 +440,7 @@ app.post('/api/wordsPolish', async (req, res) => {
         res.json({ id: newWordId }); 
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -457,7 +460,7 @@ app.get('/api/words/limit', async (req, res) => {
         res.json(result.rows);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -475,7 +478,7 @@ app.put('/api/words/raisePopularity', async (req, res) =>{
         res.status(200).json({ message: "Pomyślnie znaleziono frazę" });;
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -492,7 +495,7 @@ app.get('/api/wordsSecond/word', async (req, res) => {
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     } 
 });
 
@@ -509,7 +512,7 @@ app.get('/api/wordsSecond', async (req, res) => {
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     } 
 });
 
@@ -532,7 +535,7 @@ app.get('/api/wordsSecondDetailed', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }  
 });
 
@@ -552,7 +555,7 @@ app.delete('/api/wordsSecond', async (req, res) =>{
             res.status(404).json({ message: "Nie znaleziono frazy o podanym ID" });
         }    }catch(err){
         console.log(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -567,14 +570,14 @@ app.put('/api/wordsSecond', async (req, res) =>{
 
     try{
         const phraseExists = await pool.query(`SELECT * FROM ${table} WHERE word = $1 AND category_id = $2`, [word, category_id]);
-        if (phraseExists.rows.length > 0) {
+        if (phraseExists.rows.length > 0 && phraseExists.rows[0].id != id) {
             return res.status(400).json({ error: "Dana fraza już istnieje" });
         }
         const result = await pool.query(`UPDATE ${table} SET word = $2, definition = $3, difficulty_level_id = $4, category_id = $5, part_of_speech = $6 WHERE id = $1`, [id, word, definition, difficulty_level_id, category_id, part_of_speech]);
         res.status(200).json({message: "Pomyślnie edytowano frazę"})
     }catch(err){
         console.log(err.message)
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -600,7 +603,7 @@ app.post('/api/wordsSecond', async (req, res) => {
         res.json({ id: newWordId }); 
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -624,7 +627,7 @@ app.get('/api/translationPOL_Detailed', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     } 
 });
 
@@ -637,16 +640,16 @@ app.get('/api/translationPOL_/pol', async(req, res)=>{
     }
 
     try{
-        const condition = 'SELECT tr.id, ws.word as word '
+        const condition = 'SELECT tr.id, ws.word as word_second '
             + `FROM translations_pl_${language.toLowerCase()} tr, ${table} ws `
             + `WHERE tr.${fkName}=ws.id AND tr.word_polish_id = ` + id + `;`;
-        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word, ws.word '
+        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word as word_polish, ws.word as word_second '
             + `FROM translations_pl_${language.toLowerCase()} tr, words_polish wp, ${table} ws `
             + `WHERE tr.word_polish_id=wp.id and tr.${fkName}=ws.id ORDER BY id ASC;`);
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     } 
 });
 
@@ -668,7 +671,7 @@ app.get('/api/translationPOL_Detailed/pol', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     } 
 });
 
@@ -681,16 +684,16 @@ app.get('/api/translationPOL_/_', async(req, res)=>{
     }
 
     try{
-        const condition = 'SELECT tr.id, wp.word as word '
+        const condition = 'SELECT tr.id, wp.word as word_polish '
             + `FROM translations_pl_${language.toLowerCase()} tr, words_polish wp `
             + `WHERE tr.word_polish_id=wp.id AND tr.${fkName} = ` + id + ';';
-        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word, ws.word '
+        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word as word_polish, ws.word as word_second '
             + `FROM translations_pl_${language.toLowerCase()} tr, words_polish wp, ${table} ws `
             + `WHERE tr.word_polish_id=wp.id and tr.${fkName}=ws.id ORDER BY id ASC;`);
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     } 
 });
 
@@ -707,13 +710,13 @@ app.get('/api/translationPOL_Detailed/_', async(req, res)=>{
         const condition = 'SELECT wp.id, tr.id as translation_id, wp.word as word, definition, c. name as category, photo '
             + `FROM translations_pl_${language.toLowerCase()} tr, words_polish wp, categories c `
             + `WHERE tr.word_polish_id=wp.id AND c.id = wp.category_id AND tr.${fkName} = ` + id + ';';
-        const result = await pool.query(id ? condition : 'SELECT tr.id, wp.word as word, definition, c. name as category, photo '
+        const result = await pool.query(id ? condition : 'SELECT wp.id, tr.id as translation_id, wp.word as word, definition, c. name as category, photo '
             + `FROM translations_pl_${language.toLowerCase()} tr, words_polish wp, categories c `
             + `WHERE tr.word_polish_id=wp.id AND c.id = wp.category_id ORDER BY id ASC;`);
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     } 
 });
 
@@ -732,7 +735,7 @@ app.get('/api/translationPOL_Detailed/pol/word', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     } 
 });
 
@@ -753,7 +756,7 @@ app.delete('/api/translationPOL_', async (req, res) =>{
             res.status(404).json({ message: "Nie znaleziono tłumaczenia o podanym ID" });
         }}catch(err){
         console.log(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -777,7 +780,7 @@ app.post('/api/translationPOL_', async (req, res) =>{
         res.status(200).json({ message: "Pomyślnie dodano tłumaczenie" });
     }catch(err){
         console.error(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -802,7 +805,7 @@ app.get('/api/quizzes', async (req, res) => {
         res.json(result.rows);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -814,7 +817,7 @@ app.put('/api/quizzes/raisePopularity', async (req, res) =>{
         res.status(200).json({ message: "Pomyślnie zwiększono popularność quizu" });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 })
 
@@ -830,7 +833,7 @@ app.delete('/api/quizzes', async (req, res) => {
         }
     }catch(err){
         console.log(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -846,7 +849,7 @@ app.post('/api/quizzes', async (req, res) =>{
         res.json({ id: newQuizId }); 
     }catch(err){
         console.error(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -872,7 +875,7 @@ app.get('/api/quizzesQuestions', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -901,7 +904,7 @@ app.post('/api/quizzesQuestions', async (req, res) => {
       res.json({ success: true, rows: results.map((result) => result.rows) });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Błąd serwera");
+      res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -918,7 +921,7 @@ app.get('/api/quizzesQuestions/Count', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -938,7 +941,7 @@ app.get('/api/usersQuizzesQuestions', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 }); 
 
@@ -965,6 +968,19 @@ function allowedLanguage(language){
 
     return {isAllowed: true, table: table, fkName: fkName};
 }
+
+function errorMessageTranslator(errorCode){
+    switch(errorCode){
+        case "23505":
+            return "Błąd. Naruszono unikalność.";
+        case "23503":
+            return "Błąd. Naruszono klucz obcy.";
+        case "22P02":
+            return "Błąd. Podano nieprawidłowe dane.";
+        default:
+            return "Wystąpił błąd serwera, spróbuj ponownie później."    
+    }
+}
    
 app.get('/api/usersQuizzesQuestionsDetailed', async(req, res)=>{
     const { language, id, userId } = req.query;
@@ -989,7 +1005,7 @@ app.get('/api/usersQuizzesQuestionsDetailed', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });  
 
@@ -1018,7 +1034,7 @@ app.post('/api/usersQuizzesQuestions', async (req, res) => {
       res.json({ success: true, rows: results.map((result) => result.rows) });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Błąd serwera");
+      res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -1031,7 +1047,7 @@ app.get('/api/usersQuizzesScores', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -1050,7 +1066,7 @@ app.post('/api/usersQuizzesScores', async(req, res)=>{
         res.status(200).json({ message: "Rozpoczęto nowy quiz" });
     }catch(err){
         console.error(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -1062,7 +1078,7 @@ app.delete('/api/usersQuizzesScores', async (req, res) => {
         res.status(200).json({message: result});
     }catch(err){
         console.log(err.message);
-        res.status(500).send("Błąd serwera");
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -1077,7 +1093,7 @@ app.get('/api/stories', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -1090,7 +1106,7 @@ app.post('/api/stories', async(req, res)=>{
         res.status(200).json({ message: "Pomyślnie dodano historię" });
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -1103,7 +1119,7 @@ app.get('/api/storiesQuestions', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -1134,7 +1150,7 @@ app.post('/api/storiesQuestionsAndAnswers', async (req, res) => {
       res.json({ success: true, questions: results });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Błąd serwera");
+      res.status(500).send(errorMessageTranslator(err.code));
     }
   });
 
@@ -1158,7 +1174,7 @@ app.post('/api/storiesQuestions', async(req, res)=>{
       res.json({ success: true, rows: results.map((result) => result.rows) });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Błąd serwera");
+      res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -1171,7 +1187,7 @@ app.get('/api/storiesAnswers', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -1196,7 +1212,7 @@ app.post('/api/storiesAnswers', async(req, res)=>{
       res.json({ success: true, rows: results.map((result) => result.rows) });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Błąd serwera");
+      res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
@@ -1207,24 +1223,20 @@ app.get('/api/storiesQuestions/Count', async(req, res)=>{
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 
 app.get('/api/usersStoriesQuestions', async(req, res)=>{
     const { id, userId } = req.query;
-    
     try{
-        const condition = 'SELECT sq.id, sq.quiz_id, sq.question, '
+        const result = await pool.query('SELECT sq.id, sq.quiz_id, sq.question, '
         + `EXISTS (SELECT 1 FROM users_stories_questions usq, users_quizzes_scores uqs WHERE usq.story_question_id = sq.id AND uqs.quiz_id=sq.quiz_id AND uqs.user_id = ` + userId + ' AND usq.user_quiz_score_id=uqs.id) AS done '
-        + 'FROM stories_questions sq WHERE sq.quiz_id = ' + id + ' ORDER BY sq.quiz_id ASC'
-        const result = await pool.query(userId ? condition : 'SELECT sq.id, sq.quiz_id, sq.question, '
-        + `EXISTS (SELECT 1 FROM users_stories_questions usq, users_quizzes_scores uqs WHERE usq.story_question_id = sq.id AND uqs.quiz_id=sq.quiz_id AND usq.user_quiz_score_id=uqs.id) AS done `
         + 'FROM stories_questions sq WHERE sq.quiz_id = ' + id + ' ORDER BY sq.quiz_id ASC');
         res.json(result.rows);
     }catch(err){
         console.error(err.message);
-        res.status(500).send('Błąd serwera');
+        res.status(500).send(errorMessageTranslator(err.code));
     }
 });  
 
@@ -1248,7 +1260,7 @@ app.post('/api/usersStoriesQuestions', async (req, res) => {
       res.json({ success: true, rows: results.map((result) => result.rows) });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Błąd serwera");
+      res.status(500).send(errorMessageTranslator(err.code));
     }
 });
 

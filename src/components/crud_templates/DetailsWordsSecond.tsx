@@ -61,7 +61,7 @@ const DetailsWordsSecond = ({ routeName, code }: Props) => {
 
   const tableData: TableData<TranslationPL_> = {
     title: "Tłumaczenia",
-    headers: ["id", "word"],
+    headers: ["id", "word_polish"],
     data: translations,
     canDelete: true,
     routeName: "/translationPOL_?language=" + code,

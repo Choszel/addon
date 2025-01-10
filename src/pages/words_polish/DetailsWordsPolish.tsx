@@ -60,7 +60,7 @@ const DetailsWordsPolish = () => {
 
   const tableDataENG: TableData<TranslationPL_> = {
     title: "Tłumaczenia angielskie",
-    headers: ["id", "word"],
+    headers: ["id", "word_second"],
     data: translationsENG,
     canDelete: true,
     routeName: "/translationPOL_?language=ENG",
@@ -69,7 +69,7 @@ const DetailsWordsPolish = () => {
   };
   const tableDataSPA: TableData<TranslationPL_> = {
     title: "Tłumaczenia hiszpańskie",
-    headers: ["id", "word"],
+    headers: ["id", "word_second"],
     data: translationsSPA,
     canDelete: true,
     routeName: "/translationPOL_?language=SPA",

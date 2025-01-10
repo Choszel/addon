@@ -22,7 +22,7 @@ const CWordsSecond = ({ routeName, code, titlePart }: Props) => {
   >([]);
   const [translationsData, setTranslationsData] = useState<Translation[]>();
   const navigate = useNavigate();
-  const { postData } = actionData(routeName);
+  const { postData } = actionData("/wordsSecond");
   const { postData: postTranslations } = actionData("/translationPOL_");
   const {
     data: categories,
@@ -37,6 +37,7 @@ const CWordsSecond = ({ routeName, code, titlePart }: Props) => {
 
   const handleSave = async () => {
     const formData = new URLSearchParams();
+    formData.append("language", code);
     formData.append("word", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");
     formData.append("difficulty_level_id", refs[2]?.value ?? "");
@@ -109,7 +110,6 @@ const CWordsSecond = ({ routeName, code, titlePart }: Props) => {
         inputType: "select",
         isRequired: false,
         data: usePartOfSpeech(),
-        maxLength: 15,
       },
     ],
     setRefs: function (): void {},

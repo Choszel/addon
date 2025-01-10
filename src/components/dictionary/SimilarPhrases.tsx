@@ -1,4 +1,4 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { useState } from "react";
 
 interface Props {
@@ -35,12 +35,15 @@ const SimilarPhrases = ({ phrase, inLanguage }: Props) => {
 
   return (
     <Box width={{ base: "100%", md: "40%" }}>
-      {send == false ? (
+      {send === false ? (
         <button className="button_primary" onClick={loadSimilarPhrases}>
           Wczytaj podobne zwroty
         </button>
       ) : (
-        <Text whiteSpace="pre-line">{similarPhrases}</Text>
+        <Box
+          whiteSpace="pre-line"
+          dangerouslySetInnerHTML={{ __html: similarPhrases }}
+        />
       )}
     </Box>
   );

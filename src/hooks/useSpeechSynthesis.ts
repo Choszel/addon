@@ -3,23 +3,22 @@ const useSpeechSynthesis = (language: string, phrase: string) => {
     console.log("handleSpeak language:", language);
     
     let speakLanguage = "";
-    let voiceId = 1;
+    let voiceId = 0;
     switch (language) {
       case "ENG":
         speakLanguage = "en-GB";
-        voiceId = 0;
         break;
       case "SPA":
         speakLanguage = "es-ES";
-        voiceId = 0;
         break;
       default:
         speakLanguage = "pl-PL";
+        voiceId = 1;
         break;
     }
     msg.lang = speakLanguage;
 
-    const voices = speechSynthesis
+    const voices = window.speechSynthesis
       .getVoices()
       .filter((voice) => voice.lang === speakLanguage);
     msg.voice = voices[voiceId];

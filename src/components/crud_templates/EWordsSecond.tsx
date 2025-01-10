@@ -20,7 +20,7 @@ const EWordsSecond = ({ routeName, titlePart, code }: Props) => {
     (HTMLInputElement | HTMLSelectElement | null)[]
   >([]);
   const navigate = useNavigate();
-  const { putData } = actionData(routeName);
+  const { putData } = actionData("/wordsSecond");
 
   const {
     data: categories,
@@ -37,6 +37,7 @@ const EWordsSecond = ({ routeName, titlePart, code }: Props) => {
 
   const handleSave = async () => {
     const formData = new URLSearchParams();
+    formData.append("language", code);
     formData.append("id", id || "");
     formData.append("word", refs[0]?.value ?? "");
     formData.append("definition", refs[1]?.value ?? "");
