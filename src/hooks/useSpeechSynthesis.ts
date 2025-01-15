@@ -13,7 +13,6 @@ const useSpeechSynthesis = (language: string, phrase: string) => {
         break;
       default:
         speakLanguage = "pl-PL";
-        voiceId = 1;
         break;
     }
     msg.lang = speakLanguage;

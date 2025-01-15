@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 import { useState } from "react";
 
 interface Props {
@@ -7,11 +7,13 @@ interface Props {
 }
 
 const SimilarPhrases = ({ phrase, inLanguage }: Props) => {
-  const [similarPhrases, setSimilarPhrases] = useState<string>("Ładowanie...");
+  const [similarPhrases, setSimilarPhrases] = useState<string>("Ładowanie");
   const [send, setSend] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const loadSimilarPhrases = async () => {
     setSend(true);
+    setLoading(true);
     const prompt = {
       inputText: phrase,
       inLanguage: inLanguage,
@@ -24,10 +26,10 @@ const SimilarPhrases = ({ phrase, inLanguage }: Props) => {
       body: JSON.stringify(prompt),
     });
 
+    setLoading(false);
     if (result.ok) {
       const airespond = await result.json();
       setSimilarPhrases(airespond.analysis);
-      console.log(airespond.analysis);
     } else {
       setSimilarPhrases("Error");
     }
@@ -40,10 +42,13 @@ const SimilarPhrases = ({ phrase, inLanguage }: Props) => {
           Wczytaj podobne zwroty
         </button>
       ) : (
-        <Box
-          whiteSpace="pre-line"
-          dangerouslySetInnerHTML={{ __html: similarPhrases }}
-        />
+        <>
+          <Box
+            whiteSpace="pre-line"
+            dangerouslySetInnerHTML={{ __html: similarPhrases }}
+          />
+          {loading && <Spinner />}
+        </>
       )}
     </Box>
   );

@@ -5,7 +5,6 @@ import { HiSpeakerWave } from "react-icons/hi2";
 import usePhrasesStorage from "../../hooks/usePhrasesStorage";
 import useTokenData from "../../others/useTokenData";
 import getFlag from "../../hooks/useFlags";
-import { useEffect } from "react";
 import useSpeechSynthesis from "../../hooks/useSpeechSynthesis";
 
 interface Props {
@@ -57,10 +56,6 @@ const TranslationTab = ({
     }
   };
 
-  useEffect(() => {
-    console.log(phrase);
-    console.log(phrase.language);
-  }, []);
   return (
     <VStack marginBottom={{ base: "10%", md: "4%" }}>
       <Stack

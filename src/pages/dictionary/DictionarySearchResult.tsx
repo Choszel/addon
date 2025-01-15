@@ -10,6 +10,7 @@ import { HiSpeakerWave } from "react-icons/hi2";
 import RandomPhrase from "../../components/dictionary/RandomPhrase";
 import SimilarPhrases from "../../components/dictionary/SimilarPhrases";
 import useSpeechSynthesis from "../../hooks/useSpeechSynthesis";
+import useLanguages from "../../hooks/useLanguages";
 
 export interface Phrase {
   id: number;
@@ -39,6 +40,7 @@ const DictionarySearchResult = () => {
   const navigate = useNavigate();
   const { putData } = actionData("/words/raisePopularity");
   const [error, setError] = useState<boolean>(false);
+  const { data: languages } = useLanguages();
 
   const fetchData = async (endpoint: string, params?: {}) => {
     try {
@@ -55,7 +57,6 @@ const DictionarySearchResult = () => {
 
   const Load = async () => {
     console.log("Load");
-
     let data: Phrase[] = [];
     if (code == "POL") {
       try {
@@ -67,28 +68,31 @@ const DictionarySearchResult = () => {
           formData.append("id", id || "");
           putData(formData);
           setSearchPhrase(data[0]);
-          let data2: Phrase[] = await fetchData("translationPOL_Detailed/pol", {
-            language: "ENG",
-            id: id || 0,
-          });
-          data2 = data2.map((element) => ({
-            ...element,
-            language: "ENG",
-          }));
 
-          let data3: Phrase[] = await fetchData("translationPOL_Detailed/pol", {
-            language: "SPA",
-            id: id || 0,
-          });
-          data3 = data3.map((element) => ({
-            ...element,
-            language: "SPA",
-          }));
+          let data2: Phrase[] = [];
+          const translationPromises = languages
+            .filter((lang) => lang.code != "POL")
+            .map(async (lang) => {
+              let data3: Phrase[] = await fetchData(
+                "translationPOL_Detailed/pol",
+                {
+                  language: lang.code,
+                  id: id || 0,
+                }
+              );
+              return data3.map((element) => ({
+                ...element,
+                language: lang.code,
+              }));
+            });
 
-          setTranslations(data2.concat(data3));
+          const translationResults = await Promise.all(translationPromises);
+          data2 = translationResults.flat();
+          setTranslations(data2);
         }
       } catch (err) {
         console.log(err);
+        setError(true);
       }
     } else {
       try {
@@ -96,7 +100,6 @@ const DictionarySearchResult = () => {
           language: code,
           id: id || 0,
         });
-        console.log(data);
         if (data[0]?.word == word) {
           data[0].language = code;
           setSearchPhrase(data[0]);
@@ -145,11 +148,11 @@ const DictionarySearchResult = () => {
   };
 
   useEffect(() => {
-    if (id && code && word) {
+    if (id && code && word && languages.length > 0) {
       setSelectedLanguage(code);
       Load();
     }
-  }, [id, code, word]);
+  }, [id, code, word, languages]);
 
   const onSearch = (id: number, searchText: string) => {
     navigate(

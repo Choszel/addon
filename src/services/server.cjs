@@ -1128,7 +1128,7 @@ app.post('/api/storiesQuestionsAndAnswers', async (req, res) => {
   
     try {
       const questions = JSON.parse(data);
-  
+
       const results = await Promise.all(
         questions.map(async (q) => {
           const questionResult = await pool.query(
@@ -1197,6 +1197,7 @@ app.post('/api/storiesAnswers', async(req, res)=>{
     console.log(question_id, data)
     try {
       const questions = JSON.parse(data);
+      console.log("question_id, data", question_id, data);
       const values = questions.map((q) => [
         question_id,
         q.answear,
@@ -1204,7 +1205,7 @@ app.post('/api/storiesAnswers', async(req, res)=>{
       ]);
   
       const query =
-        `INSERT INTO stories_answers(question_id, answear, correct) VALUES ($1, $2,) RETURNING id`;
+        `INSERT INTO stories_answers(question_id, answear, correct) VALUES ($1, $2, $3) RETURNING id`;
       const results = await Promise.all(
         values.map((value) => {return pool.query(query, value)})
       );
